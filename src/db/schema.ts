@@ -122,7 +122,7 @@ export const groceryListItems = sqliteTable(
         groceryListId: text("grocery_list_id")
             .notNull()
             .references(() => groceryLists.id),
-        ingredient: text("ingredient_id")
+        ingredientId: text("ingredient_id")
             .notNull()
             .references(() => ingredients.id),
         quantity: numeric("quantity").notNull(),
@@ -132,7 +132,7 @@ export const groceryListItems = sqliteTable(
     },
     (table) => [
         uniqueIndex("grocery_list_items_ingredient_unique").on(
-            table.ingredient,
+            table.ingredientId,
             table.groceryListId
         ),
     ]
