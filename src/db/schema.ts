@@ -1,7 +1,9 @@
+import { AdapterAccountType } from "@auth/core/adapters";
 import { sql } from "drizzle-orm";
 import {
     integer,
     numeric,
+    primaryKey,
     sqliteTable,
     text,
     uniqueIndex,
@@ -10,12 +12,7 @@ import {
 const baseSchema = {
     id: text("id")
         .primaryKey()
-        .$defaultFn(
-            () => sql`lower(hex( randomblob(4)) || '-' || hex( randomblob(2))
-         || '-' || '4' || substr( hex( randomblob(2)), 2) || '-'
-         || substr('AB89', 1 + (abs(random()) % 4) , 1)  ||
-         substr(hex(randomblob(2)), 2) || '-' || hex(randomblob(6))) `
-        ),
+        .$defaultFn(() => crypto.randomUUID()),
     createdAt: text("created_at")
         .notNull()
         .default(sql`CURRENT_TIMESTAMP`),
@@ -25,17 +22,81 @@ const baseSchema = {
     deletedAt: text("deleted_at"),
 };
 
-export const users = sqliteTable(
-    "users",
+export const users = sqliteTable("user", {
+    ...baseSchema,
+    name: text("name"),
+    email: text("email").unique(),
+    emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
+    image: text("image"),
+});
+
+export const accounts = sqliteTable(
+    "account",
     {
-        ...baseSchema,
-        name: text("name").notNull(),
-        email: text("email").notNull(),
-        passwordHash: text("password_hash").notNull(),
-        lastLogin: text("last_login"),
-        isAdmin: integer("is_admin").notNull().default(0),
+        userId: text("userId")
+            .notNull()
+            .references(() => users.id, { onDelete: "cascade" }),
+        type: text("type").$type<AdapterAccountType>().notNull(),
+        provider: text("provider").notNull(),
+        providerAccountId: text("providerAccountId").notNull(),
+        refresh_token: text("refresh_token"),
+        access_token: text("access_token"),
+        expires_at: integer("expires_at"),
+        token_type: text("token_type"),
+        scope: text("scope"),
+        id_token: text("id_token"),
+        session_state: text("session_state"),
     },
-    (table) => [uniqueIndex("users_email_unique").on(table.email)]
+    (account) => ({
+        compoundKey: primaryKey({
+            columns: [account.provider, account.providerAccountId],
+        }),
+    })
+);
+
+export const sessions = sqliteTable("session", {
+    sessionToken: text("sessionToken").primaryKey(),
+    userId: text("userId")
+        .notNull()
+        .references(() => users.id, { onDelete: "cascade" }),
+    expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
+});
+
+export const verificationTokens = sqliteTable(
+    "verificationToken",
+    {
+        identifier: text("identifier").notNull(),
+        token: text("token").notNull(),
+        expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
+    },
+    (verificationToken) => ({
+        compositePk: primaryKey({
+            columns: [verificationToken.identifier, verificationToken.token],
+        }),
+    })
+);
+
+export const authenticators = sqliteTable(
+    "authenticator",
+    {
+        credentialID: text("credentialID").notNull().unique(),
+        userId: text("userId")
+            .notNull()
+            .references(() => users.id, { onDelete: "cascade" }),
+        providerAccountId: text("providerAccountId").notNull(),
+        credentialPublicKey: text("credentialPublicKey").notNull(),
+        counter: integer("counter").notNull(),
+        credentialDeviceType: text("credentialDeviceType").notNull(),
+        credentialBackedUp: integer("credentialBackedUp", {
+            mode: "boolean",
+        }).notNull(),
+        transports: text("transports"),
+    },
+    (authenticator) => ({
+        compositePK: primaryKey({
+            columns: [authenticator.userId, authenticator.credentialID],
+        }),
+    })
 );
 
 export const groups = sqliteTable("groups", {
