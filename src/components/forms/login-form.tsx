@@ -4,15 +4,20 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useLoginMutation } from "@/mutations/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { Spinner } from "../ui/spinner";
 import GitHubLoginButton from "./github-login-button";
 
 const loginFormSchema = z.object({
     email: z.string().email(),
-    password: z.string().min(3),
+    password: z.string().min(8, {
+        message: "Password must be at least 8 characters",
+    }),
 });
 type LoginFormSchema = z.infer<typeof loginFormSchema>;
 
@@ -25,8 +30,14 @@ export function LoginForm() {
         resolver: zodResolver(loginFormSchema),
     });
 
-    const onSubmit = (data: LoginFormSchema) => {
-        console.log(data);
+    const loginMutation = useLoginMutation();
+    const router = useRouter();
+
+    const onSubmit = async (data: LoginFormSchema) => {
+        await loginMutation.mutateAsync(data);
+        if (!loginMutation.error) {
+            router.replace("/auth/home");
+        }
     };
 
     return (
@@ -83,11 +94,19 @@ export function LoginForm() {
                                     </p>
                                 )}
                             </div>
+                            <Button
+                                type="submit"
+                                className="w-full"
+                                disabled={loginMutation.isPending}
+                            >
+                                {loginMutation.isPending ? (
+                                    <Spinner />
+                                ) : (
+                                    "Login"
+                                )}
+                            </Button>
                         </form>
 
-                        <Button type="submit" className="w-full">
-                            Login
-                        </Button>
                         <GitHubLoginButton />
                         <div className="text-center text-sm">
                             Don&apos;t have an account?{" "}

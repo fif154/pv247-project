@@ -1,4 +1,4 @@
-import { githubSignIn } from "@/app/actions";
+import { githubSignIn } from "@/app/(with-animated-bg)/actions";
 import { Button } from "../ui/button";
 
 export default function GitHubLoginButton() {
