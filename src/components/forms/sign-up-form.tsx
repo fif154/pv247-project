@@ -52,7 +52,6 @@ export function SignUpForm() {
 
         if (!registerMutation.isError) {
             router.replace("/auth/home");
-            console.log("User created successfully");
         }
     };
 
