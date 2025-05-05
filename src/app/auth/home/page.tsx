@@ -1,4 +1,4 @@
-import { signOutAction } from "@/app/(with-animated-bg)/actions";
+import { signOutAction } from "@/app/(auth)/actions";
 import { auth } from "@/auth";
 import { Button } from "@/components/ui/button";
 

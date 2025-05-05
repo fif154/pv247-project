@@ -12,8 +12,7 @@ export default auth((req) => {
     const isProtected = getIsProtectedPath(req.nextUrl.pathname);
 
     if (!isLoggedIn && isProtected) {
-        const redirectUrl = new URL("/", req.nextUrl.origin);
-        redirectUrl.searchParams.append("callbackUrl", req.nextUrl.href);
+        const redirectUrl = new URL("/login", req.nextUrl.origin);
 
         return Response.redirect(redirectUrl);
     }
