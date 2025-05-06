@@ -23,4 +23,6 @@ export const updateIngredientController =
         return await updateIngredientUseCase(id, result.data);
     };
 
-export type IUpdateIngredientController = typeof updateIngredientController;
+export type IUpdateIngredientController = ReturnType<
+    typeof updateIngredientController
+>;

@@ -5,4 +5,6 @@ export const getIngredientController =
         return await getIngredientUseCase(id);
     };
 
-export type IGetIngredientController = typeof getIngredientController;
+export type IGetIngredientController = ReturnType<
+    typeof getIngredientController
+>;

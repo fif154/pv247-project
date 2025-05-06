@@ -25,4 +25,6 @@ export const createIngredientController =
         return await createIngredientUseCase(result.data);
     };
 
-export type ICreateIngredientController = typeof createIngredientController;
+export type ICreateIngredientController = ReturnType<
+    typeof createIngredientController
+>;

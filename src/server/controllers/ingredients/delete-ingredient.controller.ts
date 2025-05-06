@@ -6,4 +6,6 @@ export const deleteIngredientController =
         return await deleteIngredientUseCase(id);
     };
 
-export type IDeleteIngredientController = typeof deleteIngredientController;
+export type IDeleteIngredientController = ReturnType<
+    typeof deleteIngredientController
+>;

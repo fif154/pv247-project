@@ -4,4 +4,6 @@ export const listIngredientsController =
     (listIngredientsUseCase: IListIngredientsUseCase) => async () =>
         await listIngredientsUseCase();
 
-export type IListIngredientsController = typeof listIngredientsController;
+export type IListIngredientsController = ReturnType<
+    typeof listIngredientsController
+>;

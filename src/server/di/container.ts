@@ -17,6 +17,7 @@ ApplicationContainer.load(
     createAuthenticationModule()
 );
 ApplicationContainer.load(Symbol("UsersModule"), createUsersModule());
+
 ApplicationContainer.load(
     Symbol("IngredientsModule"),
     createIngredientsModule()
