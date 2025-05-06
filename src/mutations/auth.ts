@@ -1,7 +1,4 @@
-import {
-    credentialsRegister,
-    credentialsSignIn,
-} from "@/app/(with-animated-bg)/actions";
+import { credentialsRegister, credentialsSignIn } from "@/app/(auth)/actions";
 import { SignUpFormSchema } from "@/components/forms/sign-up-form";
 import { showErrorToast, showSuccessToast } from "@/utils/toast";
 import { useMutation } from "@tanstack/react-query";

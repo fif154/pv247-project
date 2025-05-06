@@ -1,21 +1,24 @@
-import { signOutAction } from "@/app/(auth)/actions";
-import { auth } from "@/auth";
-import { Button } from "@/components/ui/button";
+import { Macros } from "@/components/macros";
+import { Meals } from "@/components/meals";
+import { format } from "date-fns";
+import { CalendarDays } from "lucide-react";
+
+const formatDate = (date: Date) => format(date, "EEEE, MMMM d, yyyy");
 
 const Page = async () => {
-    const userSession = (await auth())!;
+    const today = new Date();
 
     return (
-        <div className="flex flex-col items-center justify-center h-screen">
-            <h1 className="text-4xl font-bold">Welcome to the Home Page</h1>
-            <p className="mt-4 text-lg">
-                This is the home page of your application.
-            </p>
-            <p className="mt-4 text-lg">User ID: {userSession.user.id}</p>
-            <p className="mt-4 text-lg">User Email: {userSession.user.email}</p>
-            <p className="mt-4 text-lg">User Name: {userSession.user.name}</p>
-            <p className="mt-4 text-lg">User Image: {userSession.user.image}</p>
-            <Button onClick={signOutAction}>Sign out</Button>
+        <div className="flex flex-col h-screen gap-4">
+            <div className="flex flex-col gap-2">
+                <h1 className="text-4xl font-bold">Dashboard</h1>
+                <div className="flex items-center gap-2 text-[#7A8A9E]">
+                    <CalendarDays className="h-4 w-4" />
+                    <span>{formatDate(today)}</span>
+                </div>
+            </div>
+            <Macros calories={1560} carbs={12} fat={44} protein={123} />
+            <Meals />
         </div>
     );
 };
