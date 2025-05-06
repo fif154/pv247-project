@@ -13,5 +13,5 @@ export interface IIngredientsRepository {
         >
     ): Promise<Ingredient>;
     deleteIngredient(id: string): Promise<void>;
-    listIngredients(): Promise<Ingredient[]>;
+    listIngredients(userId: string): Promise<Ingredient[]>;
 }

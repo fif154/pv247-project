@@ -2,7 +2,7 @@ import { db } from "@/db";
 import { ingredients } from "@/db/schema";
 import { IIngredientsRepository } from "@/server/application/repositories/ingredients.repository.interface";
 import { Ingredient } from "@/server/entities/models/ingredient";
-import { eq, isNull } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 
 export class IngredientsRepository implements IIngredientsRepository {
     async createIngredient(
@@ -19,7 +19,7 @@ export class IngredientsRepository implements IIngredientsRepository {
         const [ingredient] = await db
             .select()
             .from(ingredients)
-            .where(eq(ingredients.id, id))
+            .where(and(eq(ingredients.id, id), isNull(ingredients.deletedAt)))
             .limit(1);
         return ingredient || null;
     }
@@ -28,7 +28,9 @@ export class IngredientsRepository implements IIngredientsRepository {
         const [ingredient] = await db
             .select()
             .from(ingredients)
-            .where(eq(ingredients.name, name))
+            .where(
+                and(eq(ingredients.name, name), isNull(ingredients.deletedAt))
+            )
             .limit(1);
         return ingredient || null;
     }
@@ -42,7 +44,7 @@ export class IngredientsRepository implements IIngredientsRepository {
         const [ingredient] = await db
             .update(ingredients)
             .set(input)
-            .where(eq(ingredients.id, id))
+            .where(and(eq(ingredients.id, id), isNull(ingredients.deletedAt)))
             .returning();
         return ingredient;
     }
@@ -51,11 +53,16 @@ export class IngredientsRepository implements IIngredientsRepository {
         await db.delete(ingredients).where(eq(ingredients.id, id));
     }
 
-    async listIngredients(): Promise<Ingredient[]> {
+    async listIngredients(userId: string): Promise<Ingredient[]> {
         const result = await db
             .select()
             .from(ingredients)
-            .where(isNull(ingredients.deletedAt));
+            .where(
+                and(
+                    eq(ingredients.createdBy, userId),
+                    isNull(ingredients.deletedAt)
+                )
+            );
         return result;
     }
 }
