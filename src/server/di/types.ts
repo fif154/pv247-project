@@ -12,14 +12,25 @@ export const DI_SYMBOLS = {
 
     // Repositories
     IUsersRepository: Symbol.for("IUsersRepository"),
+    IIngredientsRepository: Symbol.for("IIngredientsRepository"),
 
     // Use Cases
     ISignInUseCase: Symbol.for("ISignInUseCase"),
     IRegisterUseCase: Symbol.for("IRegisterUseCase"),
+    ICreateIngredientUseCase: Symbol.for("ICreateIngredientUseCase"),
+    IUpdateIngredientUseCase: Symbol.for("IUpdateIngredientUseCase"),
+    IDeleteIngredientUseCase: Symbol.for("IDeleteIngredientUseCase"),
+    IListIngredientsUseCase: Symbol.for("IListIngredientsUseCase"),
+    IGetIngredientUseCase: Symbol.for("IGetIngredientUseCase"),
 
     // Controllers
     ISignInController: Symbol.for("ISignInController"),
     IRegisterController: Symbol.for("IRegisterController"),
+    ICreateIngredientController: Symbol.for("ICreateIngredientController"),
+    IUpdateIngredientController: Symbol.for("IUpdateIngredientController"),
+    IDeleteIngredientController: Symbol.for("IDeleteIngredientController"),
+    IListIngredientsController: Symbol.for("IListIngredientsController"),
+    IGetIngredientController: Symbol.for("IGetIngredientController"),
 };
 
 export interface DI_RETURN_TYPES {

@@ -2,8 +2,8 @@ import { AdapterAccountType } from "@auth/core/adapters";
 import { relations, sql } from "drizzle-orm";
 import {
     integer,
-    numeric,
     primaryKey,
+    real,
     sqliteTable,
     text,
     uniqueIndex,
@@ -145,14 +145,12 @@ export const ingredients = sqliteTable(
             onDelete: "set null",
         }),
         imageUrl: text("image_url"),
-        protein: numeric("protein"),
-        carbs: numeric("carbs"),
-        fats: numeric("fats"),
-        calories: numeric("calories"),
+        protein: real("protein"),
+        carbs: real("carbs"),
+        fats: real("fats"),
+        calories: real("calories"),
         // allow specifying macros per custom amount of grams
-        baseMacroQuantity: numeric("base_macro_quantity")
-            .notNull()
-            .default("100"),
+        baseMacroQuantity: real("base_macro_quantity").notNull().default(100),
     },
     (table) => ({
         ingredientsNameUnique: uniqueIndex("ingredients_name_unique").on(
@@ -167,7 +165,7 @@ export const units = sqliteTable(
         ...baseSchema,
         name: text("name").notNull(),
         description: text("description"),
-        gramsPerUnit: numeric("grams_per_unit").notNull(),
+        gramsPerUnit: real("grams_per_unit").notNull(),
     },
     (table) => ({
         unitsNameUnique: uniqueIndex("units_name_unique").on(table.name),
@@ -184,7 +182,7 @@ export const recipeIngredients = sqliteTable(
         ingredientId: text("ingredient_id")
             .notNull()
             .references(() => ingredients.id, { onDelete: "cascade" }),
-        quantity: numeric("quantity").notNull(),
+        quantity: real("quantity").notNull(),
         unitId: text("unit_id").references(() => units.id, {
             onDelete: "set null",
         }),
@@ -222,7 +220,7 @@ export const groceryListItems = sqliteTable(
         ingredientId: text("ingredient_id")
             .notNull()
             .references(() => ingredients.id, { onDelete: "restrict" }),
-        quantity: numeric("quantity").notNull(),
+        quantity: real("quantity").notNull(),
         unitId: text("unit_id").references(() => units.id, {
             onDelete: "set null",
         }),
@@ -296,7 +294,7 @@ export const mealAdditionalIngredients = sqliteTable(
         ingredientId: text("ingredient_id")
             .notNull()
             .references(() => ingredients.id, { onDelete: "restrict" }), // Use restrict to prevent deleting an ingredient that's part of a meal log
-        quantity: numeric("quantity").notNull(),
+        quantity: real("quantity").notNull(),
         unitId: text("unit_id").references(() => units.id, {
             onDelete: "set null",
         }),
