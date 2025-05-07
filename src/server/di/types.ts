@@ -1,3 +1,5 @@
+import { IGroupMembersRepository } from "../application/repositories/groupMembers.repository.interface";
+import { IGroupsRepository } from "../application/repositories/groups.repository.interface";
 import { IUsersRepository } from "../application/repositories/users.repository.interface";
 import { IAuthenticationService } from "../application/services/authentication.service.interface";
 import { IRegisterUseCase } from "../application/use-cases/auth/register.use-case";
@@ -12,6 +14,8 @@ export const DI_SYMBOLS = {
 
     // Repositories
     IUsersRepository: Symbol.for("IUsersRepository"),
+    IGroupsRepository: Symbol.for("IGroupsRepository"),
+    IGroupMembersRepository: Symbol.for("IGroupMembersRepository"),
 
     // Use Cases
     ISignInUseCase: Symbol.for("ISignInUseCase"),
@@ -28,6 +32,8 @@ export interface DI_RETURN_TYPES {
 
     // Repositories
     IUsersRepository: IUsersRepository;
+    IGroupsRepository: IGroupsRepository;
+    IGroupMembersRepository: IGroupMembersRepository;
 
     // Use Cases
     ISignInUseCase: ISignInUseCase;
