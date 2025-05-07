@@ -4,12 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useRegisterMutation } from "@/mutations/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { Spinner } from "../ui/spinner";
 
-const signUpFormSchema = z
+export const signUpFormSchema = z
     .object({
         firstName: z.string().min(1, {
             message: "First name is required",
@@ -18,14 +21,18 @@ const signUpFormSchema = z
             message: "Last name is required",
         }),
         email: z.string().email(),
-        password: z.string().min(3),
-        confirmPassword: z.string().min(3),
+        password: z.string().min(8, {
+            message: "Password must be at least 8 characters",
+        }),
+        confirmPassword: z.string().min(8, {
+            message: "Password must be at least 8 characters",
+        }),
     })
     .refine((data) => data.password === data.confirmPassword, {
         message: "Passwords do not match",
         path: ["confirmPassword"],
     });
-type SignUpFormSchema = z.infer<typeof signUpFormSchema>;
+export type SignUpFormSchema = z.infer<typeof signUpFormSchema>;
 
 export function SignUpForm() {
     const {
@@ -36,8 +43,16 @@ export function SignUpForm() {
         resolver: zodResolver(signUpFormSchema),
     });
 
-    const onSubmit = (data: SignUpFormSchema) => {
-        console.log(data);
+    const router = useRouter();
+
+    const registerMutation = useRegisterMutation();
+
+    const onSubmit = async (data: SignUpFormSchema) => {
+        await registerMutation.mutateAsync(data);
+
+        if (!registerMutation.isError) {
+            router.replace("/auth/home");
+        }
     };
 
     return (
@@ -137,8 +152,16 @@ export function SignUpForm() {
                                     </p>
                                 )}
                             </div>
-                            <Button type="submit" className="w-full">
-                                Sign up
+                            <Button
+                                type="submit"
+                                className="w-full"
+                                disabled={registerMutation.isPending}
+                            >
+                                {registerMutation.isPending ? (
+                                    <Spinner />
+                                ) : (
+                                    "Sign up"
+                                )}
                             </Button>
 
                             <div className="text-center text-sm">
