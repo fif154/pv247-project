@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // seed.ts
 import { AdapterAccountType } from "@auth/core/adapters"; // Ensure this type is accessible
 import { faker } from "@faker-js/faker";
