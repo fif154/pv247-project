@@ -1,14 +1,17 @@
 import { db } from "@/db";
 import { ingredientCategories } from "@/db/schema";
 import { IIngredientCategoriesRepository } from "@/server/application/repositories/ingredient-categories.repository.interface";
-import { IngredientCategory } from "@/server/entities/models/ingredient-category";
+import {
+    CreateIngredientCategory,
+    IngredientCategory,
+} from "@/server/entities/models/ingredient-category";
 import { and, eq, isNull } from "drizzle-orm";
 
 export class IngredientCategoriesRepository
     implements IIngredientCategoriesRepository
 {
     async createCategory(
-        input: Omit<IngredientCategory, "id" | "createdAt" | "updatedAt">
+        input: CreateIngredientCategory
     ): Promise<IngredientCategory> {
         const [category] = await db
             .insert(ingredientCategories)
@@ -49,12 +52,7 @@ export class IngredientCategoriesRepository
         const result = await db
             .select()
             .from(ingredientCategories)
-            .where(
-                and(
-                    eq(ingredientCategories.createdBy, userId),
-                    isNull(ingredientCategories.deletedAt)
-                )
-            );
+            .where(isNull(ingredientCategories.deletedAt));
         return result;
     }
 }

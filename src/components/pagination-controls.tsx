@@ -1,6 +1,7 @@
 import {
     Pagination,
     PaginationContent,
+    PaginationEllipsis,
     PaginationItem,
     PaginationLink,
     PaginationNext,
@@ -20,7 +21,38 @@ export const PaginationControls = ({
 }: PaginationControlsProps) => {
     if (totalPages <= 1) return null;
 
-    const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+    const getPaginationItems = () => {
+        if (totalPages < 1) return [];
+
+        const firstPage = 1;
+        const lastPage = totalPages;
+        const pagesSet = new Set<number>();
+
+        pagesSet.add(firstPage);
+        pagesSet.add(lastPage);
+
+        if (page - 1 > firstPage) {
+            pagesSet.add(page - 1);
+        }
+
+        pagesSet.add(page);
+
+        if (page + 1 < lastPage) {
+            pagesSet.add(page + 1);
+        }
+
+        const sortedPages = Array.from(pagesSet).sort((a, b) => a - b);
+        const items: (number | "ellipsis")[] = [];
+
+        sortedPages.forEach((page, index) => {
+            if (index > 0 && page - sortedPages[index - 1] > 1) {
+                items.push("ellipsis");
+            }
+            items.push(page);
+        });
+
+        return items;
+    };
 
     return (
         <Pagination className="mt-4">
@@ -35,14 +67,18 @@ export const PaginationControls = ({
                     />
                 </PaginationItem>
 
-                {pages.map((p) => (
-                    <PaginationItem key={p}>
-                        <PaginationLink
-                            isActive={page === p}
-                            onClick={() => onPageChange(p)}
-                        >
-                            {p}
-                        </PaginationLink>
+                {getPaginationItems().map((p, index) => (
+                    <PaginationItem key={index} className="hidden sm:flex">
+                        {p === "ellipsis" ? (
+                            <PaginationEllipsis />
+                        ) : (
+                            <PaginationLink
+                                isActive={page === p}
+                                onClick={() => onPageChange(p)}
+                            >
+                                {p}
+                            </PaginationLink>
+                        )}
                     </PaginationItem>
                 ))}
 

@@ -14,7 +14,12 @@ const ingredientSchema = z.object({
     id: z.string().optional(),
     name: z.string().min(1, { message: "Name is required." }),
     quantity: z.number().min(1, { message: "Quantity is required." }),
-    unit: z.string().optional(),
+    unit: z
+        .object({
+            id: z.string(),
+            name: z.string(),
+        })
+        .optional(),
     category: z.object({
         id: z.string(),
         name: z.string(),
@@ -63,15 +68,6 @@ type Props = {
 export const GroceryListCreateForm = (props: Props) => {
     const form = useForm<GroceryListFormValues>({
         resolver: zodResolver(groceryListFormSchema),
-        defaultValues: {
-            manualIngredients: [
-                {
-                    name: "",
-                    quantity: 1,
-                    unit: "",
-                },
-            ],
-        },
     });
 
     const { handleSubmit } = form;
