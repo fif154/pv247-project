@@ -1,4 +1,4 @@
-import { db } from "@/db";
+import { db, Transaction } from "@/db";
 import { ingredients } from "@/db/schema";
 import { IIngredientsRepository } from "@/server/application/repositories/ingredients.repository.interface";
 import { Ingredient } from "@/server/entities/models/ingredient";
@@ -6,9 +6,11 @@ import { and, eq, isNull } from "drizzle-orm";
 
 export class IngredientsRepository implements IIngredientsRepository {
     async createIngredient(
-        input: Omit<Ingredient, "id" | "createdAt" | "updatedAt">
+        input: Omit<Ingredient, "id" | "createdAt" | "updatedAt">,
+        tx?: Transaction
     ): Promise<Ingredient> {
-        const [ingredient] = await db
+        const invoker = tx ?? db;
+        const [ingredient] = await invoker
             .insert(ingredients)
             .values(input)
             .returning();

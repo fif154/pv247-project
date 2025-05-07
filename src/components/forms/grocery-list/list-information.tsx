@@ -10,7 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useFormContext } from "react-hook-form";
-import { GroceryListFormValues } from "./grocery-list-create";
+import { GroceryListFormValues } from "./schema";
 
 export const ListInformation = () => {
     const form = useFormContext<GroceryListFormValues>();

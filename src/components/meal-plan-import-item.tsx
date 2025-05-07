@@ -2,7 +2,7 @@ import { MealPlan } from "@/server/entities/models/mealplan";
 import { format } from "date-fns";
 import { CalendarDays } from "lucide-react";
 import { useFormContext } from "react-hook-form";
-import { GroceryListFormValues } from "./forms/grocery-list/grocery-list-create";
+import { GroceryListFormValues } from "./forms/grocery-list/schema";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 import { Checkbox } from "./ui/checkbox";

@@ -32,10 +32,7 @@ import { Ingredient } from "@/server/entities/models/ingredient";
 import { Plus, Search, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import {
-    GroceryListFormValues,
-    IngredientFormValues,
-} from "./grocery-list-create";
+import { GroceryListFormValues, IngredientFormValues } from "./schema";
 
 export const AddIngredientsManuallyForm = () => {
     const form = useFormContext<GroceryListFormValues>();
@@ -109,8 +106,9 @@ const AddExistingIngredientsManually = ({
                 existingIngredients.every((eI) => eI.name !== item.name)
         ) ?? [];
 
-    const addCategory = (item: Ingredient) => {
+    const addIngredient = (item: Ingredient) => {
         const newItem: IngredientFormValues = {
+            id: item.id,
             name: item.name,
             quantity: 1,
             category: item.category!,
@@ -152,7 +150,7 @@ const AddExistingIngredientsManually = ({
                                     <CommandItem
                                         key={item.name}
                                         value={item.name}
-                                        onSelect={() => addCategory(item)}
+                                        onSelect={() => addIngredient(item)}
                                     >
                                         <span>{item.name}</span>
                                         <span className="ml-2 text-xs ">

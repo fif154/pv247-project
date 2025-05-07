@@ -1,7 +1,7 @@
 import { Recipe } from "@/server/entities/models/recipe";
 import { ChefHat } from "lucide-react";
 import { useFormContext } from "react-hook-form";
-import { GroceryListFormValues } from "./forms/grocery-list/grocery-list-create";
+import { GroceryListFormValues } from "./forms/grocery-list/schema";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Checkbox } from "./ui/checkbox";
 import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";

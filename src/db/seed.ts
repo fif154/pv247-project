@@ -185,7 +185,7 @@ async function main() {
     const groups = [];
     for (let i = 0; i < NUM_GROUPS; i++) {
         const group = {
-            id: crypto.randomUUID(),
+            id: i === 0 ? "default" : crypto.randomUUID(),
             name: faker.commerce.department() + " Team",
             description: faker.lorem.sentence(),
         };

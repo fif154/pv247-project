@@ -224,14 +224,12 @@ export const groceryLists = sqliteTable("grocery_lists", {
     groupId: text("group_id")
         .notNull()
         .references(() => groups.id, { onDelete: "cascade" }),
-    recipeId: text("recipe_id").references(() => recipes.id, {
-        onDelete: "set null",
-    }),
     name: text("name").notNull(),
-    description: text("description"),
     createdBy: text("created_by")
         .notNull()
         .references(() => users.id, { onDelete: "cascade" }),
+    fromDate: integer("from_date", { mode: "timestamp_ms" }),
+    toDate: integer("to_date", { mode: "timestamp_ms" }),
 });
 
 export const groceryListItems = sqliteTable(
@@ -560,10 +558,6 @@ export const groceryListsRelations = relations(
         group: one(groups, {
             fields: [groceryLists.groupId],
             references: [groups.id],
-        }),
-        recipe: one(recipes, {
-            fields: [groceryLists.recipeId],
-            references: [recipes.id],
         }),
         creator: one(users, {
             fields: [groceryLists.createdBy],

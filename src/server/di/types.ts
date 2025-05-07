@@ -1,5 +1,11 @@
+import { IGroceryListItemsRepository } from "@/server/application/repositories/grocery-list-items.repository.interface";
+import { IGroceryListsRepository } from "@/server/application/repositories/grocery-lists.repository.interface";
 import { IUnitsRepository } from "@/server/application/repositories/units.repository.interface";
+import { ICreateGroceryListUseCase } from "@/server/application/use-cases/grocery-lists/create-grocery-list.use-case";
+import { IListGroceryListsUseCase } from "@/server/application/use-cases/grocery-lists/list-grocery-lists.use-case";
 import { IListUnitsUseCase } from "@/server/application/use-cases/units/list-units.use-case";
+import { ICreateGroceryListController } from "@/server/controllers/grocery-lists/create-grocery-list.controller";
+import { IListGroceryListsController } from "@/server/controllers/grocery-lists/list-grocery-lists.controller";
 import { IListUnitsController } from "@/server/controllers/units/list-units.controller";
 import { IIngredientCategoriesRepository } from "../application/repositories/ingredient-categories.repository.interface";
 import { IIngredientsRepository } from "../application/repositories/ingredients.repository.interface";
@@ -86,6 +92,14 @@ export const DI_SYMBOLS = {
     IUnitsRepository: Symbol("IUnitsRepository"),
     IListUnitsUseCase: Symbol("IListUnitsUseCase"),
     IListUnitsController: Symbol("IListUnitsController"),
+
+    // Grocery Lists
+    IGroceryListsRepository: Symbol("IGroceryListsRepository"),
+    IGroceryListItemsRepository: Symbol("IGroceryListItemsRepository"),
+    ICreateGroceryListUseCase: Symbol("ICreateGroceryListUseCase"),
+    IListGroceryListsUseCase: Symbol("IListGroceryListsUseCase"),
+    ICreateGroceryListController: Symbol("ICreateGroceryListController"),
+    IListGroceryListsController: Symbol("IListGroceryListsController"),
 };
 
 export interface DI_RETURN_TYPES {
@@ -136,4 +150,12 @@ export interface DI_RETURN_TYPES {
     IUnitsRepository: IUnitsRepository;
     IListUnitsUseCase: IListUnitsUseCase;
     IListUnitsController: IListUnitsController;
+
+    // Grocery Lists
+    IGroceryListsRepository: IGroceryListsRepository;
+    IGroceryListItemsRepository: IGroceryListItemsRepository;
+    ICreateGroceryListUseCase: ICreateGroceryListUseCase;
+    IListGroceryListsUseCase: IListGroceryListsUseCase;
+    ICreateGroceryListController: ICreateGroceryListController;
+    IListGroceryListsController: IListGroceryListsController;
 }

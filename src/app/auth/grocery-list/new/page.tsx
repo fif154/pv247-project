@@ -16,7 +16,8 @@ const Page = async () => {
         <div className="flex flex-col h-screen gap-4">
             <div className="flex flex-row justify-between items-center">
                 <div className="flex gap-6 items-center">
-                    <ArrowLeft className="h-5 w-5 " />
+                    <ArrowLeft className="h-5 w-5" />
+
                     <PageHeader>Create a grocery list</PageHeader>
                 </div>
             </div>

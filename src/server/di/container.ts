@@ -2,6 +2,7 @@ import { createContainer } from "@evyweb/ioctopus";
 
 import { createAuthenticationModule } from "./modules/authentication.module";
 import { createTransactionManagerModule } from "./modules/database.module";
+import { createGroceryListsModule } from "./modules/grocery-lists.module";
 import { createIngredientCategoriesModule } from "./modules/ingredient-categories.module";
 import { createIngredientsModule } from "./modules/ingredients.module";
 import { createRecipesModule } from "./modules/recipes.module";
@@ -34,6 +35,11 @@ ApplicationContainer.load(
 );
 
 ApplicationContainer.load(Symbol("UnitsModule"), createUnitsModule());
+
+ApplicationContainer.load(
+    Symbol("GroceryListsModule"),
+    createGroceryListsModule()
+);
 
 export function getInjection<
     K extends keyof typeof DI_SYMBOLS & keyof DI_RETURN_TYPES

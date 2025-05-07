@@ -1,8 +1,8 @@
-import { db } from "@/db";
+import { db, Transaction } from "@/db";
 import { recipes } from "@/db/schema";
 import { IRecipesRepository } from "@/server/application/repositories/recipes.repository.interface";
 import { Recipe } from "@/server/entities/models/recipe";
-import { and, eq, isNull } from "drizzle-orm";
+import { and, eq, inArray, isNull } from "drizzle-orm";
 
 export class RecipesRepository implements IRecipesRepository {
     async createRecipe(
@@ -12,13 +12,23 @@ export class RecipesRepository implements IRecipesRepository {
         return recipe;
     }
 
-    async getRecipeById(id: string): Promise<Recipe | null> {
-        const [recipe] = await db
+    async getRecipeById(id: string, tx?: Transaction): Promise<Recipe | null> {
+        const invoker = tx ?? db;
+        const [recipe] = await invoker
             .select()
             .from(recipes)
             .where(and(eq(recipes.id, id), isNull(recipes.deletedAt)))
             .limit(1);
         return recipe || null;
+    }
+
+    async getRecipesByIds(ids: string[], tx?: Transaction): Promise<Recipe[]> {
+        const invoker = tx ?? db;
+
+        const result = await invoker.query.recipes.findMany({
+            where: and(isNull(recipes.deletedAt), inArray(recipes.id, ids)),
+        });
+        return result;
     }
 
     async getRecipeByName(name: string): Promise<Recipe | null> {
