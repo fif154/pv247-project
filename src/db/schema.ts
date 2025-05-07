@@ -147,3 +147,6 @@ export const units = sqliteTable(
     },
     (table) => [uniqueIndex("units_name_unique").on(table.name)]
 );
+
+export type Group = typeof groups.$inferSelect;
+export type User = typeof users.$inferInsert;
