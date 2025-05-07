@@ -8,7 +8,7 @@ export async function createIngredientAction(data: Omit<Ingredient, "id">) {
         const ingredientController = getInjection(
             "ICreateIngredientController"
         );
-        ingredientController(data);
+        return await ingredientController(data);
     } catch (err) {
         // TODO: handle errors
         return {
