@@ -133,7 +133,25 @@ export const recipes = sqliteTable("recipes", {
         .notNull()
         .references(() => users.id, { onDelete: "set null" }),
     servings: integer("servings").notNull().default(1),
+    image: text("image"),
 });
+
+export const ingredientCategories = sqliteTable(
+    "ingredient_categories",
+    {
+        ...baseSchema,
+        name: text("name").notNull(),
+        description: text("description"),
+        createdBy: text("created_by")
+            .notNull()
+            .references(() => users.id, { onDelete: "set null" }),
+    },
+    (table) => ({
+        ingredientCategoriesNameUnique: uniqueIndex(
+            "ingredient_categories_name_unique"
+        ).on(table.name),
+    })
+);
 
 export const ingredients = sqliteTable(
     "ingredients",
@@ -144,6 +162,13 @@ export const ingredients = sqliteTable(
         createdBy: text("created_by").references(() => users.id, {
             onDelete: "set null",
         }),
+        categoryId: text("category_id").references(
+            () => ingredientCategories.id,
+            {
+                onDelete: "set null",
+            }
+        ),
+
         imageUrl: text("image_url"),
         protein: real("protein"),
         carbs: real("carbs"),
@@ -304,6 +329,73 @@ export const mealAdditionalIngredients = sqliteTable(
             table.mealId,
             table.ingredientId
         ),
+    })
+);
+
+export const mealPlans = sqliteTable("meal_plans", {
+    ...baseSchema,
+    name: text("name").notNull(),
+    createdBy: text("created_by")
+        .notNull()
+        .references(() => users.id, { onDelete: "cascade" }),
+    startDate: integer("start_date", { mode: "timestamp_ms" }).notNull(),
+    endDate: integer("end_date", { mode: "timestamp_ms" }).notNull(),
+    description: text("description"),
+    image: text("image"),
+    groupId: text("group_id")
+        .notNull()
+        .references(() => groups.id, { onDelete: "cascade" }),
+    isPublic: integer("is_public", { mode: "boolean" })
+        .notNull()
+        .default(false),
+});
+
+export const mealPlanMeals = sqliteTable(
+    "meal_plan_meals",
+    {
+        ...baseSchema,
+        mealPlanId: text("meal_plan_id")
+            .notNull()
+            .references(() => mealPlans.id, { onDelete: "cascade" }),
+        mealId: text("meal_id")
+            .notNull()
+            .references(() => meals.id, { onDelete: "cascade" }),
+    },
+    (table) => ({
+        mealPlanMealUnique: uniqueIndex("meal_plan_meal_unique").on(
+            table.mealPlanId,
+            table.mealId
+        ),
+    })
+);
+
+export const mealsPlansRelations = relations(mealPlans, ({ one, many }) => ({
+    group: one(groups, {
+        fields: [mealPlans.groupId],
+        references: [groups.id],
+    }),
+    creator: one(users, {
+        fields: [mealPlans.createdBy],
+        references: [users.id],
+    }),
+    meals: many(mealPlanMeals),
+}));
+
+export const mealPlanMealsRelations = relations(mealPlanMeals, ({ one }) => ({
+    mealPlan: one(mealPlans, {
+        fields: [mealPlanMeals.mealPlanId],
+        references: [mealPlans.id],
+    }),
+    meal: one(meals, {
+        fields: [mealPlanMeals.mealId],
+        references: [meals.id],
+    }),
+}));
+
+export const ingredientCategoriesRelations = relations(
+    ingredientCategories,
+    ({ many }) => ({
+        ingredients: many(ingredients),
     })
 );
 

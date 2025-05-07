@@ -1,5 +1,6 @@
 import { Macros } from "@/components/macros";
 import { Meals } from "@/components/meals";
+import { PageHeader } from "@/components/page-header";
 import { format } from "date-fns";
 import { CalendarDays } from "lucide-react";
 import { AddNewButton } from "./add-new-button";
@@ -13,7 +14,7 @@ const Page = async () => {
         <div className="flex flex-col h-screen gap-4">
             <div className="flex flex-row justify-between items-center">
                 <div className="flex flex-col gap-2">
-                    <h1 className="text-4xl font-bold">Dashboard</h1>
+                    <PageHeader>Dashboard</PageHeader>
                     <div className="flex items-center gap-2 text-[#7A8A9E]">
                         <CalendarDays className="h-4 w-4" />
                         <span>{formatDate(today)}</span>
