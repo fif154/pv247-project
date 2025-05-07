@@ -2,8 +2,10 @@ import { createContainer } from "@evyweb/ioctopus";
 
 import { createAuthenticationModule } from "./modules/authentication.module";
 import { createTransactionManagerModule } from "./modules/database.module";
+import { createIngredientCategoriesModule } from "./modules/ingredient-categories.module";
 import { createIngredientsModule } from "./modules/ingredients.module";
 import { createRecipesModule } from "./modules/recipes.module";
+import { createUnitsModule } from "./modules/units.module";
 import { createUsersModule } from "./modules/users.module";
 import { DI_RETURN_TYPES, DI_SYMBOLS } from "./types";
 
@@ -25,6 +27,13 @@ ApplicationContainer.load(
 );
 
 ApplicationContainer.load(Symbol("RecipesModule"), createRecipesModule());
+
+ApplicationContainer.load(
+    Symbol("IngredientCategoriesModule"),
+    createIngredientCategoriesModule()
+);
+
+ApplicationContainer.load(Symbol("UnitsModule"), createUnitsModule());
 
 export function getInjection<
     K extends keyof typeof DI_SYMBOLS & keyof DI_RETURN_TYPES

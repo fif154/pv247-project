@@ -1,9 +1,15 @@
+import { IUnitsRepository } from "@/server/application/repositories/units.repository.interface";
+import { IListUnitsUseCase } from "@/server/application/use-cases/units/list-units.use-case";
+import { IListUnitsController } from "@/server/controllers/units/list-units.controller";
+import { IIngredientCategoriesRepository } from "../application/repositories/ingredient-categories.repository.interface";
 import { IIngredientsRepository } from "../application/repositories/ingredients.repository.interface";
 import { IRecipesRepository } from "../application/repositories/recipes.repository.interface";
 import { IUsersRepository } from "../application/repositories/users.repository.interface";
 import { IAuthenticationService } from "../application/services/authentication.service.interface";
 import { IRegisterUseCase } from "../application/use-cases/auth/register.use-case";
 import { ISignInUseCase } from "../application/use-cases/auth/sign-in.use-case";
+import { ICreateCategoryUseCase } from "../application/use-cases/ingredient-categories/create-category.use-case";
+import { IListCategoriesUseCase } from "../application/use-cases/ingredient-categories/list-categories.use-case";
 import { ICreateIngredientUseCase } from "../application/use-cases/ingredients/create-ingredient.use-case";
 import { IDeleteIngredientUseCase } from "../application/use-cases/ingredients/delete-ingredient.use-case";
 import { IGetIngredientUseCase } from "../application/use-cases/ingredients/get-ingredient.use-case";
@@ -16,6 +22,8 @@ import { IListRecipesUseCase } from "../application/use-cases/recipes/list-recip
 import { IUpdateRecipeUseCase } from "../application/use-cases/recipes/update-recipe.use-case";
 import { IRegisterController } from "../controllers/auth/register.controller";
 import { ISignInController } from "../controllers/auth/sign-in.controller";
+import { ICreateCategoryController } from "../controllers/ingredient-categories/create-category.controller";
+import { IListCategoriesController } from "../controllers/ingredient-categories/list-categories.controller";
 import { ICreateIngredientController } from "../controllers/ingredients/create-ingredient.controller";
 import { IDeleteIngredientController } from "../controllers/ingredients/delete-ingredient.controller";
 import { IGetIngredientController } from "../controllers/ingredients/get-ingredient.controller";
@@ -64,6 +72,20 @@ export const DI_SYMBOLS = {
     IDeleteRecipeController: Symbol.for("IDeleteRecipeController"),
     IListRecipesController: Symbol.for("IListRecipesController"),
     IGetRecipeController: Symbol.for("IGetRecipeController"),
+
+    // Ingredient Categories
+    IIngredientCategoriesRepository: Symbol.for(
+        "IIngredientCategoriesRepository"
+    ),
+    ICreateCategoryUseCase: Symbol.for("ICreateCategoryUseCase"),
+    IListCategoriesUseCase: Symbol.for("IListCategoriesUseCase"),
+    ICreateCategoryController: Symbol.for("ICreateCategoryController"),
+    IListCategoriesController: Symbol.for("IListCategoriesController"),
+
+    // Units
+    IUnitsRepository: Symbol("IUnitsRepository"),
+    IListUnitsUseCase: Symbol("IListUnitsUseCase"),
+    IListUnitsController: Symbol("IListUnitsController"),
 };
 
 export interface DI_RETURN_TYPES {
@@ -102,4 +124,16 @@ export interface DI_RETURN_TYPES {
     IDeleteRecipeController: IDeleteRecipeController;
     IListRecipesController: IListRecipesController;
     IGetRecipeController: IGetRecipeController;
+
+    // Ingredient Categories
+    IIngredientCategoriesRepository: IIngredientCategoriesRepository;
+    ICreateCategoryUseCase: ICreateCategoryUseCase;
+    IListCategoriesUseCase: IListCategoriesUseCase;
+    ICreateCategoryController: ICreateCategoryController;
+    IListCategoriesController: IListCategoriesController;
+
+    // Units
+    IUnitsRepository: IUnitsRepository;
+    IListUnitsUseCase: IListUnitsUseCase;
+    IListUnitsController: IListUnitsController;
 }
