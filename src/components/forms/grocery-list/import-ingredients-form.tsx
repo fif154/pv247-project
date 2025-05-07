@@ -1,16 +1,19 @@
 import { MealPlanImportItem } from "@/components/meal-plan-import-item";
+import { PaginationControls } from "@/components/pagination-controls";
 import { RecipeImportItem } from "@/components/recipe-import-item";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { usePagination } from "@/hooks/use-pagination";
 import { MealPlan } from "@/server/entities/models/mealplan";
 import { Recipe } from "@/server/entities/models/recipe";
-import { mockRecipes } from "@/utils/mock";
 import { TabsContent } from "@radix-ui/react-tabs";
 
-export const ImportIngredientsForm = () => {
-    const recipes = mockRecipes;
-    const mealPlans: MealPlan[] = [];
+type Props = {
+    recipes: Recipe[];
+    mealPlans: MealPlan[];
+};
 
+export const ImportIngredientsForm = ({ recipes, mealPlans }: Props) => {
     return (
         <Card>
             <CardHeader>
@@ -37,23 +40,39 @@ export const ImportIngredientsForm = () => {
 };
 
 const RecipeTabsContent = ({ recipes }: { recipes: Recipe[] }) => {
+    const { paginatedItems, currentPage, goToPage, pageSize } =
+        usePagination(recipes);
+
     return (
         <TabsContent value="recipes" className="flex flex-col gap-4">
-            {recipes.map((recipe) => (
+            {paginatedItems.map((recipe) => (
                 <RecipeImportItem key={recipe.id} recipe={recipe} />
             ))}
             {recipes.length === 0 && <NoTabContent tabName="recipes" />}
+            <PaginationControls
+                totalPages={Math.ceil(recipes.length / pageSize)}
+                page={currentPage}
+                onPageChange={goToPage}
+            />
         </TabsContent>
     );
 };
 
 const MealPlanTabsContent = ({ mealPlans }: { mealPlans: MealPlan[] }) => {
+    const { paginatedItems, currentPage, goToPage, pageSize } =
+        usePagination(mealPlans);
+
     return (
         <TabsContent value="mealplans" className="flex flex-col gap-4">
-            {mealPlans.map((mealPlan) => (
+            {paginatedItems.map((mealPlan) => (
                 <MealPlanImportItem key={mealPlan.id} plan={mealPlan} />
             ))}
             {mealPlans.length === 0 && <NoTabContent tabName="meal plans" />}
+            <PaginationControls
+                totalPages={Math.ceil(mealPlans.length / pageSize)}
+                page={currentPage}
+                onPageChange={goToPage}
+            />
         </TabsContent>
     );
 };

@@ -54,15 +54,17 @@ export class IngredientsRepository implements IIngredientsRepository {
     }
 
     async listIngredients(userId: string): Promise<Ingredient[]> {
-        const result = await db
-            .select()
-            .from(ingredients)
-            .where(
-                and(
-                    eq(ingredients.createdBy, userId),
-                    isNull(ingredients.deletedAt)
-                )
-            );
+        const result = await db.query.ingredients.findMany({
+            where: and(
+                // TODO: add a check for the user
+                // eq(ingredients.createdBy, userId),
+                isNull(ingredients.deletedAt)
+            ),
+            with: {
+                category: true,
+            },
+        });
+
         return result;
     }
 }

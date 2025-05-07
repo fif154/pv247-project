@@ -168,7 +168,6 @@ export const ingredients = sqliteTable(
                 onDelete: "set null",
             }
         ),
-
         imageUrl: text("image_url"),
         protein: real("protein"),
         carbs: real("carbs"),
@@ -522,9 +521,13 @@ export const ingredientsRelations = relations(ingredients, ({ one, many }) => ({
         references: [users.id],
         relationName: "ingredientsCreatedBy",
     }),
+    category: one(ingredientCategories, {
+        fields: [ingredients.categoryId],
+        references: [ingredientCategories.id],
+    }),
     usedInRecipes: many(recipeIngredients),
     usedInGroceryListItems: many(groceryListItems),
-    usedInMealAdditionalIngredients: many(mealAdditionalIngredients), // New
+    usedInMealAdditionalIngredients: many(mealAdditionalIngredients),
 }));
 
 export const unitsRelations = relations(units, ({ many }) => ({
