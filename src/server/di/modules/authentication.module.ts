@@ -8,35 +8,33 @@ import { AuthenticationService } from "@/server/infrastructure/services/authenti
 import { DI_SYMBOLS } from "../types";
 
 export function createAuthenticationModule() {
-    const authenticationModule = createModule();
+  const authenticationModule = createModule();
 
-    authenticationModule
-        .bind(DI_SYMBOLS.IAuthenticationService)
-        .toClass(AuthenticationService, [DI_SYMBOLS.IUsersRepository]);
+  authenticationModule
+    .bind(DI_SYMBOLS.IAuthenticationService)
+    .toClass(AuthenticationService, [DI_SYMBOLS.IUsersRepository]);
 
-    authenticationModule
-        .bind(DI_SYMBOLS.ISignInUseCase)
-        .toHigherOrderFunction(signInUseCase, [
-            DI_SYMBOLS.IUsersRepository,
-            DI_SYMBOLS.IAuthenticationService,
-        ]);
+  authenticationModule
+    .bind(DI_SYMBOLS.ISignInUseCase)
+    .toHigherOrderFunction(signInUseCase, [
+      DI_SYMBOLS.IUsersRepository,
+      DI_SYMBOLS.IAuthenticationService,
+    ]);
 
-    authenticationModule
-        .bind(DI_SYMBOLS.IRegisterUseCase)
-        .toHigherOrderFunction(registerUseCase, [
-            DI_SYMBOLS.IUsersRepository,
-            DI_SYMBOLS.IAuthenticationService,
-        ]);
+  authenticationModule
+    .bind(DI_SYMBOLS.IRegisterUseCase)
+    .toHigherOrderFunction(registerUseCase, [
+      DI_SYMBOLS.IUsersRepository,
+      DI_SYMBOLS.IAuthenticationService,
+    ]);
 
-    authenticationModule
-        .bind(DI_SYMBOLS.ISignInController)
-        .toHigherOrderFunction(signInController, [DI_SYMBOLS.ISignInUseCase]);
+  authenticationModule
+    .bind(DI_SYMBOLS.ISignInController)
+    .toHigherOrderFunction(signInController, [DI_SYMBOLS.ISignInUseCase]);
 
-    authenticationModule
-        .bind(DI_SYMBOLS.IRegisterController)
-        .toHigherOrderFunction(registerController, [
-            DI_SYMBOLS.IRegisterUseCase,
-        ]);
+  authenticationModule
+    .bind(DI_SYMBOLS.IRegisterController)
+    .toHigherOrderFunction(registerController, [DI_SYMBOLS.IRegisterUseCase]);
 
-    return authenticationModule;
+  return authenticationModule;
 }
