@@ -65,10 +65,8 @@ export const createGroceryListUseCase =
         if (input.manualIngredients?.length) {
             const items = await Promise.all(
                 input.manualIngredients.map(async (ingredient) => {
-                    console.log("ingredient", ingredient);
                     let ingredientId = ingredient.id;
                     if (!ingredientId) {
-                        console.log(ingredientId);
                         ingredientId = (
                             await ingredientsRepository.createIngredient(
                                 {
