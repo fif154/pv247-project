@@ -1,7 +1,7 @@
-import { AppSidebar } from "@/components/app-sidebar";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { PropsWithChildren } from "react";
+import { AppSidebar } from '@/components/app-sidebar';
+import { ThemeToggle } from '@/components/theme-toggle';
+import { SidebarTrigger } from '@/components/ui/sidebar';
+import { PropsWithChildren } from 'react';
 
 const Layout = ({ children }: PropsWithChildren) => {
   return (

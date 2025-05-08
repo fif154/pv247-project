@@ -1,4 +1,4 @@
-import { MacroItemType } from "./macros";
+import { MacroItemType } from './macros';
 
 export const MacroItem = (props: MacroItemType) => {
   return (

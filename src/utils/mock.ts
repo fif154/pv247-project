@@ -1,6 +1,6 @@
-import { Ingredient } from "@/server/entities/models/ingredient";
-import { Meal } from "@/server/entities/models/meal";
-import { Recipe } from "@/server/entities/models/recipe";
+import { Ingredient } from '@/server/entities/models/ingredient';
+import { Meal } from '@/server/entities/models/meal';
+import { Recipe } from '@/server/entities/models/recipe';
 
 const generateMockUUID = () => crypto.randomUUID();
 
@@ -28,10 +28,10 @@ const user_uuid_3 = generateMockUUID();
 
 const mockGramUnit = {
   ...getMockDateInfo(),
-  gramsPerUnit: "100",
-  name: "grams",
+  gramsPerUnit: '100',
+  name: 'grams',
   id: generateMockUUID(),
-  description: "grams",
+  description: 'grams',
 };
 
 export const mockIngredients: Ingredient[] = [
@@ -40,15 +40,15 @@ export const mockIngredients: Ingredient[] = [
     createdAt: getCurrentISODate(),
     updatedAt: getCurrentISODate(),
     deletedAt: null,
-    name: "Chicken Breast",
-    description: "Boneless, skinless chicken breast.",
+    name: 'Chicken Breast',
+    description: 'Boneless, skinless chicken breast.',
     createdBy: user_uuid_1,
-    imageUrl: "https://example.com/images/chicken_breast.jpg",
-    protein: "31", // per 100g
-    carbs: "0", // per 100g
-    fats: "3.6", // per 100g
-    calories: "165", // per 100g
-    baseMacroQuantity: "100",
+    imageUrl: 'https://example.com/images/chicken_breast.jpg',
+    protein: '31', // per 100g
+    carbs: '0', // per 100g
+    fats: '3.6', // per 100g
+    calories: '165', // per 100g
+    baseMacroQuantity: '100',
   },
   {
     id: generateMockUUID(), // ingredient_uuid_spaghetti
@@ -56,15 +56,15 @@ export const mockIngredients: Ingredient[] = [
     updatedAt: getCurrentISODate(),
     deletedAt: null,
 
-    name: "Spaghetti Pasta",
-    description: "Dried spaghetti pasta.",
+    name: 'Spaghetti Pasta',
+    description: 'Dried spaghetti pasta.',
     createdBy: user_uuid_1,
-    imageUrl: "https://example.com/images/spaghetti.jpg",
-    protein: "13", // per 100g uncooked
-    carbs: "75", // per 100g uncooked
-    fats: "1.5", // per 100g uncooked
-    calories: "371", // per 100g uncooked
-    baseMacroQuantity: "100",
+    imageUrl: 'https://example.com/images/spaghetti.jpg',
+    protein: '13', // per 100g uncooked
+    carbs: '75', // per 100g uncooked
+    fats: '1.5', // per 100g uncooked
+    calories: '371', // per 100g uncooked
+    baseMacroQuantity: '100',
   },
   {
     id: generateMockUUID(), // ingredient_uuid_t_sauce
@@ -72,15 +72,15 @@ export const mockIngredients: Ingredient[] = [
     updatedAt: getCurrentISODate(),
     deletedAt: null,
 
-    name: "Tomato Sauce",
-    description: "Basic tomato sauce or passata.",
+    name: 'Tomato Sauce',
+    description: 'Basic tomato sauce or passata.',
     createdBy: user_uuid_2,
-    imageUrl: "https://example.com/images/tomato_sauce.jpg",
-    protein: "1.5", // per 100g
-    carbs: "7", // per 100g
-    fats: "0.2", // per 100g
-    calories: "35", // per 100g
-    baseMacroQuantity: "100",
+    imageUrl: 'https://example.com/images/tomato_sauce.jpg',
+    protein: '1.5', // per 100g
+    carbs: '7', // per 100g
+    fats: '0.2', // per 100g
+    calories: '35', // per 100g
+    baseMacroQuantity: '100',
   },
   {
     id: generateMockUUID(), // ingredient_uuid_olive_oil
@@ -88,15 +88,15 @@ export const mockIngredients: Ingredient[] = [
     updatedAt: getCurrentISODate(),
     deletedAt: null,
 
-    name: "Olive Oil",
-    description: "Extra virgin olive oil.",
+    name: 'Olive Oil',
+    description: 'Extra virgin olive oil.',
     createdBy: user_uuid_1,
-    imageUrl: "https://example.com/images/olive_oil.jpg",
-    protein: "0",
-    carbs: "0",
-    fats: "100",
-    calories: "884", // per 100g (or 100ml approx)
-    baseMacroQuantity: "100",
+    imageUrl: 'https://example.com/images/olive_oil.jpg',
+    protein: '0',
+    carbs: '0',
+    fats: '100',
+    calories: '884', // per 100g (or 100ml approx)
+    baseMacroQuantity: '100',
   },
   {
     id: generateMockUUID(), // ingredient_uuid_garlic
@@ -104,15 +104,15 @@ export const mockIngredients: Ingredient[] = [
     updatedAt: getCurrentISODate(),
     deletedAt: null,
 
-    name: "Garlic Clove",
-    description: "Fresh garlic.",
+    name: 'Garlic Clove',
+    description: 'Fresh garlic.',
     createdBy: user_uuid_2,
     imageUrl: null,
-    protein: "6.4", // per 100g
-    carbs: "33", // per 100g
-    fats: "0.5", // per 100g
-    calories: "149", // per 100g
-    baseMacroQuantity: "100", // Though often used in smaller quantities
+    protein: '6.4', // per 100g
+    carbs: '33', // per 100g
+    fats: '0.5', // per 100g
+    calories: '149', // per 100g
+    baseMacroQuantity: '100', // Though often used in smaller quantities
   },
   {
     id: generateMockUUID(), // ingredient_uuid_oats
@@ -120,15 +120,15 @@ export const mockIngredients: Ingredient[] = [
     updatedAt: getCurrentISODate(),
     deletedAt: null,
 
-    name: "Rolled Oats",
-    description: "Standard rolled oats for porridge.",
+    name: 'Rolled Oats',
+    description: 'Standard rolled oats for porridge.',
     createdBy: user_uuid_3,
-    imageUrl: "https://example.com/images/oats.jpg",
-    protein: "16.9",
-    carbs: "66.3",
-    fats: "6.9",
-    calories: "389",
-    baseMacroQuantity: "100",
+    imageUrl: 'https://example.com/images/oats.jpg',
+    protein: '16.9',
+    carbs: '66.3',
+    fats: '6.9',
+    calories: '389',
+    baseMacroQuantity: '100',
   },
   {
     id: generateMockUUID(), // ingredient_uuid_milk
@@ -136,15 +136,15 @@ export const mockIngredients: Ingredient[] = [
     updatedAt: getCurrentISODate(),
     deletedAt: null,
 
-    name: "Milk (Whole)",
+    name: 'Milk (Whole)',
     description: "Cow's milk, whole.",
     createdBy: user_uuid_1,
-    imageUrl: "https://example.com/images/milk.jpg",
-    protein: "3.3",
-    carbs: "4.8",
-    fats: "3.5", // Adjust for skimmed/semi-skimmed
-    calories: "62",
-    baseMacroQuantity: "100", // For 100ml
+    imageUrl: 'https://example.com/images/milk.jpg',
+    protein: '3.3',
+    carbs: '4.8',
+    fats: '3.5', // Adjust for skimmed/semi-skimmed
+    calories: '62',
+    baseMacroQuantity: '100', // For 100ml
   },
   {
     id: generateMockUUID(), // ingredient_uuid_banana
@@ -152,15 +152,15 @@ export const mockIngredients: Ingredient[] = [
     updatedAt: getCurrentISODate(),
     deletedAt: null,
 
-    name: "Banana",
-    description: "Fresh banana.",
+    name: 'Banana',
+    description: 'Fresh banana.',
     createdBy: user_uuid_2,
-    imageUrl: "https://example.com/images/banana.jpg",
-    protein: "1.1",
-    carbs: "22.8",
-    fats: "0.3",
-    calories: "89",
-    baseMacroQuantity: "100", // For 100g (approx 1 medium banana without skin)
+    imageUrl: 'https://example.com/images/banana.jpg',
+    protein: '1.1',
+    carbs: '22.8',
+    fats: '0.3',
+    calories: '89',
+    baseMacroQuantity: '100', // For 100g (approx 1 medium banana without skin)
   },
   {
     id: generateMockUUID(), // ingredient_uuid_eggs
@@ -168,15 +168,15 @@ export const mockIngredients: Ingredient[] = [
     updatedAt: getCurrentISODate(),
     deletedAt: null,
 
-    name: "Egg (Large)",
-    description: "Large chicken egg.",
+    name: 'Egg (Large)',
+    description: 'Large chicken egg.',
     createdBy: user_uuid_1,
-    imageUrl: "https://example.com/images/egg.jpg",
-    protein: "12.6", // per 100g (approx 2 large eggs)
-    carbs: "1.1",
-    fats: "9.5",
-    calories: "143",
-    baseMacroQuantity: "100", // Or you could define per egg (~50-60g)
+    imageUrl: 'https://example.com/images/egg.jpg',
+    protein: '12.6', // per 100g (approx 2 large eggs)
+    carbs: '1.1',
+    fats: '9.5',
+    calories: '143',
+    baseMacroQuantity: '100', // Or you could define per egg (~50-60g)
   },
 ];
 
@@ -186,18 +186,18 @@ export const mockRecipes: Recipe[] = [
     createdAt: getCurrentISODate(),
     updatedAt: getCurrentISODate(),
     deletedAt: null,
-    name: "Classic Spaghetti Bolognese",
+    name: 'Classic Spaghetti Bolognese',
     description:
-      "A hearty and traditional Italian meat sauce served with spaghetti. (Note: Bolognese ingredients like ground beef not yet added to sample ingredients above, add them for completeness)",
+      'A hearty and traditional Italian meat sauce served with spaghetti. (Note: Bolognese ingredients like ground beef not yet added to sample ingredients above, add them for completeness)',
     createdBy: user_uuid_1,
     servings: 4,
     ingredients: [
       {
         ...getMockDateInfo(),
         id: generateMockUUID(),
-        ingredientId: "ingredient_uuid_spaghetti",
+        ingredientId: 'ingredient_uuid_spaghetti',
         recipeId: generateMockUUID(),
-        quantity: "200",
+        quantity: '200',
         unitId: generateMockUUID(),
         unit: mockGramUnit,
 
@@ -206,9 +206,9 @@ export const mockRecipes: Recipe[] = [
       {
         ...getMockDateInfo(),
         id: generateMockUUID(),
-        ingredientId: "ingredient_uuid_t_sauce",
+        ingredientId: 'ingredient_uuid_t_sauce',
         recipeId: generateMockUUID(),
-        quantity: "150",
+        quantity: '150',
         unitId: generateMockUUID(),
         unit: mockGramUnit,
 
@@ -222,18 +222,18 @@ export const mockRecipes: Recipe[] = [
     updatedAt: getCurrentISODate(),
     deletedAt: null,
 
-    name: "Simple Banana Oatmeal",
+    name: 'Simple Banana Oatmeal',
     description:
-      "A quick and healthy breakfast made with rolled oats, milk, and topped with banana.",
+      'A quick and healthy breakfast made with rolled oats, milk, and topped with banana.',
     createdBy: user_uuid_2,
     servings: 1,
     ingredients: [
       {
         ...getMockDateInfo(),
         id: generateMockUUID(),
-        ingredientId: "ingredient_uuid_oats",
+        ingredientId: 'ingredient_uuid_oats',
         recipeId: generateMockUUID(),
-        quantity: "50",
+        quantity: '50',
         unitId: generateMockUUID(),
         unit: mockGramUnit,
         ingredient: mockIngredients[5],
@@ -241,9 +241,9 @@ export const mockRecipes: Recipe[] = [
       {
         ...getMockDateInfo(),
         id: generateMockUUID(),
-        ingredientId: "ingredient_uuid_milk",
+        ingredientId: 'ingredient_uuid_milk',
         recipeId: generateMockUUID(),
-        quantity: "200",
+        quantity: '200',
         unitId: generateMockUUID(),
         unit: mockGramUnit,
 
@@ -252,9 +252,9 @@ export const mockRecipes: Recipe[] = [
       {
         ...getMockDateInfo(),
         id: generateMockUUID(),
-        ingredientId: "ingredient_uuid_banana",
+        ingredientId: 'ingredient_uuid_banana',
         recipeId: generateMockUUID(),
-        quantity: "130",
+        quantity: '130',
         unitId: generateMockUUID(),
         unit: mockGramUnit,
 
@@ -268,9 +268,9 @@ export const mockRecipes: Recipe[] = [
     updatedAt: getCurrentISODate(),
     deletedAt: null,
 
-    name: "Fluffy Scrambled Eggs",
+    name: 'Fluffy Scrambled Eggs',
     description:
-      "Creamy and fluffy scrambled eggs, perfect for breakfast or a light meal.",
+      'Creamy and fluffy scrambled eggs, perfect for breakfast or a light meal.',
     createdBy: user_uuid_1,
     servings: 2,
   },
@@ -280,9 +280,9 @@ export const mockRecipes: Recipe[] = [
     updatedAt: getCurrentISODate(),
     deletedAt: null,
 
-    name: "Quick Chicken Stir-fry",
+    name: 'Quick Chicken Stir-fry',
     description:
-      "A fast and flavorful chicken stir-fry with mixed vegetables. (Note: stir-fry vegetables and soy sauce not added to ingredients above, add for completeness)",
+      'A fast and flavorful chicken stir-fry with mixed vegetables. (Note: stir-fry vegetables and soy sauce not added to ingredients above, add for completeness)',
     createdBy: user_uuid_3,
     servings: 2,
   },
@@ -294,21 +294,21 @@ export const mockMeals: Meal[] = [
     createdAt: getCurrentISODate(),
     updatedAt: getCurrentISODate(),
     deletedAt: null,
-    name: "Morning Oats Delight",
-    userId: "user_uuid_1",
-    recipeId: "recipe_uuid_oats",
-    mealTypeId: "mealtype_uuid_breakfast",
-    plannedDate: new Date("2025-05-07T08:00:00Z"),
-    notes: "Extra berries today!",
+    name: 'Morning Oats Delight',
+    userId: 'user_uuid_1',
+    recipeId: 'recipe_uuid_oats',
+    mealTypeId: 'mealtype_uuid_breakfast',
+    plannedDate: new Date('2025-05-07T08:00:00Z'),
+    notes: 'Extra berries today!',
     image:
-      "https://fastly.picsum.photos/id/388/200/200.jpg?hmac=yc4V5jCOMR-l634JzXmANfvSGFGgYWHQN4aKA69RvZo",
+      'https://fastly.picsum.photos/id/388/200/200.jpg?hmac=yc4V5jCOMR-l634JzXmANfvSGFGgYWHQN4aKA69RvZo',
     mealType: {
       createdAt: getCurrentISODate(),
       updatedAt: getCurrentISODate(),
       deletedAt: null,
-      id: "mealtype_uuid_breakfast",
-      name: "Breakfast",
-      description: "The first meal of the day.",
+      id: 'mealtype_uuid_breakfast',
+      name: 'Breakfast',
+      description: 'The first meal of the day.',
     },
     recipe: mockRecipes[1],
   },
@@ -317,20 +317,20 @@ export const mockMeals: Meal[] = [
     createdAt: getCurrentISODate(),
     updatedAt: getCurrentISODate(),
     deletedAt: null,
-    name: "Chicken Salad Lunch",
-    userId: "user_uuid_2",
-    recipeId: "recipe_uuid_chickensalad",
-    mealTypeId: "mealtype_uuid_lunch",
+    name: 'Chicken Salad Lunch',
+    userId: 'user_uuid_2',
+    recipeId: 'recipe_uuid_chickensalad',
+    mealTypeId: 'mealtype_uuid_lunch',
     plannedDate: getFutureDateTimestamp(2),
-    notes: "Pack in a container for work.",
+    notes: 'Pack in a container for work.',
     image: null,
     mealType: {
       createdAt: getCurrentISODate(),
       updatedAt: getCurrentISODate(),
       deletedAt: null,
-      id: "mealtype_uuid_lunch",
-      name: "Lunch",
-      description: "Lunchhhhhh",
+      id: 'mealtype_uuid_lunch',
+      name: 'Lunch',
+      description: 'Lunchhhhhh',
     },
     recipe: mockRecipes[3],
     additionalIngredients: [
@@ -338,7 +338,7 @@ export const mockMeals: Meal[] = [
         ...mockIngredients[0],
         ingredientId: mockIngredients[0].id,
         unitId: generateMockUUID(),
-        quantity: "200",
+        quantity: '200',
         mealId: generateMockUUID(),
         unit: mockGramUnit,
       },
@@ -349,21 +349,21 @@ export const mockMeals: Meal[] = [
     createdAt: getCurrentISODate(),
     updatedAt: getCurrentISODate(),
     deletedAt: null,
-    name: "Spaghetti Carbonara Dinner",
-    userId: "user_uuid_1",
-    recipeId: "recipe_uuid_carbonara",
-    mealTypeId: "mealtype_uuid_dinner",
-    plannedDate: new Date("2025-05-06T19:30:00Z"),
+    name: 'Spaghetti Carbonara Dinner',
+    userId: 'user_uuid_1',
+    recipeId: 'recipe_uuid_carbonara',
+    mealTypeId: 'mealtype_uuid_dinner',
+    plannedDate: new Date('2025-05-06T19:30:00Z'),
     notes: "Don't forget the parmesan.",
     image:
-      "https://fastly.picsum.photos/id/388/200/200.jpg?hmac=yc4V5jCOMR-l634JzXmANfvSGFGgYWHQN4aKA69RvZo",
+      'https://fastly.picsum.photos/id/388/200/200.jpg?hmac=yc4V5jCOMR-l634JzXmANfvSGFGgYWHQN4aKA69RvZo',
     mealType: {
       createdAt: getCurrentISODate(),
       updatedAt: getCurrentISODate(),
       deletedAt: null,
-      id: "mealtype_uuid_dinner",
-      name: "Dinner",
-      description: "The last meal of the day.",
+      id: 'mealtype_uuid_dinner',
+      name: 'Dinner',
+      description: 'The last meal of the day.',
     },
     recipe: mockRecipes[2],
   },
@@ -372,43 +372,43 @@ export const mockMeals: Meal[] = [
     createdAt: getCurrentISODate(),
     updatedAt: getCurrentISODate(),
     deletedAt: null,
-    name: "Quick Apple Snack",
-    userId: "user_uuid_3",
-    recipeId: "recipe_uuid_apple",
-    mealTypeId: "mealtype_uuid_snack",
+    name: 'Quick Apple Snack',
+    userId: 'user_uuid_3',
+    recipeId: 'recipe_uuid_apple',
+    mealTypeId: 'mealtype_uuid_snack',
     plannedDate: null,
-    notes: "A Fuji apple.",
+    notes: 'A Fuji apple.',
     image: null,
     mealType: {
       createdAt: getCurrentISODate(),
       updatedAt: getCurrentISODate(),
       deletedAt: null,
-      id: "mealtype_uuid_snack",
-      name: "Snack",
-      description: "A small meal between main meals.",
+      id: 'mealtype_uuid_snack',
+      name: 'Snack',
+      description: 'A small meal between main meals.',
     },
     recipe: mockRecipes[0],
   },
   {
     id: generateMockUUID(),
-    createdAt: "2025-05-01T10:00:00Z",
-    updatedAt: "2025-05-02T11:00:00Z",
+    createdAt: '2025-05-01T10:00:00Z',
+    updatedAt: '2025-05-02T11:00:00Z',
     deletedAt: null,
-    name: "Weekend Brunch Special",
-    userId: "user_uuid_2",
-    recipeId: "recipe_uuid_pancakes",
-    mealTypeId: "mealtype_uuid_brunch",
-    plannedDate: new Date("2025-05-10T11:00:00Z"),
-    notes: "With maple syrup and blueberries.",
+    name: 'Weekend Brunch Special',
+    userId: 'user_uuid_2',
+    recipeId: 'recipe_uuid_pancakes',
+    mealTypeId: 'mealtype_uuid_brunch',
+    plannedDate: new Date('2025-05-10T11:00:00Z'),
+    notes: 'With maple syrup and blueberries.',
     image:
-      "https://fastly.picsum.photos/id/388/200/200.jpg?hmac=yc4V5jCOMR-l634JzXmANfvSGFGgYWHQN4aKA69RvZo",
+      'https://fastly.picsum.photos/id/388/200/200.jpg?hmac=yc4V5jCOMR-l634JzXmANfvSGFGgYWHQN4aKA69RvZo',
     mealType: {
       createdAt: getCurrentISODate(),
       updatedAt: getCurrentISODate(),
       deletedAt: null,
-      id: "mealtype_uuid_brunch",
-      name: "Brunch",
-      description: "A late morning meal.",
+      id: 'mealtype_uuid_brunch',
+      name: 'Brunch',
+      description: 'A late morning meal.',
     },
     recipe: mockRecipes[1],
   },

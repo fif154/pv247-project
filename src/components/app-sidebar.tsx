@@ -1,6 +1,6 @@
-import { signOutAction } from "@/app/(auth)/actions";
-import { auth } from "@/auth";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { signOutAction } from '@/app/(auth)/actions';
+import { auth } from '@/auth';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Sidebar,
   SidebarContent,
@@ -11,17 +11,17 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-} from "@/components/ui/sidebar";
-import { navItems } from "@/config/nav";
-import { ChefHat } from "lucide-react";
-import { MobileNav } from "./mobile-nav";
+} from '@/components/ui/sidebar';
+import { navItems } from '@/config/nav';
+import { ChefHat } from 'lucide-react';
+import { MobileNav } from './mobile-nav';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
+} from './ui/dropdown-menu';
 
 export async function AppSidebar() {
   const userSession = (await auth())!;
@@ -66,11 +66,11 @@ export async function AppSidebar() {
                     <div className="flex items-center gap-3">
                       <Avatar>
                         <AvatarImage
-                          src={userSession.user.image ?? ""}
+                          src={userSession.user.image ?? ''}
                           alt="User"
                         />
                         <AvatarFallback>
-                          {(userSession.user.name ?? "x")
+                          {(userSession.user.name ?? 'x')
                             .charAt(0)
                             .toUpperCase()}
                         </AvatarFallback>

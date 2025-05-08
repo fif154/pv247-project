@@ -1,24 +1,21 @@
-import { Groups } from "@/components/groups/groups";
-import { Group } from "@/db/schema";
+import { auth } from '@/auth';
+import { CreateGroupModal } from '@/components/groups/create-group-modal';
+import { GroupList } from '@/components/groups/group-list';
 
-const Page = () => {
-    const groups: Group[] = [{
-        id: "1",
-        createdAt: '0',
-        description: "descripotion",
-        name: "name",
-        updatedAt: "",
-        deletedAt: null,
-    }]
-    
-    return (
-        <div className="flex flex-col h-screen gap-4">
-            <div className="flex flex-col gap-2">
-                <h1 className="text-4xl font-bold">Groups</h1>
-            </div>
-            <Groups groups={groups} />
-        </div>
-    );
+const Page = async () => {
+  const userSession = await auth();
+  return (
+    <div className="flex flex-col h-screen gap-4">
+      <div className="flex gap-6">
+        <h1 className="text-4xl font-bold">Groups</h1>
+        <CreateGroupModal
+          userId={userSession?.user.id ?? ''}
+          email={userSession?.user.email ?? ''}
+        />
+      </div>
+      <GroupList userId={userSession?.user.id ?? ''} />
+    </div>
+  );
 };
 
 export default Page;

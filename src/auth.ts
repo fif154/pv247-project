@@ -1,10 +1,10 @@
-import Credentials from "@auth/core/providers/credentials";
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import NextAuth from "next-auth";
-import { decode, encode } from "next-auth/jwt";
-import GitHub from "next-auth/providers/github";
-import { db } from "./db";
-import { getInjection } from "./server/di/container";
+import Credentials from '@auth/core/providers/credentials';
+import { DrizzleAdapter } from '@auth/drizzle-adapter';
+import NextAuth from 'next-auth';
+import { decode, encode } from 'next-auth/jwt';
+import GitHub from 'next-auth/providers/github';
+import { db } from './db';
+import { getInjection } from './server/di/container';
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: DrizzleAdapter(db),
@@ -23,22 +23,22 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         let user = null;
 
         if (credentials.register) {
-          const registerController = getInjection("IRegisterController");
+          const registerController = getInjection('IRegisterController');
 
           user = await registerController(credentials);
         } else {
-          const signInController = getInjection("ISignInController");
+          const signInController = getInjection('ISignInController');
           user = await signInController(credentials);
         }
 
         if (!user) {
-          throw new Error("Invalid credentials.");
+          throw new Error('Invalid credentials.');
         }
 
         return {
           id: user.id,
-          email: user.email ?? "",
-          name: user.name ?? "",
+          email: user.email ?? '',
+          name: user.name ?? '',
           image: user.image ?? null,
         };
       },
@@ -63,12 +63,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
   },
   session: {
-    strategy: "jwt",
+    strategy: 'jwt',
   },
   pages: {
-    signIn: "/",
-    signOut: "/",
-    error: "/",
+    signIn: '/',
+    signOut: '/',
+    error: '/',
   },
   jwt: {
     encode,

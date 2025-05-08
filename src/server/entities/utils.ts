@@ -4,8 +4,8 @@ import type {
   ExtractTablesWithRelations,
   InferSelectModel,
   Many,
-} from "drizzle-orm";
-import * as schema from "../../db/schema";
+} from 'drizzle-orm';
+import * as schema from '../../db/schema';
 
 type Schema = typeof schema;
 type TSchema = ExtractTablesWithRelations<Schema>;
@@ -22,7 +22,7 @@ type FindTsNameByDbName<DbNameToFind extends string> = {
  */
 export type TModelWithRelations<TTableName extends keyof TSchema> =
   InferSelectModel<Schema[TTableName]> & {
-    [K in keyof TSchema[TTableName]["relations"]]?: TSchema[TTableName]["relations"][K] extends infer TRelation // Infer the Relation/Many type
+    [K in keyof TSchema[TTableName]['relations']]?: TSchema[TTableName]['relations'][K] extends infer TRelation // Infer the Relation/Many type
       ? // Extract the dbName from the relation's referencedTableName property
         TRelation extends {
           referencedTableName: infer TRefDbName extends string;

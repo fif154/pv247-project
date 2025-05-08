@@ -1,9 +1,9 @@
-import { Macros } from "@/components/macros";
-import { Meals } from "@/components/meals";
-import { format } from "date-fns";
-import { CalendarDays } from "lucide-react";
+import { Macros } from '@/components/macros';
+import { Meals } from '@/components/meals';
+import { format } from 'date-fns';
+import { CalendarDays } from 'lucide-react';
 
-const formatDate = (date: Date) => format(date, "EEEE, MMMM d, yyyy");
+const formatDate = (date: Date) => format(date, 'EEEE, MMMM d, yyyy');
 
 const Page = async () => {
   const today = new Date();

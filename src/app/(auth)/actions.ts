@@ -1,16 +1,16 @@
-"use server";
+'use server';
 
-import { signIn, signOut } from "@/auth";
-import { SignUpFormSchema } from "@/components/forms/sign-up-form";
-import { isRedirectError } from "next/dist/client/components/redirect-error";
+import { signIn, signOut } from '@/auth';
+import { SignUpFormSchema } from '@/components/forms/sign-up-form';
+import { isRedirectError } from 'next/dist/client/components/redirect-error';
 
 export const githubSignIn = async () => {
-  await signIn("github");
+  await signIn('github');
 };
 
 export const credentialsSignIn = async (email: string, password: string) => {
   try {
-    await signIn("credentials", {
+    await signIn('credentials', {
       email,
       password,
     });
@@ -24,7 +24,7 @@ export const credentialsSignIn = async (email: string, password: string) => {
 
 export const credentialsRegister = async (data: SignUpFormSchema) => {
   try {
-    await signIn("credentials", {
+    await signIn('credentials', {
       ...data,
       register: true,
     });

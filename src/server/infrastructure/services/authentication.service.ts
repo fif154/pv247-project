@@ -1,10 +1,10 @@
-import { IAuthenticationService } from "@/server/application/services/authentication.service.interface";
-import { compare, hash } from "bcrypt-ts";
+import { IAuthenticationService } from '@/server/application/services/authentication.service.interface';
+import { compare, hash } from 'bcrypt-ts';
 
 export class AuthenticationService implements IAuthenticationService {
   async validatePasswords(
     inputPassword: string,
-    usersHashedPassword: string,
+    usersHashedPassword: string
   ): Promise<boolean> {
     return await compare(inputPassword, usersHashedPassword);
   }

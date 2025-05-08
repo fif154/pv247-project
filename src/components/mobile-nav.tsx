@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { navItems } from "@/config/nav"; // Assuming navItems is in config/nav.ts
-import { Plus } from "lucide-react";
-import { useState } from "react";
+} from '@/components/ui/dialog';
+import { navItems } from '@/config/nav'; // Assuming navItems is in config/nav.ts
+import { Plus } from 'lucide-react';
+import { useState } from 'react';
 
-export const mobileNavHeight = "h-16";
+export const mobileNavHeight = 'h-16';
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);
