@@ -1,7 +1,7 @@
-import { createModule } from "@evyweb/ioctopus";
+import { createModule } from '@evyweb/ioctopus';
 
-import { TransactionManagerService } from "@/server/infrastructure/services/transaction-manager.service";
-import { DI_SYMBOLS } from "../types";
+import { TransactionManagerService } from '@/server/infrastructure/services/transaction-manager.service';
+import { DI_SYMBOLS } from '../types';
 
 export function createTransactionManagerModule() {
   const transactionManagerModule = createModule();

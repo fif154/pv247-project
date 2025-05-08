@@ -1,4 +1,4 @@
-import { Meal } from "@/server/entities/models/meal";
+import { Meal } from '@/server/entities/models/meal';
 
 export type Macros = {
   calories: number;
@@ -11,7 +11,7 @@ const getMacroInGrams = (
   quantity: number,
   gramsPerUnit: number,
   macro: number,
-  baseMacroQuantity: number,
+  baseMacroQuantity: number
 ) => {
   const amountInGrams = quantity * gramsPerUnit;
   return macro * (amountInGrams / baseMacroQuantity);
@@ -36,25 +36,25 @@ export const calculateMacrosForMeal = (meal: Meal): Macros => {
         +recipeIngredient.quantity,
         +recipeIngredient.unit!.gramsPerUnit,
         +recipeIngredient.ingredient.calories!,
-        +recipeIngredient.ingredient.baseMacroQuantity,
+        +recipeIngredient.ingredient.baseMacroQuantity
       );
       res.protein += getMacroInGrams(
         +recipeIngredient.quantity,
         +recipeIngredient.unit!.gramsPerUnit,
         +recipeIngredient.ingredient.protein!,
-        +recipeIngredient.ingredient.baseMacroQuantity,
+        +recipeIngredient.ingredient.baseMacroQuantity
       );
       res.carbs += getMacroInGrams(
         +recipeIngredient.quantity,
         +recipeIngredient.unit!.gramsPerUnit,
         +recipeIngredient.ingredient.carbs!,
-        +recipeIngredient.ingredient.baseMacroQuantity,
+        +recipeIngredient.ingredient.baseMacroQuantity
       );
       res.fats += getMacroInGrams(
         +recipeIngredient.quantity,
         +recipeIngredient.unit!.gramsPerUnit,
         +recipeIngredient.ingredient.fats!,
-        +recipeIngredient.ingredient.baseMacroQuantity,
+        +recipeIngredient.ingredient.baseMacroQuantity
       );
     }
   });

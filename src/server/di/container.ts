@@ -1,26 +1,26 @@
-import { createContainer } from "@evyweb/ioctopus";
+import { createContainer } from '@evyweb/ioctopus';
 
-import { createAuthenticationModule } from "./modules/authentication.module";
-import { createTransactionManagerModule } from "./modules/database.module";
-import { createIngredientsModule } from "./modules/ingredients.module";
-import { createUsersModule } from "./modules/users.module";
-import { DI_RETURN_TYPES, DI_SYMBOLS } from "./types";
+import { createAuthenticationModule } from './modules/authentication.module';
+import { createTransactionManagerModule } from './modules/database.module';
+import { createIngredientsModule } from './modules/ingredients.module';
+import { createUsersModule } from './modules/users.module';
+import { DI_RETURN_TYPES, DI_SYMBOLS } from './types';
 
 const ApplicationContainer = createContainer();
 
 ApplicationContainer.load(
-  Symbol("TransactionManagerModule"),
-  createTransactionManagerModule(),
+  Symbol('TransactionManagerModule'),
+  createTransactionManagerModule()
 );
 ApplicationContainer.load(
-  Symbol("AuthenticationModule"),
-  createAuthenticationModule(),
+  Symbol('AuthenticationModule'),
+  createAuthenticationModule()
 );
-ApplicationContainer.load(Symbol("UsersModule"), createUsersModule());
+ApplicationContainer.load(Symbol('UsersModule'), createUsersModule());
 
 ApplicationContainer.load(
-    Symbol("IngredientsModule"),
-    createIngredientsModule()
+  Symbol('IngredientsModule'),
+  createIngredientsModule()
 );
 
 export function getInjection<

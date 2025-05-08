@@ -1,5 +1,5 @@
-import { mockMeals } from "@/utils/mock";
-import { MealCard } from "./meal-card";
+import { mockMeals } from '@/utils/mock';
+import { MealCard } from './meal-card';
 
 export const Meals = () => {
   return (

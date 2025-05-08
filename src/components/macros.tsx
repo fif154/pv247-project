@@ -1,5 +1,5 @@
-import { MacroItem } from "./macro-item";
-import { Card, CardContent } from "./ui/card";
+import { MacroItem } from './macro-item';
+import { Card, CardContent } from './ui/card';
 
 type Props = {
   carbs: number;
@@ -14,61 +14,61 @@ export type MacroItemType = {
   icon: string;
   bgColor: string;
   textColor: string;
-  unit: "kcal" | "g";
+  unit: 'kcal' | 'g';
   percentage: number;
 };
 
 export const macroTextColors = {
-  calories: "text-macro-calories",
-  carbs: "text-macro-carbs",
-  protein: "text-macro-protein",
-  fat: "text-macro-fat",
+  calories: 'text-macro-calories',
+  carbs: 'text-macro-carbs',
+  protein: 'text-macro-protein',
+  fat: 'text-macro-fat',
 };
 
 export const macroBgColors = {
-  calories: "bg-macro-calories",
-  carbs: "bg-macro-carbs",
-  protein: "bg-macro-protein",
-  fat: "bg-macro-fat",
+  calories: 'bg-macro-calories',
+  carbs: 'bg-macro-carbs',
+  protein: 'bg-macro-protein',
+  fat: 'bg-macro-fat',
 };
 
 export const Macros = (props: Props) => {
   const macroItems: MacroItemType[] = [
     {
-      label: "Calories",
+      label: 'Calories',
       value: props.calories,
-      icon: "🔥",
+      icon: '🔥',
       bgColor: macroBgColors.calories,
       textColor: macroTextColors.calories,
-      unit: "kcal",
+      unit: 'kcal',
       // TODO: Add a percentage calculation based on the daily recommended intake
       percentage: props.calories / 2000,
     },
     {
-      label: "Carbs",
+      label: 'Carbs',
       value: props.carbs,
-      icon: "🍞",
+      icon: '🍞',
       bgColor: macroBgColors.carbs,
       textColor: macroTextColors.carbs,
-      unit: "g",
+      unit: 'g',
       percentage: props.carbs / 200,
     },
     {
-      label: "Protein",
+      label: 'Protein',
       value: props.protein,
-      icon: "🍗",
+      icon: '🍗',
       bgColor: macroBgColors.protein,
       textColor: macroTextColors.protein,
-      unit: "g",
+      unit: 'g',
       percentage: props.protein / 200,
     },
     {
-      label: "Fat",
+      label: 'Fat',
       value: props.fat,
-      icon: "🥑",
+      icon: '🥑',
       bgColor: macroBgColors.fat,
       textColor: macroTextColors.fat,
-      unit: "g",
+      unit: 'g',
       percentage: props.fat / 70,
     },
   ];

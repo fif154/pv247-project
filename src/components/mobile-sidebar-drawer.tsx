@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Menu } from "lucide-react";
-import { useState } from "react";
+import { Menu } from 'lucide-react';
+import { useState } from 'react';
 
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 
 import {
   Sidebar,
@@ -15,12 +15,12 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-} from "@/components/ui/sidebar";
+} from '@/components/ui/sidebar';
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { navItems } from "@/config/nav";
-import { ChefHat } from "lucide-react";
-import { Button } from "./ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { navItems } from '@/config/nav';
+import { ChefHat } from 'lucide-react';
+import { Button } from './ui/button';
 
 interface MobileSidebarDrawerProps {
   user: {
@@ -80,12 +80,12 @@ export function MobileSidebarDrawer({ user }: MobileSidebarDrawerProps) {
             <SidebarFooter className="p-4">
               <div className="flex items-center gap-3">
                 <Avatar>
-                  <AvatarImage src={user.image ?? ""} alt={user.name} />
+                  <AvatarImage src={user.image ?? ''} alt={user.name} />
                   <AvatarFallback>
                     {user.name
-                      .split(" ")
+                      .split(' ')
                       .map((n) => n[0])
-                      .join("")}
+                      .join('')}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col">
