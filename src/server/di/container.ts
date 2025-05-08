@@ -9,12 +9,12 @@ import { DI_RETURN_TYPES, DI_SYMBOLS } from "./types";
 const ApplicationContainer = createContainer();
 
 ApplicationContainer.load(
-    Symbol("TransactionManagerModule"),
-    createTransactionManagerModule()
+  Symbol("TransactionManagerModule"),
+  createTransactionManagerModule(),
 );
 ApplicationContainer.load(
-    Symbol("AuthenticationModule"),
-    createAuthenticationModule()
+  Symbol("AuthenticationModule"),
+  createAuthenticationModule(),
 );
 ApplicationContainer.load(Symbol("UsersModule"), createUsersModule());
 
@@ -24,7 +24,7 @@ ApplicationContainer.load(
 );
 
 export function getInjection<
-    K extends keyof typeof DI_SYMBOLS & keyof DI_RETURN_TYPES
+  K extends keyof typeof DI_SYMBOLS & keyof DI_RETURN_TYPES,
 >(symbol: K): DI_RETURN_TYPES[K] {
-    return ApplicationContainer.get(DI_SYMBOLS[symbol]);
+  return ApplicationContainer.get(DI_SYMBOLS[symbol]);
 }
