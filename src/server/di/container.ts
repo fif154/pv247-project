@@ -6,6 +6,7 @@ import { createUsersModule } from './modules/users.module';
 import { DI_RETURN_TYPES, DI_SYMBOLS } from './types';
 import { createGroupMembersModule } from './modules/groupMembers.module';
 import { createGroupsModule } from './modules/groups.module';
+import { createIngredientsModule } from "./modules/ingredients.module";
 
 const ApplicationContainer = createContainer();
 
@@ -22,6 +23,11 @@ ApplicationContainer.load(Symbol('GroupsModule'), createGroupsModule());
 ApplicationContainer.load(
   Symbol('GroupMembersModule'),
   createGroupMembersModule()
+);
+
+ApplicationContainer.load(
+    Symbol("IngredientsModule"),
+    createIngredientsModule()
 );
 
 export function getInjection<
