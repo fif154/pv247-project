@@ -6,37 +6,39 @@ import { useGetUserGroupsWithMembersQuery } from '@/mutations/groups';
 import { RemoveGroupModalContent } from './remove-group-modal-content';
 import { LeaveGroupModalContent } from './leave-group-modal-content';
 import { useState } from 'react';
+import { GroupModalContent } from './group-modal-content';
+import { UserInfo } from '@/server/entities/models/user';
 
 type GroupListProps = {
-  userId: string;
+  currentUser: UserInfo;
 };
 
-export const GroupList = ({ userId }: GroupListProps) => {
-  const { data, isLoading, error } = useGetUserGroupsWithMembersQuery(userId);
+export const GroupList = ({ currentUser }: GroupListProps) => {
+  const { data, isLoading, error } = useGetUserGroupsWithMembersQuery(
+    currentUser.id
+  );
   const groups = data ?? [];
 
   const [removeModalOpen, setRemoveModalOpen] = useState(false);
   const [leaveModalOpen, setLeaveModalOpen] = useState(false);
-  const [selectedGroup, setSelectedGroup] = useState<{
-    id: string;
-    name: string;
-    memberCount: number;
-  } | null>(null);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
 
-  const handleOpenRemoveModal = (groupId: string, groupName: string) => {
-    setSelectedGroup({ id: groupId, name: groupName, memberCount: 0 });
+  const handleOpenRemoveModal = (groupId: string) => {
+    setSelectedGroup(groupId);
     setRemoveModalOpen(true);
   };
 
-  const handleOpenLeaveModal = (
-    groupId: string,
-    groupName: string,
-    memberCount: number
-  ) => {
+  const handleOpenLeaveModal = (groupId: string, memberCount: number) => {
     if (memberCount > 1) {
-      setSelectedGroup({ id: groupId, name: groupName, memberCount });
+      setSelectedGroup(groupId);
       setLeaveModalOpen(true);
     }
+  };
+
+  const handleOpenEditModal = (groupId: string) => {
+    setSelectedGroup(groupId);
+    setEditModalOpen(true);
   };
 
   if (isLoading) return <p>Loading...</p>;
@@ -51,20 +53,21 @@ export const GroupList = ({ userId }: GroupListProps) => {
               <div className="flex justify-between w-full">
                 <h2 className="text-xl font-bold">{g.name}</h2>
                 <div className="flex gap-5">
-                  <Pencil />
+                  <Pencil
+                    className="cursor-pointer hover:text-gray-500"
+                    onClick={() => handleOpenEditModal(g.id)}
+                  />
                   <DoorOpen
                     className={
                       g.members.length <= 1
                         ? 'text-gray-400 cursor-not-allowed'
                         : ' cursor-pointerhover:text-blue-500'
                     }
-                    onClick={() =>
-                      handleOpenLeaveModal(g.id, g.name, g.members.length)
-                    }
+                    onClick={() => handleOpenLeaveModal(g.id, g.members.length)}
                   />
                   <Trash2
                     className="cursor-pointer hover:text-red-500"
-                    onClick={() => handleOpenRemoveModal(g.id, g.name)}
+                    onClick={() => handleOpenRemoveModal(g.id)}
                   />
                 </div>
               </div>
@@ -89,16 +92,25 @@ export const GroupList = ({ userId }: GroupListProps) => {
           <RemoveGroupModalContent
             modalOpen={removeModalOpen}
             setModalOpen={setRemoveModalOpen}
-            groupId={selectedGroup.id}
-            groupName={selectedGroup.name}
+            groupId={selectedGroup}
+            groupName={groups.find((g) => g.id === selectedGroup)?.name ?? ''}
           />
           <LeaveGroupModalContent
             modalOpen={leaveModalOpen}
             setModalOpen={setLeaveModalOpen}
-            groupId={selectedGroup.id}
-            groupName={selectedGroup.name}
-            currentUserId={userId}
-            memberCount={selectedGroup.memberCount}
+            groupId={selectedGroup}
+            groupName={groups.find((g) => g.id === selectedGroup)?.name ?? ''}
+            currentUserId={currentUser.id}
+            memberCount={
+              groups.find((g) => g.id === selectedGroup)?.members.length ?? 0
+            }
+          />
+          <GroupModalContent
+            modalOpen={editModalOpen}
+            setModalOpen={setEditModalOpen}
+            currentUser={currentUser}
+            initialData={groups.findLast((g) => g.id === selectedGroup)}
+            isEditMode
           />
         </>
       )}

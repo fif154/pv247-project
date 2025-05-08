@@ -2,15 +2,15 @@
 
 import { useState } from 'react';
 import { Button } from '../ui/button';
-import { CreateGroupModalContent } from './create-group-modal-content';
+import { GroupModalContent } from './group-modal-content';
 import { Plus } from 'lucide-react';
+import { UserInfo } from '@/server/entities/models/user';
 
 type CreateGroupModalProps = {
-  userId: string;
-  email: string;
+  currentUser: UserInfo;
 };
 
-export const CreateGroupModal = ({ userId, email }: CreateGroupModalProps) => {
+export const CreateGroupModal = ({ currentUser }: CreateGroupModalProps) => {
   const [modalOpen, setModalOpen] = useState(false);
 
   return (
@@ -22,10 +22,10 @@ export const CreateGroupModal = ({ userId, email }: CreateGroupModalProps) => {
         <Plus />
         Create Group
       </Button>
-      <CreateGroupModalContent
+      <GroupModalContent
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
-        currentUser={{ id: userId, email: email }}
+        currentUser={currentUser}
       />
     </>
   );
