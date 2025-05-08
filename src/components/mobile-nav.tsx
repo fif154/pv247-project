@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { navItems } from '@/config/nav'; // Assuming navItems is in config/nav.ts
+import { navItems } from '@/config/nav';
 import { useCreateDialog } from '@/hooks/use-create-dialog';
 import { Plus } from 'lucide-react';
 
