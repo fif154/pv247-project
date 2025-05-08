@@ -1,5 +1,8 @@
+import { GroceryListComponent } from "@/components/grocery-list-component";
 import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TabsContent } from "@radix-ui/react-tabs";
 import Link from "next/link";
 import { listGroceryListsAction } from "./actions";
 
@@ -18,21 +21,15 @@ const Page = async () => {
                     </Link>
                 </Button>
             </div>
-            <div className="flex flex-col gap-4">
-                {groceryLists.map((groceryList) => (
-                    <div key={groceryList.id} className="p-4 border rounded-md">
-                        <h2 className="text-lg font-semibold">
-                            {groceryList.name} {groceryList.id}
-                        </h2>
-                        <div className="flex flex-col gap-2">
-                            {groceryList.items?.map(
-                                (item) =>
-                                    `${item.ingredient?.name} (${item.quantity})`
-                            )}
-                        </div>
-                    </div>
-                ))}
-            </div>
+            <Tabs defaultValue="week">
+                <TabsList className="mb-4 grid w-full grid-cols-2">
+                    <TabsTrigger value="week">This week</TabsTrigger>
+                    <TabsTrigger value="all">All lists</TabsTrigger>
+                </TabsList>
+                <TabsContent value="week">
+                    <GroceryListComponent groceryList={groceryLists[0]} />
+                </TabsContent>
+            </Tabs>
         </div>
     );
 };
