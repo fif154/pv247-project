@@ -1,10 +1,10 @@
 import {
-    CalendarDays,
-    ChefHat,
-    Home,
-    Settings,
-    Share2,
-    ShoppingCart,
+  CalendarDays,
+  ChefHat,
+  Home,
+  Settings,
+  Share2,
+  ShoppingCart,
 } from "lucide-react";
 
 export const navItems = [

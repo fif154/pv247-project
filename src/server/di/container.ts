@@ -10,12 +10,12 @@ import { createGroupsModule } from "./modules/groups.module";
 const ApplicationContainer = createContainer();
 
 ApplicationContainer.load(
-    Symbol("TransactionManagerModule"),
-    createTransactionManagerModule()
+  Symbol("TransactionManagerModule"),
+  createTransactionManagerModule(),
 );
 ApplicationContainer.load(
-    Symbol("AuthenticationModule"),
-    createAuthenticationModule()
+  Symbol("AuthenticationModule"),
+  createAuthenticationModule(),
 );
 ApplicationContainer.load(Symbol("UsersModule"), createUsersModule());
 ApplicationContainer.load(Symbol("GroupsModule"), createGroupsModule());
@@ -23,7 +23,7 @@ ApplicationContainer.load(Symbol("GroupMembersModule"), createGroupMembersModule
 
 
 export function getInjection<
-    K extends keyof typeof DI_SYMBOLS & keyof DI_RETURN_TYPES
+  K extends keyof typeof DI_SYMBOLS & keyof DI_RETURN_TYPES,
 >(symbol: K): DI_RETURN_TYPES[K] {
-    return ApplicationContainer.get(DI_SYMBOLS[symbol]);
+  return ApplicationContainer.get(DI_SYMBOLS[symbol]);
 }

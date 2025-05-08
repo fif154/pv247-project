@@ -7,73 +7,71 @@ import { db } from "./db";
 import { getInjection } from "./server/di/container";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-    adapter: DrizzleAdapter(db),
-    providers: [
-        GitHub,
-        Credentials({
-            credentials: {
-                email: {},
-                password: {},
-                register: {},
-                firstName: {},
-                lastName: {},
-                confirmPassword: {},
-            },
-            authorize: async (credentials) => {
-                let user = null;
+  adapter: DrizzleAdapter(db),
+  providers: [
+    GitHub,
+    Credentials({
+      credentials: {
+        email: {},
+        password: {},
+        register: {},
+        firstName: {},
+        lastName: {},
+        confirmPassword: {},
+      },
+      authorize: async (credentials) => {
+        let user = null;
 
-                if (credentials.register) {
-                    const registerController = getInjection(
-                        "IRegisterController"
-                    );
+        if (credentials.register) {
+          const registerController = getInjection("IRegisterController");
 
-                    user = await registerController(credentials);
-                } else {
-                    const signInController = getInjection("ISignInController");
-                    user = await signInController(credentials);
-                }
+          user = await registerController(credentials);
+        } else {
+          const signInController = getInjection("ISignInController");
+          user = await signInController(credentials);
+        }
 
-                if (!user) {
-                    throw new Error("Invalid credentials.");
-                }
+        if (!user) {
+          throw new Error("Invalid credentials.");
+        }
 
-                return {
-                    id: user.id,
-                    email: user.email ?? "",
-                    name: user.name ?? "",
-                    image: user.image ?? null,
-                };
-            },
-        }),
-    ],
-    callbacks: {
-        async jwt({ token, user }) {
-            if (user) {
-                token.id = user.id;
-                token.email = user.email;
-                token.name = user.name;
-            }
-            return token;
-        },
-        async session({ session, token }) {
-            if (token) {
-                session.user.id = token.id as string;
-                session.user.email = token.email!;
-                session.user.name = token.name!;
-            }
-            return session;
-        },
+        return {
+          id: user.id,
+          email: user.email ?? "",
+          name: user.name ?? "",
+          image: user.image ?? null,
+        };
+      },
+    }),
+  ],
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.email = user.email;
+        token.name = user.name;
+      }
+      return token;
     },
-    session: {
-        strategy: "jwt",
+    async session({ session, token }) {
+      if (token) {
+        session.user.id = token.id as string;
+        session.user.email = token.email!;
+        session.user.name = token.name!;
+      }
+      return session;
     },
-    pages: {
-        signIn: "/",
-        signOut: "/",
-        error: "/",
-    },
-    jwt: {
-        encode,
-        decode,
-    },
+  },
+  session: {
+    strategy: "jwt",
+  },
+  pages: {
+    signIn: "/",
+    signOut: "/",
+    error: "/",
+  },
+  jwt: {
+    encode,
+    decode,
+  },
 });
