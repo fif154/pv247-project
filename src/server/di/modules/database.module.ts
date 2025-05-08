@@ -4,11 +4,11 @@ import { TransactionManagerService } from "@/server/infrastructure/services/tran
 import { DI_SYMBOLS } from "../types";
 
 export function createTransactionManagerModule() {
-    const transactionManagerModule = createModule();
+  const transactionManagerModule = createModule();
 
-    transactionManagerModule
-        .bind(DI_SYMBOLS.ITransactionManagerService)
-        .toClass(TransactionManagerService);
+  transactionManagerModule
+    .bind(DI_SYMBOLS.ITransactionManagerService)
+    .toClass(TransactionManagerService);
 
-    return transactionManagerModule;
+  return transactionManagerModule;
 }
