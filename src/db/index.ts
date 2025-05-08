@@ -5,8 +5,8 @@ import { SQLiteTransaction } from "drizzle-orm/sqlite-core";
 import * as schema from "./schema";
 
 const client = createClient({
-    url: process.env.DATABASE_URL!,
-    authToken: process.env.AUTH_TOKEN,
+  url: process.env.DATABASE_URL!,
+  authToken: process.env.AUTH_TOKEN,
 });
 
 export const db = drizzle(client, { schema });
@@ -14,8 +14,8 @@ export const db = drizzle(client, { schema });
 type Schema = typeof schema;
 
 export type Transaction = SQLiteTransaction<
-    "async",
-    ResultSet,
-    Schema,
-    ExtractTablesWithRelations<Schema>
+  "async",
+  ResultSet,
+  Schema,
+  ExtractTablesWithRelations<Schema>
 >;

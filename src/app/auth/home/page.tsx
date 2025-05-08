@@ -6,21 +6,21 @@ import { CalendarDays } from "lucide-react";
 const formatDate = (date: Date) => format(date, "EEEE, MMMM d, yyyy");
 
 const Page = async () => {
-    const today = new Date();
+  const today = new Date();
 
-    return (
-        <div className="flex flex-col h-screen gap-4">
-            <div className="flex flex-col gap-2">
-                <h1 className="text-4xl font-bold">Dashboard</h1>
-                <div className="flex items-center gap-2 text-[#7A8A9E]">
-                    <CalendarDays className="h-4 w-4" />
-                    <span>{formatDate(today)}</span>
-                </div>
-            </div>
-            <Macros calories={1560} carbs={12} fat={44} protein={123} />
-            <Meals />
+  return (
+    <div className="flex flex-col h-screen gap-4">
+      <div className="flex flex-col gap-2">
+        <h1 className="text-4xl font-bold">Dashboard</h1>
+        <div className="flex items-center gap-2 text-[#7A8A9E]">
+          <CalendarDays className="h-4 w-4" />
+          <span>{formatDate(today)}</span>
         </div>
-    );
+      </div>
+      <Macros calories={1560} carbs={12} fat={44} protein={123} />
+      <Meals />
+    </div>
+  );
 };
 
 export default Page;

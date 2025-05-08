@@ -3,27 +3,27 @@ import { IUsersRepository } from "../../repositories/users.repository.interface"
 import { IAuthenticationService } from "../../services/authentication.service.interface";
 
 export const signInUseCase =
-    (
-        usersRepository: IUsersRepository,
-        authenticationService: IAuthenticationService
-    ) =>
-    async (input: { email: string; password: string }) => {
-        const existingUser = await usersRepository.getUserByEmail(input.email);
+  (
+    usersRepository: IUsersRepository,
+    authenticationService: IAuthenticationService,
+  ) =>
+  async (input: { email: string; password: string }) => {
+    const existingUser = await usersRepository.getUserByEmail(input.email);
 
-        if (!existingUser || !existingUser.passwordHash) {
-            throw new AuthenticationError("User does not exist");
-        }
+    if (!existingUser || !existingUser.passwordHash) {
+      throw new AuthenticationError("User does not exist");
+    }
 
-        const validPassword = await authenticationService.validatePasswords(
-            input.password,
-            existingUser.passwordHash
-        );
+    const validPassword = await authenticationService.validatePasswords(
+      input.password,
+      existingUser.passwordHash,
+    );
 
-        if (!validPassword) {
-            throw new AuthenticationError("Incorrect username or password");
-        }
+    if (!validPassword) {
+      throw new AuthenticationError("Incorrect username or password");
+    }
 
-        return existingUser;
-    };
+    return existingUser;
+  };
 
 export type ISignInUseCase = ReturnType<typeof signInUseCase>;

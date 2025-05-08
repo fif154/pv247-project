@@ -4,9 +4,9 @@ import { UsersRepository } from "@/server/infrastructure/repositories/users.repo
 import { DI_SYMBOLS } from "../types";
 
 export function createUsersModule() {
-    const usersModule = createModule();
+  const usersModule = createModule();
 
-    usersModule.bind(DI_SYMBOLS.IUsersRepository).toClass(UsersRepository, []);
+  usersModule.bind(DI_SYMBOLS.IUsersRepository).toClass(UsersRepository, []);
 
-    return usersModule;
+  return usersModule;
 }
