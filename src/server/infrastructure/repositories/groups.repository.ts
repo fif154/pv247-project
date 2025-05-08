@@ -2,14 +2,14 @@ import { db } from '@/db';
 import { groups } from '@/db/schema';
 import { IGroupsRepository } from '@/server/application/repositories/groups.repository.interface';
 import { DatabaseOperationError } from '@/server/entities/errors/common';
-import { CreateGroup, Group } from '@/server/entities/models/group';
-import { eq } from 'drizzle-orm';
+import { CreateGroup, EditGroup, Group } from '@/server/entities/models/group';
+import { and, eq, isNull } from 'drizzle-orm';
 
 export class GroupsRepository implements IGroupsRepository {
   constructor() {}
   async getGroup(id: string): Promise<Group | undefined> {
     const query = db.query.groups.findFirst({
-      where: eq(groups.id, id),
+      where: and(eq(groups.id, id), isNull(groups.deletedAt)),
     });
 
     const group = await query.execute();
@@ -17,11 +17,11 @@ export class GroupsRepository implements IGroupsRepository {
     return group;
   }
 
-  async editGroup(group: Group): Promise<Group | undefined> {
+  async editGroup(group: EditGroup): Promise<Group | undefined> {
     const query = db
       .update(groups)
       .set(group)
-      .where(eq(groups.id, group.id))
+      .where(and(eq(groups.id, group.id), isNull(groups.deletedAt)))
       .returning();
 
     const updatedGroup = await query.execute();
@@ -33,7 +33,7 @@ export class GroupsRepository implements IGroupsRepository {
     const query = db
       .update(groups)
       .set({ deletedAt: new Date().toISOString() })
-      .where(eq(groups.id, id))
+      .where(and(eq(groups.id, id), isNull(groups.deletedAt)))
       .returning();
 
     const removed = await query.execute();

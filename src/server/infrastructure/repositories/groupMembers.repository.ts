@@ -3,13 +3,16 @@ import { groupMembers } from '@/db/schema';
 import { IGroupMembersRepository } from '@/server/application/repositories/groupMembers.repository.interface';
 import { DatabaseOperationError } from '@/server/entities/errors/common';
 import { GroupMember } from '@/server/entities/models/groupMember';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, isNull } from 'drizzle-orm';
 
 export class GroupMembersRepository implements IGroupMembersRepository {
   constructor() {}
   async getUserGroups(userId: string): Promise<string[] | undefined> {
     const query = db.query.groupMembers.findMany({
-      where: eq(groupMembers.userId, userId),
+      where: and(
+        eq(groupMembers.userId, userId),
+        isNull(groupMembers.deletedAt)
+      ),
     });
 
     const groups = await query.execute();
@@ -18,7 +21,10 @@ export class GroupMembersRepository implements IGroupMembersRepository {
   }
   async getGroupUsers(groupId: string): Promise<string[] | undefined> {
     const query = db.query.groupMembers.findMany({
-      where: eq(groupMembers.groupId, groupId),
+      where: and(
+        eq(groupMembers.groupId, groupId),
+        isNull(groupMembers.deletedAt)
+      ),
     });
 
     const users = await query.execute();
@@ -29,7 +35,9 @@ export class GroupMembersRepository implements IGroupMembersRepository {
     const query = db
       .update(groupMembers)
       .set({ deletedAt: new Date().toISOString() })
-      .where(eq(groupMembers.userId, userId))
+      .where(
+        and(eq(groupMembers.userId, userId), isNull(groupMembers.deletedAt))
+      )
       .returning();
 
     const removed = await query.execute();
@@ -41,7 +49,11 @@ export class GroupMembersRepository implements IGroupMembersRepository {
       .update(groupMembers)
       .set({ deletedAt: new Date().toISOString() })
       .where(
-        and(eq(groupMembers.userId, userId), eq(groupMembers.groupId, groupId))
+        and(
+          eq(groupMembers.userId, userId),
+          eq(groupMembers.groupId, groupId),
+          isNull(groupMembers.deletedAt)
+        )
       )
       .returning();
 
@@ -53,7 +65,9 @@ export class GroupMembersRepository implements IGroupMembersRepository {
     const query = db
       .update(groupMembers)
       .set({ deletedAt: new Date().toISOString() })
-      .where(eq(groupMembers.groupId, groupId))
+      .where(
+        and(eq(groupMembers.groupId, groupId), isNull(groupMembers.deletedAt))
+      )
       .returning();
 
     const removed = await query.execute();

@@ -5,13 +5,19 @@ import { IAuthenticationService } from '../application/services/authentication.s
 import { IRegisterUseCase } from '../application/use-cases/auth/register.use-case';
 import { ISignInUseCase } from '../application/use-cases/auth/sign-in.use-case';
 import { ICreateGroupWithMembersUseCase } from '../application/use-cases/groups/create-group-with-members.use-case';
+import { IEditGroupUseCase } from '../application/use-cases/groups/edit-group.use-case';
 import { IGetGroupWithMembersUseCase } from '../application/use-cases/groups/get-group-with-members.use-case';
 import { ISearchUsersByEmailUseCase } from '../application/use-cases/users/search-users.use-case';
 import { IRegisterController } from '../controllers/auth/register.controller';
 import { ISignInController } from '../controllers/auth/sign-in.controller';
 import { ICreateGroupWithMembersController } from '../controllers/groups/create-group-with-members.controller';
+import { IEditGroupController } from '../controllers/groups/edit-group.controller';
 import { IGetGroupWithMembersController } from '../controllers/groups/get-group-with-members.controller';
 import { ISearchUsersByEmailController } from '../controllers/users/search-users.controller';
+import { IRemoveGroupUseCase } from '../application/use-cases/groups/remove-group.use-case';
+import { IRemoveGroupController } from '../controllers/groups/remove-group.controller';
+import { IRemoveMemberFromGroupUseCase } from '../application/use-cases/groups/remove-member-from-group.use-case';
+import { IRemoveMemberFromGroupController } from '../controllers/groups/remove-member-from-group.controller';
 
 export const DI_SYMBOLS = {
   // Services
@@ -29,6 +35,9 @@ export const DI_SYMBOLS = {
   IGetGroupWithMembersUseCase: Symbol.for('IGetGroupWithMembersUseCase'),
   ICreateGroupWithMembersUseCase: Symbol.for('ICreateGroupWithMembersUseCase'),
   ISearchUsersByEmailUseCase: Symbol.for('ISearchUsersByEmailUseCase'),
+  IEditGroupUseCase: Symbol.for('IEditGroupUseCase'),
+  IRemoveGroupUseCase: Symbol.for('IRemoveGroupUseCase'),
+  IRemoveMemberFromGroupUseCase: Symbol.for('IRemoveMemberFromGroupUseCase'),
 
   // Controllers
   ISignInController: Symbol.for('ISignInController'),
@@ -38,6 +47,11 @@ export const DI_SYMBOLS = {
     'ICreateGroupWithMembersController'
   ),
   ISearchUsersByEmailController: Symbol.for('ISearchUsersByEmailController'),
+  IEditGroupController: Symbol.for('IEditGroupController'),
+  IRemoveGroupController: Symbol.for('IRemoveGroupController'),
+  IRemoveMemberFromGroupController: Symbol.for(
+    'IRemoveMemberFromGroupController'
+  ),
 };
 
 export interface DI_RETURN_TYPES {
@@ -55,10 +69,17 @@ export interface DI_RETURN_TYPES {
   IGetGroupWithMembersUseCase: IGetGroupWithMembersUseCase;
   ICreateGroupWithMembersUseCase: ICreateGroupWithMembersUseCase;
   ISearchUsersByEmailUseCase: ISearchUsersByEmailUseCase;
+  IEditGroupUseCase: IEditGroupUseCase;
+  IRemoveGroupUseCase: IRemoveGroupUseCase;
+  IRemoveMemberFromGroupUseCase: IRemoveMemberFromGroupUseCase;
+
   // Controllers
   ISignInController: ISignInController;
   IRegisterController: IRegisterController;
   IGetGroupWithMembersController: IGetGroupWithMembersController;
   ICreateGroupWithMembersController: ICreateGroupWithMembersController;
   ISearchUsersByEmailController: ISearchUsersByEmailController;
+  IEditGroupController: IEditGroupController;
+  IRemoveGroupController: IRemoveGroupController;
+  IRemoveMemberFromGroupController: IRemoveMemberFromGroupController;
 }
