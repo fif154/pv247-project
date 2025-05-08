@@ -61,6 +61,7 @@ export const createGroceryListUseCase =
                         ?.map((m) => m.meal?.recipe)
                         .filter(Boolean) || []
             );
+
             // This can't be null or undefined because we are filtering these values out
             allRecipes.push(...(allRecipesFromMealPlans as Recipe[]));
         }

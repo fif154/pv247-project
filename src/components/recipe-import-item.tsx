@@ -10,7 +10,6 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
 
 export const RecipeImportItem = ({ recipe }: { recipe: Recipe }) => {
     const form = useFormContext<GroceryListFormValues>();
-    console.log(recipe);
     return (
         <FormField
             key={recipe.id}

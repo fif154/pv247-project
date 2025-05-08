@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
                 destination: "/auth/home",
                 permanent: true,
             },
+            {
+                source: "/auth",
+                destination: "/auth/home",
+                permanent: true,
+            },
         ];
     },
     images: {

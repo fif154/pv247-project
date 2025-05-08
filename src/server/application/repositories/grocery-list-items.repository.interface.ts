@@ -25,5 +25,15 @@ export interface IGroceryListItemsRepository {
             >
         >
     ): Promise<GroceryListItem>;
+    updateGroceryListItemsByGroceryListId(
+        groceryListId: string,
+        input: Partial<
+            Omit<
+                GroceryListItem,
+                "id" | "createdBy" | "createdAt" | "updatedAt"
+            >
+        >,
+        tx?: Transaction
+    ): Promise<GroceryListItem[]>;
     deleteGroceryListItem(id: string): Promise<void>;
 }

@@ -34,7 +34,7 @@ export const GroceryListCreateForm = (props: Props) => {
         <Form {...form}>
             <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="flex flex-col gap-4 p-4"
+                className="flex flex-col gap-4"
             >
                 <ListInformation />
                 <ImportIngredientsForm {...props} />

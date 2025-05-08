@@ -7,7 +7,7 @@ const Layout = ({ children }: PropsWithChildren) => {
     return (
         <div className="flex min-h-screen">
             <AppSidebar />
-            <main className="flex-1 p-4 flex flex-col ">
+            <main className="flex-1 px-8 py-6 flex flex-col ">
                 <div className="flex md:hidden w-full py-2 sticky top-0 z-10 bg-background justify-between ">
                     <SidebarTrigger variant="outline" />
                     <ThemeToggle />

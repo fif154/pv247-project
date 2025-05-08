@@ -45,7 +45,16 @@ export class MealPlansRepository implements IMealPlansRepository {
                                         unit: true,
                                     },
                                 },
-                                recipe: true,
+                                recipe: {
+                                    with: {
+                                        ingredients: {
+                                            with: {
+                                                ingredient: true,
+                                                unit: true,
+                                            },
+                                        },
+                                    },
+                                },
                             },
                         },
                     },
@@ -61,7 +70,7 @@ export class MealPlansRepository implements IMealPlansRepository {
         tx?: Transaction
     ): Promise<MealPlan[]> {
         const invoker = tx ?? db;
-        return invoker.query.mealPlans.findMany({
+        return await invoker.query.mealPlans.findMany({
             where: and(isNull(mealPlans.deletedAt), inArray(mealPlans.id, ids)),
             with: {
                 meals: {
@@ -74,7 +83,16 @@ export class MealPlansRepository implements IMealPlansRepository {
                                         unit: true,
                                     },
                                 },
-                                recipe: true,
+                                recipe: {
+                                    with: {
+                                        ingredients: {
+                                            with: {
+                                                ingredient: true,
+                                                unit: true,
+                                            },
+                                        },
+                                    },
+                                },
                             },
                         },
                     },
@@ -119,7 +137,7 @@ export class MealPlansRepository implements IMealPlansRepository {
     }
 
     async listMealPlans(userId: string): Promise<MealPlan[]> {
-        return db.query.mealPlans.findMany({
+        return await db.query.mealPlans.findMany({
             // TODO: add check for groupId or userId
             where: isNull(mealPlans.deletedAt),
             with: {
@@ -133,7 +151,16 @@ export class MealPlansRepository implements IMealPlansRepository {
                                         unit: true,
                                     },
                                 },
-                                recipe: true,
+                                recipe: {
+                                    with: {
+                                        ingredients: {
+                                            with: {
+                                                ingredient: true,
+                                                unit: true,
+                                            },
+                                        },
+                                    },
+                                },
                             },
                         },
                     },

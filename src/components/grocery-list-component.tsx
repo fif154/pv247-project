@@ -1,9 +1,9 @@
 import { GroceryList } from "@/server/entities/models/grocery-list";
 import { format } from "date-fns";
 import { GroceryListItemComponent } from "./grocery-list-item-component";
-import { Button } from "./ui/button";
+import { MarkAllBoughtButton } from "./mark-all-bought-button";
 
-const formatDate = (date: Date) => {
+export const formatGroceryListDate = (date: Date) => {
     return format(date, "LLLL d");
 };
 
@@ -21,6 +21,7 @@ export const GroceryListComponent = ({
             acc[category].push(item);
             return acc;
         }, {} as Record<string, typeof groceryList.items>) || {};
+    const areAllBought = !!groceryList.items?.every((item) => item.isBought);
 
     return (
         <div className="flex flex-col gap-6">
@@ -29,12 +30,15 @@ export const GroceryListComponent = ({
                     <h2 className="text-2xl font-bold">{groceryList.name}</h2>
                     {groceryList.fromDate && groceryList.toDate ? (
                         <p className="text-sm text-muted-foreground">
-                            {formatDate(groceryList.fromDate)} -{" "}
-                            {formatDate(groceryList.toDate)}
+                            {formatGroceryListDate(groceryList.fromDate)} -{" "}
+                            {formatGroceryListDate(groceryList.toDate)}
                         </p>
                     ) : null}
                 </div>
-                <Button variant="outline">Mark all bought</Button>
+                <MarkAllBoughtButton
+                    groceryListId={groceryList.id}
+                    isAllBought={areAllBought}
+                />
             </div>
 
             <div className="flex flex-col gap-2">

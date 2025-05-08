@@ -8,6 +8,7 @@ export const showErrorToast = (message: string) => {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
+        position: "bottom-right",
     });
 };
 
@@ -19,5 +20,6 @@ export const showSuccessToast = (message: string) => {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
+        position: "bottom-right",
     });
 };

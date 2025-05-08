@@ -72,6 +72,29 @@ export class GroceryListItemsRepository implements IGroceryListItemsRepository {
         return item;
     }
 
+    async updateGroceryListItemsByGroceryListId(
+        groceryListId: string,
+        input: Partial<
+            Omit<
+                GroceryListItem,
+                "id" | "createdBy" | "createdAt" | "updatedAt"
+            >
+        >,
+        tx?: Transaction
+    ): Promise<GroceryListItem[]> {
+        const invoker = tx ?? db;
+        return await invoker
+            .update(groceryListItems)
+            .set(input)
+            .where(
+                and(
+                    eq(groceryListItems.groceryListId, groceryListId),
+                    isNull(groceryListItems.deletedAt)
+                )
+            )
+            .returning();
+    }
+
     async deleteGroceryListItem(id: string): Promise<void> {
         await db.delete(groceryListItems).where(eq(groceryListItems.id, id));
     }

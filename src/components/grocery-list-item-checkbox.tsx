@@ -1,13 +1,35 @@
 "use client";
 
-import { ComponentProps } from "react";
+import { useMarkGroceryListItemAsBoughtMutation } from "@/mutations/grocery-lists";
+import { GroceryListItem } from "@/server/entities/models/grocery-list-item";
+import { ComponentProps, useEffect, useState } from "react";
 import { Checkbox } from "./ui/checkbox";
 
-export const ClientCheckbox = (props: ComponentProps<typeof Checkbox>) => {
+export const ClientCheckbox = ({
+    item,
+    checked,
+    ...props
+}: ComponentProps<typeof Checkbox> & { item: GroceryListItem }) => {
+    const [optimisticChecked, setOptimisticChecked] = useState(checked);
+
+    const markAsBoughtMutation = useMarkGroceryListItemAsBoughtMutation(() =>
+        setOptimisticChecked((prev) => !prev)
+    );
+
+    const handleCheckedChange = async () => {
+        setOptimisticChecked((prev) => !prev);
+        await markAsBoughtMutation.mutateAsync(item);
+    };
+
+    useEffect(() => {
+        setOptimisticChecked(checked);
+    }, [checked]);
+
     return (
         <Checkbox
             {...props}
-            onCheckedChange={() => console.log("Checked changed")}
+            checked={optimisticChecked}
+            onCheckedChange={handleCheckedChange}
         />
     );
 };

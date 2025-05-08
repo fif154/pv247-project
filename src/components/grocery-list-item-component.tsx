@@ -1,7 +1,7 @@
+"use client";
 import { GroceryListItem } from "@/server/entities/models/grocery-list-item";
-import { Trash2 } from "lucide-react";
+import { DeleteGroceryListItemButton } from "./delete-grocery-list-item-button";
 import { ClientCheckbox } from "./grocery-list-item-checkbox";
-import { Button } from "./ui/button";
 
 export const GroceryListItemComponent = ({
     item,
@@ -17,12 +17,15 @@ export const GroceryListItemComponent = ({
                 <ClientCheckbox
                     id={`item-${item.id}`}
                     checked={item.isBought}
+                    item={item}
                 />
                 <div className="flex flex-col">
                     <label
                         htmlFor={`item-${item.id}`}
                         className={`font-medium ${
-                            item.isBought ? "text-muted line-through" : ""
+                            item.isBought
+                                ? "text-muted-foreground line-through"
+                                : ""
                         }`}
                     >
                         {item.name}
@@ -33,14 +36,7 @@ export const GroceryListItemComponent = ({
                 </div>
             </div>
             <div className="flex gap-1">
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                >
-                    <Trash2 className="h-4 w-4" />
-                    <span className="sr-only">Delete item</span>
-                </Button>
+                <DeleteGroceryListItemButton groceryListItemId={item.id} />
             </div>
         </li>
     );

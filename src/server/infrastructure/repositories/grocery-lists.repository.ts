@@ -18,11 +18,23 @@ export class GroceryListsRepository implements IGroceryListsRepository {
     }
 
     async getGroceryListById(id: string): Promise<GroceryList | null> {
-        const [groceryList] = await db
-            .select()
-            .from(groceryLists)
-            .where(and(eq(groceryLists.id, id), isNull(groceryLists.deletedAt)))
-            .limit(1);
+        const groceryList = await db.query.groceryLists.findFirst({
+            where: and(eq(groceryLists.id, id), isNull(groceryLists.deletedAt)),
+            with: {
+                items: {
+                    with: {
+                        ingredient: {
+                            with: {
+                                category: true,
+                            },
+                        },
+                        unit: true,
+                    },
+                },
+            },
+            orderBy: [desc(groceryLists.createdAt)],
+        });
+
         return groceryList || null;
     }
 
@@ -64,7 +76,11 @@ export class GroceryListsRepository implements IGroceryListsRepository {
             with: {
                 items: {
                     with: {
-                        ingredient: true,
+                        ingredient: {
+                            with: {
+                                category: true,
+                            },
+                        },
                         unit: true,
                     },
                 },
