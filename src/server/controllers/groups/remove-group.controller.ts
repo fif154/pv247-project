@@ -1,22 +1,29 @@
 import { z } from 'zod';
 import { IRemoveGroupUseCase } from '@/server/application/use-cases/groups/remove-group.use-case';
-import { InputParseError } from '@/server/entities/errors/common';
+import { ITransactionManagerService } from '@/server/application/services/transaction-manager.service.interface';
 
 const removeGroupInputSchema = z.object({
   groupId: z.string().min(1),
 });
 
 export const removeGroupController =
-  (removeGroupUseCase: IRemoveGroupUseCase) => async (input: unknown) => {
-    const { data, error } = removeGroupInputSchema.safeParse(input);
+  (
+    removeGroupUseCase: IRemoveGroupUseCase,
+    transactionManagerService: ITransactionManagerService
+  ) =>
+  async (input: unknown) => {
+    return transactionManagerService.startTransaction(async (tx) => {
+      try {
+        const data = removeGroupInputSchema.parse(input);
 
-    if (error) {
-      throw new InputParseError('Invalid data', { cause: error });
-    }
+        const result = await removeGroupUseCase(data.groupId);
 
-    const result = await removeGroupUseCase(data.groupId);
-
-    return result;
+        return result;
+      } catch (error) {
+        console.error('Error creating grocery list:', error);
+        tx.rollback();
+      }
+    });
   };
 
 export type IRemoveGroupController = ReturnType<typeof removeGroupController>;

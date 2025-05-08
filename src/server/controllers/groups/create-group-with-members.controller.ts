@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { ICreateGroupWithMembersUseCase } from '@/server/application/use-cases/groups/create-group-with-members.use-case';
-import { InputParseError } from '@/server/entities/errors/common';
+import { ITransactionManagerService } from '@/server/application/services/transaction-manager.service.interface';
 
 const createGroupInputSchema = z.object({
   name: z.string().min(1),
@@ -9,29 +9,35 @@ const createGroupInputSchema = z.object({
 });
 
 export const createGroupWithMembersController =
-  (createGroupWithMembersUseCase: ICreateGroupWithMembersUseCase) =>
+  (
+    createGroupWithMembersUseCase: ICreateGroupWithMembersUseCase,
+    transactionManagerService: ITransactionManagerService
+  ) =>
   async (input: unknown) => {
-    const { data, error } = createGroupInputSchema.safeParse(input);
+    return transactionManagerService.startTransaction(async (tx) => {
+      try {
+        const data = createGroupInputSchema.parse(input);
 
-    if (error) {
-      throw new InputParseError('Invalid data', { cause: error });
-    }
+        const group = {
+          name: data.name,
+          description: data.description,
+        };
 
-    const group = {
-      name: data.name,
-      description: data.description,
-    };
+        const createdGroup = await createGroupWithMembersUseCase(
+          group,
+          data.members
+        );
 
-    const createdGroup = await createGroupWithMembersUseCase(
-      group,
-      data.members
-    );
+        if (!createdGroup) {
+          throw new Error('Failed to create group');
+        }
 
-    if (!createdGroup) {
-      throw new Error('Failed to create group');
-    }
-
-    return createdGroup;
+        return createdGroup;
+      } catch (error) {
+        console.error('Error creating grocery list:', error);
+        tx.rollback();
+      }
+    });
   };
 
 export type ICreateGroupWithMembersController = ReturnType<

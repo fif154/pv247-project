@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { IGroupsRepository } from '@/server/application/repositories/groups.repository.interface';
 import { IGroupMembersRepository } from '@/server/application/repositories/groupMembers.repository.interface';
 import {
@@ -12,12 +13,14 @@ export const createGroupWithMembersUseCase =
   ) =>
   async (
     group: CreateGroup,
-    members: string[]
+    members: string[],
+    tx?: any
   ): Promise<GroupWithMemberIds | undefined> => {
-    const createdGroup = await groupsRepository.createGroup(group);
+    const createdGroup = await groupsRepository.createGroup(group, tx);
     const groupMembers = await groupMembersRepository.addUsersToGroup(
       members,
-      createdGroup.id
+      createdGroup.id,
+      tx
     );
 
     return {

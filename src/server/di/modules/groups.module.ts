@@ -12,6 +12,8 @@ import { removeGroupUseCase } from '@/server/application/use-cases/groups/remove
 import { removeGroupController } from '@/server/controllers/groups/remove-group.controller';
 import { removeMemberFromGroupUseCase } from '@/server/application/use-cases/groups/remove-member-from-group.use-case';
 import { removeMemberFromGroupController } from '@/server/controllers/groups/remove-member-from-group.controller';
+import { getUserGroupsWithMembersController } from '@/server/controllers/groups/get-user-groups-with-members.controller';
+import { getUserGroupsWithMembersUseCase } from '@/server/application/use-cases/groups/get-user-groups-with-members.use-case';
 
 export function createGroupsModule() {
   const groupsModule = createModule();
@@ -54,6 +56,14 @@ export function createGroupsModule() {
     ]);
 
   groupsModule
+    .bind(DI_SYMBOLS.IGetUserGroupsWithMembersUseCase)
+    .toHigherOrderFunction(getUserGroupsWithMembersUseCase, [
+      DI_SYMBOLS.IGroupsRepository,
+      DI_SYMBOLS.IGroupMembersRepository,
+      DI_SYMBOLS.IUsersRepository,
+    ]);
+
+  groupsModule
     .bind(DI_SYMBOLS.IGetGroupWithMembersController)
     .toHigherOrderFunction(getGroupWithMembersController, [
       DI_SYMBOLS.IGetGroupWithMembersUseCase,
@@ -63,22 +73,34 @@ export function createGroupsModule() {
     .bind(DI_SYMBOLS.ICreateGroupWithMembersController)
     .toHigherOrderFunction(createGroupWithMembersController, [
       DI_SYMBOLS.ICreateGroupWithMembersUseCase,
+      DI_SYMBOLS.ITransactionManagerService,
     ]);
 
   groupsModule
     .bind(DI_SYMBOLS.IEditGroupController)
-    .toHigherOrderFunction(editGroupController, [DI_SYMBOLS.IEditGroupUseCase]);
+    .toHigherOrderFunction(editGroupController, [
+      DI_SYMBOLS.IEditGroupUseCase,
+      DI_SYMBOLS.ITransactionManagerService,
+    ]);
 
   groupsModule
     .bind(DI_SYMBOLS.IRemoveGroupController)
     .toHigherOrderFunction(removeGroupController, [
       DI_SYMBOLS.IRemoveGroupUseCase,
+      DI_SYMBOLS.ITransactionManagerService,
     ]);
 
   groupsModule
     .bind(DI_SYMBOLS.IRemoveMemberFromGroupController)
     .toHigherOrderFunction(removeMemberFromGroupController, [
       DI_SYMBOLS.IRemoveMemberFromGroupUseCase,
+      DI_SYMBOLS.ITransactionManagerService,
+    ]);
+
+  groupsModule
+    .bind(DI_SYMBOLS.IGetUserGroupsWithMembersController)
+    .toHigherOrderFunction(getUserGroupsWithMembersController, [
+      DI_SYMBOLS.IGetUserGroupsWithMembersUseCase,
     ]);
 
   return groupsModule;

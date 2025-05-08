@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { IRemoveMemberFromGroupUseCase } from '@/server/application/use-cases/groups/remove-member-from-group.use-case';
-import { InputParseError } from '@/server/entities/errors/common';
+import { ITransactionManagerService } from '@/server/application/services/transaction-manager.service.interface';
 
 const removeMemberFromGroupInputSchema = z.object({
   groupId: z.string().min(1),
@@ -8,17 +8,23 @@ const removeMemberFromGroupInputSchema = z.object({
 });
 
 export const removeMemberFromGroupController =
-  (removeMemberFromGroupUseCase: IRemoveMemberFromGroupUseCase) =>
+  (
+    removeMemberFromGroupUseCase: IRemoveMemberFromGroupUseCase,
+    transactionManagerService: ITransactionManagerService
+  ) =>
   async (input: unknown) => {
-    const { data, error } = removeMemberFromGroupInputSchema.safeParse(input);
+    return transactionManagerService.startTransaction(async (tx) => {
+      try {
+        const data = removeMemberFromGroupInputSchema.parse(input);
 
-    if (error) {
-      throw new InputParseError('Invalid data', { cause: error });
-    }
+        const result = await removeMemberFromGroupUseCase(data);
 
-    const result = await removeMemberFromGroupUseCase(data);
-
-    return result;
+        return result;
+      } catch (error) {
+        console.error('Error creating grocery list:', error);
+        tx.rollback();
+      }
+    });
   };
 
 export type IRemoveMemberFromGroupController = ReturnType<

@@ -7,20 +7,27 @@ export const editGroupUseCase =
     groupsRepository: IGroupsRepository,
     groupMembersRepository: IGroupMembersRepository
   ) =>
-  async (data: {
-    groupId: string;
-    name: string;
-    description: string | null;
-    members: string[];
-  }): Promise<GroupWithMemberIds | undefined> => {
+  async (
+    data: {
+      groupId: string;
+      name: string;
+      description: string | null;
+      members: string[];
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    tx?: any
+  ): Promise<GroupWithMemberIds | undefined> => {
     const { groupId, name, description, members } = data;
 
     // Update the group details
-    const updatedGroup = await groupsRepository.editGroup({
-      id: groupId,
-      name,
-      description,
-    });
+    const updatedGroup = await groupsRepository.editGroup(
+      {
+        id: groupId,
+        name,
+        description,
+      },
+      tx
+    );
 
     if (!updatedGroup) {
       throw new Error('Failed to update group.');
@@ -41,15 +48,15 @@ export const editGroupUseCase =
 
     // Add new members
     if (membersToAdd.length > 0) {
-      await groupMembersRepository.addUsersToGroup(membersToAdd, groupId);
+      await groupMembersRepository.addUsersToGroup(membersToAdd, groupId, tx);
     }
 
     // Remove members
     if (membersToRemove.length > 0) {
-      await Promise.all(
-        membersToRemove.map((userId) =>
-          groupMembersRepository.removeUserFromGroup(userId, groupId)
-        )
+      await groupMembersRepository.removeUsersFromGroup(
+        membersToRemove,
+        groupId,
+        tx
       );
     }
 

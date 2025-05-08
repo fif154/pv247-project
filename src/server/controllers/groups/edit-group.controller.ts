@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { IEditGroupUseCase } from '@/server/application/use-cases/groups/edit-group.use-case';
-import { InputParseError } from '@/server/entities/errors/common';
+import { ITransactionManagerService } from '@/server/application/services/transaction-manager.service.interface';
 
 const editGroupInputSchema = z.object({
   groupId: z.string().min(1),
@@ -10,21 +10,30 @@ const editGroupInputSchema = z.object({
 });
 
 export const editGroupController =
-  (editGroupUseCase: IEditGroupUseCase) => async (input: unknown) => {
-    const { data, error } = editGroupInputSchema.safeParse(input);
+  (
+    editGroupUseCase: IEditGroupUseCase,
+    transactionManagerService: ITransactionManagerService
+  ) =>
+  async (input: unknown) => {
+    return transactionManagerService.startTransaction(async (tx) => {
+      try {
+        const data = editGroupInputSchema.parse(input);
+        const updatedGroup = await editGroupUseCase(
+          {
+            groupId: data.groupId,
+            name: data.name,
+            description: data.description ?? null,
+            members: data.members,
+          },
+          tx
+        );
 
-    if (error) {
-      throw new InputParseError('Invalid data', { cause: error });
-    }
-
-    const updatedGroup = await editGroupUseCase({
-      groupId: data.groupId,
-      name: data.name,
-      description: data.description ?? null,
-      members: data.members,
+        return updatedGroup;
+      } catch (error) {
+        console.error('Error creating grocery list:', error);
+        tx.rollback();
+      }
     });
-
-    return updatedGroup;
   };
 
 export type IEditGroupController = ReturnType<typeof editGroupController>;

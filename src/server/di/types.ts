@@ -24,13 +24,13 @@ import { IDeleteIngredientUseCase } from '../application/use-cases/ingredients/d
 import { IGetIngredientUseCase } from '../application/use-cases/ingredients/get-ingredient.use-case';
 import { IListIngredientsUseCase } from '../application/use-cases/ingredients/list-ingredients.use-case';
 import { IUpdateIngredientUseCase } from '../application/use-cases/ingredients/update-ingredient.use-case';
-import { IRegisterController } from '../controllers/auth/register.controller';
-import { ISignInController } from '../controllers/auth/sign-in.controller';
 import { ICreateIngredientController } from '../controllers/ingredients/create-ingredient.controller';
 import { IDeleteIngredientController } from '../controllers/ingredients/delete-ingredient.controller';
 import { IGetIngredientController } from '../controllers/ingredients/get-ingredient.controller';
 import { IListIngredientsController } from '../controllers/ingredients/list-ingredients.controller';
 import { IUpdateIngredientController } from '../controllers/ingredients/update-ingredient.controller';
+import { IGetUserGroupsWithMembersUseCase } from '../application/use-cases/groups/get-user-groups-with-members.use-case';
+import { IGetUserGroupsWithMembersController } from '../controllers/groups/get-user-groups-with-members.controller';
 
 export const DI_SYMBOLS = {
   // Services
@@ -47,6 +47,9 @@ export const DI_SYMBOLS = {
   ISignInUseCase: Symbol.for('ISignInUseCase'),
   IRegisterUseCase: Symbol.for('IRegisterUseCase'),
   IGetGroupWithMembersUseCase: Symbol.for('IGetGroupWithMembersUseCase'),
+  IGetUserGroupsWithMembersUseCase: Symbol.for(
+    'IGetUserGroupsWithMembersUseCase'
+  ),
   ICreateGroupWithMembersUseCase: Symbol.for('ICreateGroupWithMembersUseCase'),
   ISearchUsersByEmailUseCase: Symbol.for('ISearchUsersByEmailUseCase'),
   IEditGroupUseCase: Symbol.for('IEditGroupUseCase'),
@@ -62,6 +65,9 @@ export const DI_SYMBOLS = {
   ISignInController: Symbol.for('ISignInController'),
   IRegisterController: Symbol.for('IRegisterController'),
   IGetGroupWithMembersController: Symbol.for('IGetGroupWithMembersController'),
+  IGetUserGroupsWithMembersController: Symbol.for(
+    'IGetUserGroupsWithMembersController'
+  ),
   ICreateGroupWithMembersController: Symbol.for(
     'ICreateGroupWithMembersController'
   ),
@@ -93,6 +99,7 @@ export interface DI_RETURN_TYPES {
   ISignInUseCase: ISignInUseCase;
   IRegisterUseCase: IRegisterUseCase;
   IGetGroupWithMembersUseCase: IGetGroupWithMembersUseCase;
+  IGetUserGroupsWithMembersUseCase: IGetUserGroupsWithMembersUseCase;
   ICreateGroupWithMembersUseCase: ICreateGroupWithMembersUseCase;
   ISearchUsersByEmailUseCase: ISearchUsersByEmailUseCase;
   IEditGroupUseCase: IEditGroupUseCase;
@@ -108,6 +115,7 @@ export interface DI_RETURN_TYPES {
   ISignInController: ISignInController;
   IRegisterController: IRegisterController;
   IGetGroupWithMembersController: IGetGroupWithMembersController;
+  IGetUserGroupsWithMembersController: IGetUserGroupsWithMembersController;
   ICreateGroupWithMembersController: ICreateGroupWithMembersController;
   ISearchUsersByEmailController: ISearchUsersByEmailController;
   IEditGroupController: IEditGroupController;

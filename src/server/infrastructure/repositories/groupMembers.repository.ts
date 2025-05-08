@@ -1,9 +1,9 @@
-import { db } from '@/db';
+import { db, Transaction } from '@/db';
 import { groupMembers } from '@/db/schema';
 import { IGroupMembersRepository } from '@/server/application/repositories/groupMembers.repository.interface';
 import { DatabaseOperationError } from '@/server/entities/errors/common';
 import { GroupMember } from '@/server/entities/models/groupMember';
-import { and, eq, isNull } from 'drizzle-orm';
+import { and, eq, inArray, isNull } from 'drizzle-orm';
 
 export class GroupMembersRepository implements IGroupMembersRepository {
   constructor() {}
@@ -31,8 +31,11 @@ export class GroupMembersRepository implements IGroupMembersRepository {
 
     return users.map((g) => g.userId);
   }
-  async removeUserFromAllGroups(userId: string): Promise<boolean> {
-    const query = db
+  async removeUserFromAllGroups(
+    userId: string,
+    tx?: Transaction
+  ): Promise<boolean> {
+    const query = (tx ?? db)
       .update(groupMembers)
       .set({ deletedAt: new Date().toISOString() })
       .where(
@@ -44,8 +47,12 @@ export class GroupMembersRepository implements IGroupMembersRepository {
 
     return removed.length !== 0;
   }
-  async removeUserFromGroup(userId: string, groupId: string): Promise<boolean> {
-    const query = db
+  async removeUserFromGroup(
+    userId: string,
+    groupId: string,
+    tx?: Transaction
+  ): Promise<boolean> {
+    const query = (tx ?? db)
       .update(groupMembers)
       .set({ deletedAt: new Date().toISOString() })
       .where(
@@ -61,8 +68,32 @@ export class GroupMembersRepository implements IGroupMembersRepository {
 
     return removed.length !== 0;
   }
-  async removeAllUsersFromGroup(groupId: string): Promise<boolean> {
-    const query = db
+  async removeUsersFromGroup(
+    userIds: string[],
+    groupId: string,
+    tx?: Transaction
+  ): Promise<boolean> {
+    const query = (tx ?? db)
+      .update(groupMembers)
+      .set({ deletedAt: new Date().toISOString() })
+      .where(
+        and(
+          inArray(groupMembers.userId, userIds),
+          eq(groupMembers.groupId, groupId),
+          isNull(groupMembers.deletedAt)
+        )
+      )
+      .returning();
+
+    const removed = await query.execute();
+
+    return removed.length !== 0;
+  }
+  async removeAllUsersFromGroup(
+    groupId: string,
+    tx?: Transaction
+  ): Promise<boolean> {
+    const query = (tx ?? db)
       .update(groupMembers)
       .set({ deletedAt: new Date().toISOString() })
       .where(
@@ -74,8 +105,12 @@ export class GroupMembersRepository implements IGroupMembersRepository {
 
     return removed.length !== 0;
   }
-  async addUserToGroup(userId: string, groupId: string): Promise<GroupMember> {
-    const query = db
+  async addUserToGroup(
+    userId: string,
+    groupId: string,
+    tx?: Transaction
+  ): Promise<GroupMember> {
+    const query = (tx ?? db)
       .insert(groupMembers)
       .values({ userId, groupId })
       .returning();
@@ -91,10 +126,11 @@ export class GroupMembersRepository implements IGroupMembersRepository {
 
   async addUsersToGroup(
     userIds: string[],
-    groupId: string
+    groupId: string,
+    tx?: Transaction
   ): Promise<GroupMember[]> {
     const values = userIds.map((userId) => ({ userId, groupId }));
-    const query = db.insert(groupMembers).values(values).returning();
+    const query = (tx ?? db).insert(groupMembers).values(values).returning();
 
     const created = await query.execute();
 
