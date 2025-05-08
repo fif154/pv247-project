@@ -6,34 +6,34 @@ import { IRegisterController } from "../controllers/auth/register.controller";
 import { ISignInController } from "../controllers/auth/sign-in.controller";
 
 export const DI_SYMBOLS = {
-    // Services
-    IAuthenticationService: Symbol.for("IAuthenticationService"),
-    ITransactionManagerService: Symbol.for("ITransactionManagerService"),
+  // Services
+  IAuthenticationService: Symbol.for("IAuthenticationService"),
+  ITransactionManagerService: Symbol.for("ITransactionManagerService"),
 
-    // Repositories
-    IUsersRepository: Symbol.for("IUsersRepository"),
+  // Repositories
+  IUsersRepository: Symbol.for("IUsersRepository"),
 
-    // Use Cases
-    ISignInUseCase: Symbol.for("ISignInUseCase"),
-    IRegisterUseCase: Symbol.for("IRegisterUseCase"),
+  // Use Cases
+  ISignInUseCase: Symbol.for("ISignInUseCase"),
+  IRegisterUseCase: Symbol.for("IRegisterUseCase"),
 
-    // Controllers
-    ISignInController: Symbol.for("ISignInController"),
-    IRegisterController: Symbol.for("IRegisterController"),
+  // Controllers
+  ISignInController: Symbol.for("ISignInController"),
+  IRegisterController: Symbol.for("IRegisterController"),
 };
 
 export interface DI_RETURN_TYPES {
-    // Services
-    IAuthenticationService: IAuthenticationService;
+  // Services
+  IAuthenticationService: IAuthenticationService;
 
-    // Repositories
-    IUsersRepository: IUsersRepository;
+  // Repositories
+  IUsersRepository: IUsersRepository;
 
-    // Use Cases
-    ISignInUseCase: ISignInUseCase;
-    IRegisterUseCase: IRegisterUseCase;
+  // Use Cases
+  ISignInUseCase: ISignInUseCase;
+  IRegisterUseCase: IRegisterUseCase;
 
-    // Controllers
-    ISignInController: ISignInController;
-    IRegisterController: IRegisterController;
+  // Controllers
+  ISignInController: ISignInController;
+  IRegisterController: IRegisterController;
 }

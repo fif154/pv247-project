@@ -6,47 +6,47 @@ import { CreateUser, User } from "@/server/entities/models/user";
 import { eq } from "drizzle-orm";
 
 export class UsersRepository implements IUsersRepository {
-    constructor() {}
-    async getUser(id: string): Promise<User | undefined> {
-        try {
-            const query = db.query.users.findFirst({
-                where: eq(users.id, id),
-            });
+  constructor() {}
+  async getUser(id: string): Promise<User | undefined> {
+    try {
+      const query = db.query.users.findFirst({
+        where: eq(users.id, id),
+      });
 
-            const user = await query.execute();
+      const user = await query.execute();
 
-            return user;
-        } catch (err) {
-            throw err;
-        }
+      return user;
+    } catch (err) {
+      throw err;
     }
-    async getUserByEmail(email: string): Promise<User | undefined> {
-        try {
-            const query = db.query.users.findFirst({
-                where: eq(users.email, email),
-            });
+  }
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    try {
+      const query = db.query.users.findFirst({
+        where: eq(users.email, email),
+      });
 
-            const user = await query.execute();
+      const user = await query.execute();
 
-            return user;
-        } catch (err) {
-            throw err;
-        }
+      return user;
+    } catch (err) {
+      throw err;
     }
-    async createUser(input: CreateUser): Promise<User> {
-        try {
-            const newUser: CreateUser = input;
-            const query = db.insert(users).values(newUser).returning();
+  }
+  async createUser(input: CreateUser): Promise<User> {
+    try {
+      const newUser: CreateUser = input;
+      const query = db.insert(users).values(newUser).returning();
 
-            const [created] = await query.execute();
+      const [created] = await query.execute();
 
-            if (created) {
-                return created;
-            } else {
-                throw new DatabaseOperationError("Cannot create user.");
-            }
-        } catch (err) {
-            throw err;
-        }
+      if (created) {
+        return created;
+      } else {
+        throw new DatabaseOperationError("Cannot create user.");
+      }
+    } catch (err) {
+      throw err;
     }
+  }
 }

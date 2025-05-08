@@ -8,16 +8,16 @@ import { SidebarProvider } from "./ui/sidebar";
 const queryClient = new QueryClient();
 
 export const Providers = ({ children }: PropsWithChildren) => {
-    return (
-        <QueryClientProvider client={queryClient}>
-            <ThemeProvider
-                attribute="class"
-                defaultTheme="dark"
-                enableSystem
-                disableTransitionOnChange
-            >
-                <SidebarProvider>{children}</SidebarProvider>
-            </ThemeProvider>
-        </QueryClientProvider>
-    );
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="dark"
+        enableSystem
+        disableTransitionOnChange
+      >
+        <SidebarProvider>{children}</SidebarProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  );
 };
