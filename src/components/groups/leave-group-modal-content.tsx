@@ -19,6 +19,7 @@ type LeaveGroupModalContentProps = {
   groupName: string;
   currentUserId: string;
   memberCount: number;
+  onSuccess?: () => void;
 };
 
 export const LeaveGroupModalContent = ({
@@ -27,6 +28,7 @@ export const LeaveGroupModalContent = ({
   groupId,
   groupName,
   currentUserId,
+  onSuccess,
 }: LeaveGroupModalContentProps) => {
   const { mutate: removeMember, isPending: isRemoving } =
     useRemoveMemberFromGroupMutation();
@@ -36,6 +38,7 @@ export const LeaveGroupModalContent = ({
       { groupId, memberId: currentUserId },
       {
         onSuccess: () => {
+          onSuccess?.();
           setModalOpen(false); // Close the modal on success
         },
         onError: (error) => {

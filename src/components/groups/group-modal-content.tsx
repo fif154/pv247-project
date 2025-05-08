@@ -29,8 +29,9 @@ type GroupModalContentProps = {
   modalOpen: boolean;
   setModalOpen: (open: boolean) => void;
   currentUser: UserInfo;
-  initialData?: GroupWithMembers; // For editing, pre-fill the form
-  isEditMode?: boolean; // Determines if it's edit mode
+  initialData?: GroupWithMembers;
+  isEditMode?: boolean;
+  onSuccess?: () => void;
 };
 
 const groupFormSchema = z.object({
@@ -48,6 +49,7 @@ export const GroupModalContent = ({
   currentUser,
   initialData,
   isEditMode = false,
+  onSuccess,
 }: GroupModalContentProps) => {
   const [emailQuery, setEmailQuery] = useState('');
   const [users, setUsers] = useState<User[]>([]);
@@ -87,7 +89,10 @@ export const GroupModalContent = ({
           members: selectedUsers.map((user) => user.id),
         },
         {
-          onSuccess: () => setModalOpen(false),
+          onSuccess: () => {
+            onSuccess?.();
+            setModalOpen(false);
+          },
         }
       );
     } else {
@@ -98,7 +103,10 @@ export const GroupModalContent = ({
           members: selectedUsers.map((user) => user.id),
         },
         {
-          onSuccess: () => setModalOpen(false),
+          onSuccess: () => {
+            onSuccess?.();
+            setModalOpen(false);
+          },
         }
       );
     }

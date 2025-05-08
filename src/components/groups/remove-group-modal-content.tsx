@@ -17,6 +17,7 @@ type RemoveGroupModalContentProps = {
   setModalOpen: (open: boolean) => void;
   groupId: string;
   groupName: string;
+  onSuccess?: () => void;
 };
 
 export const RemoveGroupModalContent = ({
@@ -24,6 +25,7 @@ export const RemoveGroupModalContent = ({
   setModalOpen,
   groupId,
   groupName,
+  onSuccess,
 }: RemoveGroupModalContentProps) => {
   const { mutate: removeGroup, isPending: isRemoving } =
     useRemoveGroupMutation();
@@ -31,6 +33,7 @@ export const RemoveGroupModalContent = ({
   const handleRemove = () => {
     removeGroup(groupId, {
       onSuccess: () => {
+        onSuccess?.();
         setModalOpen(false); // Close the modal on success
       },
       onError: (error) => {
