@@ -1,5 +1,5 @@
-import { IIngredientsRepository } from "@/server/application/repositories/ingredients.repository.interface";
-import { InputParseError } from "@/server/entities/errors/common";
+import { IIngredientsRepository } from '@/server/application/repositories/ingredients.repository.interface';
+import { InputParseError } from '@/server/entities/errors/common';
 
 export const createIngredientUseCase =
     (ingredientsRepository: IIngredientsRepository) =>
@@ -31,5 +31,5 @@ export const createIngredientUseCase =
     };
 
 export type ICreateIngredientUseCase = ReturnType<
-    typeof createIngredientUseCase
+  typeof createIngredientUseCase
 >;

@@ -1,6 +1,6 @@
-import { IRegisterUseCase } from "@/server/application/use-cases/auth/register.use-case";
-import { InputParseError } from "@/server/entities/errors/common";
-import { z } from "zod";
+import { IRegisterUseCase } from '@/server/application/use-cases/auth/register.use-case';
+import { InputParseError } from '@/server/entities/errors/common';
+import { z } from 'zod';
 
 const inputSchema = z.object({
   email: z.string().email(),
@@ -14,7 +14,7 @@ export const registerController =
     const { data, error } = inputSchema.safeParse(input);
 
     if (error) {
-      throw new InputParseError("Invalid data", { cause: error });
+      throw new InputParseError('Invalid data', { cause: error });
     }
 
     const user = await registerUseCase(data);

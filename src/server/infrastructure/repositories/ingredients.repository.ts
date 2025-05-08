@@ -17,43 +17,41 @@ export class IngredientsRepository implements IIngredientsRepository {
         return ingredient;
     }
 
-    async getIngredientById(id: string): Promise<Ingredient | null> {
-        const [ingredient] = await db
-            .select()
-            .from(ingredients)
-            .where(and(eq(ingredients.id, id), isNull(ingredients.deletedAt)))
-            .limit(1);
-        return ingredient || null;
-    }
+  async getIngredientById(id: string): Promise<Ingredient | null> {
+    const [ingredient] = await db
+      .select()
+      .from(ingredients)
+      .where(and(eq(ingredients.id, id), isNull(ingredients.deletedAt)))
+      .limit(1);
+    return ingredient || null;
+  }
 
-    async getIngredientByName(name: string): Promise<Ingredient | null> {
-        const [ingredient] = await db
-            .select()
-            .from(ingredients)
-            .where(
-                and(eq(ingredients.name, name), isNull(ingredients.deletedAt))
-            )
-            .limit(1);
-        return ingredient || null;
-    }
+  async getIngredientByName(name: string): Promise<Ingredient | null> {
+    const [ingredient] = await db
+      .select()
+      .from(ingredients)
+      .where(and(eq(ingredients.name, name), isNull(ingredients.deletedAt)))
+      .limit(1);
+    return ingredient || null;
+  }
 
-    async updateIngredient(
-        id: string,
-        input: Partial<
-            Omit<Ingredient, "id" | "createdBy" | "createdAt" | "updatedAt">
-        >
-    ): Promise<Ingredient> {
-        const [ingredient] = await db
-            .update(ingredients)
-            .set(input)
-            .where(and(eq(ingredients.id, id), isNull(ingredients.deletedAt)))
-            .returning();
-        return ingredient;
-    }
+  async updateIngredient(
+    id: string,
+    input: Partial<
+      Omit<Ingredient, 'id' | 'createdBy' | 'createdAt' | 'updatedAt'>
+    >
+  ): Promise<Ingredient> {
+    const [ingredient] = await db
+      .update(ingredients)
+      .set(input)
+      .where(and(eq(ingredients.id, id), isNull(ingredients.deletedAt)))
+      .returning();
+    return ingredient;
+  }
 
-    async deleteIngredient(id: string): Promise<void> {
-        await db.delete(ingredients).where(eq(ingredients.id, id));
-    }
+  async deleteIngredient(id: string): Promise<void> {
+    await db.delete(ingredients).where(eq(ingredients.id, id));
+  }
 
     async listIngredients(userId: string): Promise<Ingredient[]> {
         const result = await db.query.ingredients.findMany({

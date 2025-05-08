@@ -1,16 +1,16 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Meal } from "@/server/entities/models/meal";
-import { calculateMacrosForMeal } from "@/utils/macros";
-import { MoreHorizontal } from "lucide-react";
-import Image from "next/image";
-import { macroTextColors } from "./macros";
+} from '@/components/ui/dropdown-menu';
+import { Meal } from '@/server/entities/models/meal';
+import { calculateMacrosForMeal } from '@/utils/macros';
+import { MoreHorizontal } from 'lucide-react';
+import Image from 'next/image';
+import { macroTextColors } from './macros';
 
 type Props = {
   meal: Meal;

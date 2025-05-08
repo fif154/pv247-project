@@ -1,5 +1,5 @@
-import { githubSignIn } from "@/app/(auth)/actions";
-import { Button } from "../ui/button";
+import { githubSignIn } from '@/app/(auth)/actions';
+import { Button } from '../ui/button';
 
 export default function GitHubLoginButton() {
   return (
