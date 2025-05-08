@@ -26,7 +26,8 @@ const Page = async () => {
                         </h2>
                         <div className="flex flex-col gap-2">
                             {groceryList.items?.map(
-                                (item) => item.ingredient?.name
+                                (item) =>
+                                    `${item.ingredient?.name} (${item.quantity})`
                             )}
                         </div>
                     </div>

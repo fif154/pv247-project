@@ -1,17 +1,29 @@
 import { IGroceryListItemsRepository } from "@/server/application/repositories/grocery-list-items.repository.interface";
 import { IGroceryListsRepository } from "@/server/application/repositories/grocery-lists.repository.interface";
+import { IMealPlansRepository } from "@/server/application/repositories/meal-plans.repository.interface";
+import { IMealsRepository } from "@/server/application/repositories/meals.repository.interface";
 import { IUnitsRepository } from "@/server/application/repositories/units.repository.interface";
 import { ICreateGroceryListUseCase } from "@/server/application/use-cases/grocery-lists/create-grocery-list.use-case";
 import { IListGroceryListsUseCase } from "@/server/application/use-cases/grocery-lists/list-grocery-lists.use-case";
+import { ICreateMealPlanUseCase } from "@/server/application/use-cases/meal-plans/create-meal-plan.use-case";
+import { IListMealPlansUseCase } from "@/server/application/use-cases/meal-plans/list-meal-plans.use-case";
+import { ICreateMealUseCase } from "@/server/application/use-cases/meals/create-meal.use-case";
+import { IListMealsUseCase } from "@/server/application/use-cases/meals/list-meals.use-case";
 import { IListUnitsUseCase } from "@/server/application/use-cases/units/list-units.use-case";
 import { ICreateGroceryListController } from "@/server/controllers/grocery-lists/create-grocery-list.controller";
 import { IListGroceryListsController } from "@/server/controllers/grocery-lists/list-grocery-lists.controller";
+import { ICreateMealPlanController } from "@/server/controllers/meal-plans/create-meal-plan.controller";
+import { IListMealPlansController } from "@/server/controllers/meal-plans/list-meal-plans.controller";
+import { ICreateMealController } from "@/server/controllers/meals/create-meal.controller";
+import { IListMealsController } from "@/server/controllers/meals/list-meals.controller";
 import { IListUnitsController } from "@/server/controllers/units/list-units.controller";
 import { IIngredientCategoriesRepository } from "../application/repositories/ingredient-categories.repository.interface";
 import { IIngredientsRepository } from "../application/repositories/ingredients.repository.interface";
 import { IRecipesRepository } from "../application/repositories/recipes.repository.interface";
 import { IUsersRepository } from "../application/repositories/users.repository.interface";
 import { IAuthenticationService } from "../application/services/authentication.service.interface";
+import { IGroceryListService } from "../application/services/grocery-list.service.interface";
+import { ITransactionManagerService } from "../application/services/transaction-manager.service.interface";
 import { IRegisterUseCase } from "../application/use-cases/auth/register.use-case";
 import { ISignInUseCase } from "../application/use-cases/auth/sign-in.use-case";
 import { ICreateCategoryUseCase } from "../application/use-cases/ingredient-categories/create-category.use-case";
@@ -45,6 +57,7 @@ export const DI_SYMBOLS = {
     // Services
     IAuthenticationService: Symbol.for("IAuthenticationService"),
     ITransactionManagerService: Symbol.for("ITransactionManagerService"),
+    IGroceryListService: Symbol.for("IGroceryListService"),
 
     // Repositories
     IUsersRepository: Symbol.for("IUsersRepository"),
@@ -89,22 +102,38 @@ export const DI_SYMBOLS = {
     IListCategoriesController: Symbol.for("IListCategoriesController"),
 
     // Units
-    IUnitsRepository: Symbol("IUnitsRepository"),
-    IListUnitsUseCase: Symbol("IListUnitsUseCase"),
-    IListUnitsController: Symbol("IListUnitsController"),
+    IUnitsRepository: Symbol.for("IUnitsRepository"),
+    IListUnitsUseCase: Symbol.for("IListUnitsUseCase"),
+    IListUnitsController: Symbol.for("IListUnitsController"),
 
     // Grocery Lists
-    IGroceryListsRepository: Symbol("IGroceryListsRepository"),
-    IGroceryListItemsRepository: Symbol("IGroceryListItemsRepository"),
-    ICreateGroceryListUseCase: Symbol("ICreateGroceryListUseCase"),
-    IListGroceryListsUseCase: Symbol("IListGroceryListsUseCase"),
-    ICreateGroceryListController: Symbol("ICreateGroceryListController"),
-    IListGroceryListsController: Symbol("IListGroceryListsController"),
+    IGroceryListsRepository: Symbol.for("IGroceryListsRepository"),
+    IGroceryListItemsRepository: Symbol.for("IGroceryListItemsRepository"),
+    ICreateGroceryListUseCase: Symbol.for("ICreateGroceryListUseCase"),
+    IListGroceryListsUseCase: Symbol.for("IListGroceryListsUseCase"),
+    ICreateGroceryListController: Symbol.for("ICreateGroceryListController"),
+    IListGroceryListsController: Symbol.for("IListGroceryListsController"),
+
+    // Meals
+    IMealsRepository: Symbol.for("IMealsRepository"),
+    ICreateMealUseCase: Symbol.for("ICreateMealUseCase"),
+    IListMealsUseCase: Symbol.for("IListMealsUseCase"),
+    ICreateMealController: Symbol.for("ICreateMealController"),
+    IListMealsController: Symbol.for("IListMealsController"),
+
+    // Meal Plans
+    IMealPlansRepository: Symbol.for("IMealPlansRepository"),
+    ICreateMealPlanUseCase: Symbol.for("ICreateMealPlanUseCase"),
+    IListMealPlansUseCase: Symbol.for("IListMealPlansUseCase"),
+    ICreateMealPlanController: Symbol.for("ICreateMealPlanController"),
+    IListMealPlansController: Symbol.for("IListMealPlansController"),
 };
 
 export interface DI_RETURN_TYPES {
     // Services
     IAuthenticationService: IAuthenticationService;
+    ITransactionManagerService: ITransactionManagerService;
+    IGroceryListService: IGroceryListService;
 
     // Repositories
     IUsersRepository: IUsersRepository;
@@ -158,4 +187,18 @@ export interface DI_RETURN_TYPES {
     IListGroceryListsUseCase: IListGroceryListsUseCase;
     ICreateGroceryListController: ICreateGroceryListController;
     IListGroceryListsController: IListGroceryListsController;
+
+    // Meals
+    IMealsRepository: IMealsRepository;
+    ICreateMealUseCase: ICreateMealUseCase;
+    IListMealsUseCase: IListMealsUseCase;
+    ICreateMealController: ICreateMealController;
+    IListMealsController: IListMealsController;
+
+    // Meal Plans
+    IMealPlansRepository: IMealPlansRepository;
+    ICreateMealPlanUseCase: ICreateMealPlanUseCase;
+    IListMealPlansUseCase: IListMealPlansUseCase;
+    ICreateMealPlanController: ICreateMealPlanController;
+    IListMealPlansController: IListMealPlansController;
 }

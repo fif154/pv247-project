@@ -1,12 +1,15 @@
 import { db, Transaction } from "@/db";
 import { groceryListItems } from "@/db/schema";
 import { IGroceryListItemsRepository } from "@/server/application/repositories/grocery-list-items.repository.interface";
-import { GroceryListItem } from "@/server/entities/models/grocery-list-item";
+import {
+    CreateGroceryListItem,
+    GroceryListItem,
+} from "@/server/entities/models/grocery-list-item";
 import { and, eq, isNull } from "drizzle-orm";
 
 export class GroceryListItemsRepository implements IGroceryListItemsRepository {
     async createGroceryListItem(
-        input: Omit<GroceryListItem, "id" | "createdAt" | "updatedAt">,
+        input: CreateGroceryListItem,
         tx?: Transaction
     ): Promise<GroceryListItem> {
         const invoker = tx ?? db;

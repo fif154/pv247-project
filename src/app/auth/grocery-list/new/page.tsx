@@ -1,15 +1,13 @@
+import { listMealPlansAction } from "@/app/meal-plans/actions";
 import { GroceryListCreateForm } from "@/components/forms/grocery-list/grocery-list-create";
 import { PageHeader } from "@/components/page-header";
 import { ArrowLeft } from "lucide-react";
 import { listRecipes } from "../../recipes/actions";
 
 const Page = async () => {
-    const [
-        recipes,
-        // mealPlans
-    ] = await Promise.all([
+    const [recipes, mealPlans] = await Promise.all([
         listRecipes(),
-        // listMealPlans(),
+        listMealPlansAction(),
     ]);
 
     return (
@@ -22,7 +20,7 @@ const Page = async () => {
                 </div>
             </div>
 
-            <GroceryListCreateForm recipes={recipes} mealPlans={[]} />
+            <GroceryListCreateForm recipes={recipes} mealPlans={mealPlans} />
         </div>
     );
 };

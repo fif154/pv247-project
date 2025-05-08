@@ -254,7 +254,7 @@ export const groceryListItems = sqliteTable(
     (table) => ({
         groceryListItemsIngredientUnique: uniqueIndex(
             "grocery_list_items_ingredient_unique"
-        ).on(table.groceryListId, table.ingredientId),
+        ).on(table.groceryListId, table.ingredientId, table.unitId),
     })
 );
 

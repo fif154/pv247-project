@@ -3,11 +3,14 @@ import { ChefHat } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { GroceryListFormValues } from "./forms/grocery-list/schema";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Badge } from "./ui/badge";
 import { Checkbox } from "./ui/checkbox";
 import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
 
 export const RecipeImportItem = ({ recipe }: { recipe: Recipe }) => {
     const form = useFormContext<GroceryListFormValues>();
+    console.log(recipe);
     return (
         <FormField
             key={recipe.id}
@@ -51,10 +54,32 @@ export const RecipeImportItem = ({ recipe }: { recipe: Recipe }) => {
                                 <FormLabel className="font-medium">
                                     {recipe.name}
                                 </FormLabel>
-                                <p className="text-xs text-[#7A8A9E]">
-                                    {recipe.ingredients?.length ?? 0}{" "}
-                                    ingredients
-                                </p>
+                                <HoverCard>
+                                    <HoverCardTrigger>
+                                        <p className="text-xs text-[#7A8A9E]">
+                                            {recipe.ingredients?.length ?? 0}{" "}
+                                            ingredients
+                                        </p>
+                                    </HoverCardTrigger>
+                                    <HoverCardContent>
+                                        <div className="flex flex-row flex-wrap gap-2">
+                                            {recipe.ingredients?.map(
+                                                (ingredient) => (
+                                                    <Badge
+                                                        key={ingredient.id}
+                                                        variant="outline"
+                                                    >
+                                                        {
+                                                            ingredient
+                                                                ?.ingredient
+                                                                ?.name
+                                                        }
+                                                    </Badge>
+                                                )
+                                            )}
+                                        </div>
+                                    </HoverCardContent>
+                                </HoverCard>
                             </div>
                         </div>
                     </FormItem>

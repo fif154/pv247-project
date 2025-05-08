@@ -5,14 +5,19 @@ import { IGroceryListsRepository } from "@/server/application/repositories/groce
 import { IIngredientsRepository } from "@/server/application/repositories/ingredients.repository.interface";
 import { IRecipesRepository } from "@/server/application/repositories/recipes.repository.interface";
 import { NotFoundError } from "@/server/entities/errors/common";
+import { CreateGroceryListItem } from "@/server/entities/models/grocery-list-item";
+import { Recipe } from "@/server/entities/models/recipe";
+import { IMealPlansRepository } from "../../repositories/meal-plans.repository.interface";
+import { IGroceryListService } from "../../services/grocery-list.service.interface";
 
-// TODO: this should be done in a transaction
 export const createGroceryListUseCase =
     (
         groceryListsRepository: IGroceryListsRepository,
         groceryListItemsRepository: IGroceryListItemsRepository,
         recipesRepository: IRecipesRepository,
-        ingredientsRepository: IIngredientsRepository
+        ingredientsRepository: IIngredientsRepository,
+        mealPlansRepository: IMealPlansRepository,
+        groceryListService: IGroceryListService
     ) =>
     // TODO: typing the transaction as any is not great. However, in the
     // clean architecture template, they are doing it just like this.
@@ -35,35 +40,48 @@ export const createGroceryListUseCase =
             tx
         );
 
+        const allRecipes: Recipe[] = [];
         if (input.selectedRecipes?.length) {
             const recipes = await recipesRepository.getRecipesByIds(
                 input.selectedRecipes,
                 tx
             );
+            allRecipes.push(...recipes);
+        }
 
-            const allListItems = [];
-            for (const recipe of recipes) {
-                if (recipe?.ingredients) {
-                    const items = recipe.ingredients.map((ingredient) => ({
-                        groceryListId: groceryList.id,
-                        ingredientId: ingredient.ingredientId,
-                        quantity: ingredient.quantity,
-                        unitId: ingredient.unitId,
-                        name: ingredient.ingredient?.name || "",
-                        isBought: false,
-                    }));
-                    allListItems.push(...items);
-                }
-            }
-
-            await groceryListItemsRepository.createGroceryListItems(
-                allListItems,
+        if (input.selectedMealPlans?.length) {
+            const mealPlans = await mealPlansRepository.getMealPlansByIds(
+                input.selectedMealPlans,
                 tx
             );
+
+            const allRecipesFromMealPlans = mealPlans.flatMap(
+                (mealPlan) =>
+                    mealPlan.meals
+                        ?.map((m) => m.meal?.recipe)
+                        .filter(Boolean) || []
+            );
+            // This can't be null or undefined because we are filtering these values out
+            allRecipes.push(...(allRecipesFromMealPlans as Recipe[]));
+        }
+
+        const allIngredients: CreateGroceryListItem[] = [];
+        for (const recipe of allRecipes) {
+            if (recipe?.ingredients) {
+                const items = recipe.ingredients.map((ingredient) => ({
+                    groceryListId: groceryList.id,
+                    ingredientId: ingredient.ingredientId,
+                    quantity: ingredient.quantity,
+                    unitId: ingredient.unitId,
+                    name: ingredient.ingredient?.name || "",
+                    isBought: false,
+                }));
+                allIngredients.push(...items);
+            }
         }
 
         if (input.manualIngredients?.length) {
-            const items = await Promise.all(
+            const items: CreateGroceryListItem[] = await Promise.all(
                 input.manualIngredients.map(async (ingredient) => {
                     let ingredientId = ingredient.id;
                     if (!ingredientId) {
@@ -90,7 +108,20 @@ export const createGroceryListUseCase =
                 })
             );
 
-            await groceryListItemsRepository.createGroceryListItems(items, tx);
+            allIngredients.push(...items);
+        }
+
+        const combinedIngredients =
+            groceryListService.combineIngredients(allIngredients);
+
+        try {
+            await groceryListItemsRepository.createGroceryListItems(
+                combinedIngredients,
+                tx
+            );
+        } catch (error) {
+            console.error("Error creating grocery list items:", error);
+            throw new Error("Failed to create grocery list items");
         }
 
         return groceryList;

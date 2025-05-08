@@ -5,6 +5,8 @@ import { createTransactionManagerModule } from "./modules/database.module";
 import { createGroceryListsModule } from "./modules/grocery-lists.module";
 import { createIngredientCategoriesModule } from "./modules/ingredient-categories.module";
 import { createIngredientsModule } from "./modules/ingredients.module";
+import { createMealPlansModule } from "./modules/meal-plans.module";
+import { createMealsModule } from "./modules/meals.module";
 import { createRecipesModule } from "./modules/recipes.module";
 import { createUnitsModule } from "./modules/units.module";
 import { createUsersModule } from "./modules/users.module";
@@ -41,8 +43,17 @@ ApplicationContainer.load(
     createGroceryListsModule()
 );
 
+ApplicationContainer.load(Symbol("MealsModule"), createMealsModule());
+
+ApplicationContainer.load(Symbol("MealPlansModule"), createMealPlansModule());
+
 export function getInjection<
     K extends keyof typeof DI_SYMBOLS & keyof DI_RETURN_TYPES
 >(symbol: K): DI_RETURN_TYPES[K] {
-    return ApplicationContainer.get(DI_SYMBOLS[symbol]);
+    try {
+        return ApplicationContainer.get(DI_SYMBOLS[symbol]);
+    } catch (error) {
+        console.error("Error getting injection:", error);
+        throw error;
+    }
 }

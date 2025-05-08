@@ -14,11 +14,17 @@ export class RecipesRepository implements IRecipesRepository {
 
     async getRecipeById(id: string, tx?: Transaction): Promise<Recipe | null> {
         const invoker = tx ?? db;
-        const [recipe] = await invoker
-            .select()
-            .from(recipes)
-            .where(and(eq(recipes.id, id), isNull(recipes.deletedAt)))
-            .limit(1);
+        const recipe = await invoker.query.recipes.findFirst({
+            where: and(eq(recipes.id, id), isNull(recipes.deletedAt)),
+            with: {
+                ingredients: {
+                    with: {
+                        ingredient: true,
+                    },
+                },
+            },
+        });
+
         return recipe || null;
     }
 
@@ -27,6 +33,13 @@ export class RecipesRepository implements IRecipesRepository {
 
         const result = await invoker.query.recipes.findMany({
             where: and(isNull(recipes.deletedAt), inArray(recipes.id, ids)),
+            with: {
+                ingredients: {
+                    with: {
+                        ingredient: true,
+                    },
+                },
+            },
         });
         return result;
     }
@@ -60,10 +73,17 @@ export class RecipesRepository implements IRecipesRepository {
 
     // TODO: should accept filters
     async listRecipes(): Promise<Recipe[]> {
-        const result = await db
-            .select()
-            .from(recipes)
-            .where(isNull(recipes.deletedAt));
+        const result = await db.query.recipes.findMany({
+            where: and(isNull(recipes.deletedAt)),
+            with: {
+                ingredients: {
+                    with: {
+                        ingredient: true,
+                    },
+                },
+            },
+        });
+
         return result;
     }
 }

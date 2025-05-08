@@ -2,7 +2,7 @@ import { db, Transaction } from "@/db";
 import { groceryLists } from "@/db/schema";
 import { IGroceryListsRepository } from "@/server/application/repositories/grocery-lists.repository.interface";
 import { GroceryList } from "@/server/entities/models/grocery-list";
-import { and, eq, isNull } from "drizzle-orm";
+import { and, desc, eq, isNull } from "drizzle-orm";
 
 export class GroceryListsRepository implements IGroceryListsRepository {
     async createGroceryList(
@@ -68,6 +68,7 @@ export class GroceryListsRepository implements IGroceryListsRepository {
                     },
                 },
             },
+            orderBy: [desc(groceryLists.createdAt)],
         });
 
         return result;

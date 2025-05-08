@@ -54,7 +54,6 @@ export const AddIngredientsManuallyForm = () => {
             {
                 name: "",
                 quantity: 1,
-                unit: undefined,
                 // Casting as we dont have a category yet
             } as IngredientFormValues,
             { shouldFocus: true }
@@ -107,12 +106,13 @@ const AddExistingIngredientsManually = ({
         ) ?? [];
 
     const addIngredient = (item: Ingredient) => {
-        const newItem: IngredientFormValues = {
+        const newItem = {
             id: item.id,
             name: item.name,
             quantity: 1,
             category: item.category!,
-        };
+            // Can't set the unit here
+        } as unknown as IngredientFormValues;
 
         appendExisting(newItem);
         setOpenItemSelector(false);

@@ -9,14 +9,13 @@ import { Checkbox } from "./ui/checkbox";
 import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 
 const formatDate = (date: Date) => {
-    return format(date, "MM/dd/yyyy");
+    return format(date, "dd. MM. yyyy");
 };
 
 export const MealPlanImportItem = ({ plan }: { plan: MealPlan }) => {
     const form = useFormContext<GroceryListFormValues>();
 
-    const allRecipes =
-        plan.meals?.map((mealPlanMeal) => mealPlanMeal.meal?.recipe) ?? [];
+    const allMeals = plan.meals?.map((mealPlanMeal) => mealPlanMeal.meal) ?? [];
 
     return (
         <FormField
@@ -29,7 +28,7 @@ export const MealPlanImportItem = ({ plan }: { plan: MealPlan }) => {
                         key={plan.id}
                         className="space-y-3 rounded-md border p-4"
                     >
-                        <div className="flex items-start space-x-3">
+                        <div className="flex items-center space-x-3">
                             <FormControl>
                                 <Checkbox
                                     checked={field.value?.includes(plan.id)}
@@ -63,7 +62,7 @@ export const MealPlanImportItem = ({ plan }: { plan: MealPlan }) => {
                                     <FormLabel className="font-medium">
                                         {plan.name}
                                     </FormLabel>
-                                    <p className="text-xs text-[#7A8A9E]">
+                                    <p className="text-xs">
                                         {formatDate(plan.startDate)} -{" "}
                                         {formatDate(plan.endDate)}
                                     </p>
@@ -72,18 +71,16 @@ export const MealPlanImportItem = ({ plan }: { plan: MealPlan }) => {
                         </div>
 
                         <div className="ml-7 mt-2">
-                            <p className="mb-2 text-xs text-[#7A8A9E]">
-                                Included recipes:
-                            </p>
+                            <p className="mb-2 text-xs ">Included recipes:</p>
                             <div className="flex flex-wrap gap-2">
-                                {allRecipes.map((recipe) => {
-                                    return recipe ? (
+                                {allMeals.map((meal) => {
+                                    return meal?.recipe ? (
                                         <Badge
-                                            key={recipe.id}
+                                            key={meal.id}
                                             variant="outline"
                                             className="text-xs"
                                         >
-                                            {recipe.name}
+                                            {meal.recipe.name}
                                         </Badge>
                                     ) : null;
                                 })}

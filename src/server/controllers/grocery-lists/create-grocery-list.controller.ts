@@ -14,7 +14,12 @@ export const createGroceryListController =
         const validatedInput = groceryListFormSchema.parse(input);
 
         return transactionManagerService.startTransaction(async (tx) => {
-            return createGroceryListUseCase(validatedInput, tx);
+            try {
+                return await createGroceryListUseCase(validatedInput, tx);
+            } catch (error) {
+                console.error("Error creating grocery list:", error);
+                tx.rollback();
+            }
         });
     };
 
