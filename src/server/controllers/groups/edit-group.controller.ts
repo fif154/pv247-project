@@ -30,7 +30,7 @@ export const editGroupController =
 
         return updatedGroup;
       } catch (error) {
-        console.error('Error creating grocery list:', error);
+        console.error('Error editing group:', error);
         tx.rollback();
       }
     });

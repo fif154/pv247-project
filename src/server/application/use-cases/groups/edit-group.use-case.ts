@@ -33,7 +33,7 @@ export const editGroupUseCase =
       throw new Error('Failed to update group.');
     }
 
-    // Get current group members
+    // Get current group members (including soft-deleted ones)
     const currentMembers = await groupMembersRepository.getGroupUsers(groupId);
 
     if (!currentMembers) {
@@ -46,9 +46,25 @@ export const editGroupUseCase =
       (id) => !members.includes(id)
     );
 
-    // Add new members
-    if (membersToAdd.length > 0) {
-      await groupMembersRepository.addUsersToGroup(membersToAdd, groupId, tx);
+    // Handle members to add
+    for (const memberId of membersToAdd) {
+      const isSoftDeleted =
+        await groupMembersRepository.isUserSoftDeletedInGroup(
+          memberId,
+          groupId
+        );
+
+      if (isSoftDeleted) {
+        // Undelete the user if they were soft deleted
+        await groupMembersRepository.undeleteUserFromGroup(
+          memberId,
+          groupId,
+          tx
+        );
+      } else {
+        // Add the user if they are completely new
+        await groupMembersRepository.addUsersToGroup([memberId], groupId, tx);
+      }
     }
 
     // Remove members

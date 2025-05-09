@@ -20,7 +20,6 @@ export const getGroupWithMembersAction = async (groupId: string) => {
 
 export const getUserGroupsWithMembersAction = async (userId: string) => {
   const controller = getInjection('IGetUserGroupsWithMembersController');
-
   return await controller({ userId });
 };
 

@@ -11,34 +11,34 @@ import {
 import { Button } from '../ui/button';
 import { Spinner } from '../ui/spinner';
 import { useRemoveMemberFromGroupMutation } from '@/mutations/groups';
+import { useRouter } from 'next/navigation';
 
-type LeaveGroupModalContentProps = {
+type LeaveGroupModalProps = {
   modalOpen: boolean;
   setModalOpen: (open: boolean) => void;
   groupId: string;
   groupName: string;
   currentUserId: string;
   memberCount: number;
-  onSuccess?: () => void;
 };
 
-export const LeaveGroupModalContent = ({
+export const LeaveGroupModal = ({
   modalOpen,
   setModalOpen,
   groupId,
   groupName,
   currentUserId,
-  onSuccess,
-}: LeaveGroupModalContentProps) => {
+}: LeaveGroupModalProps) => {
   const { mutate: removeMember, isPending: isRemoving } =
     useRemoveMemberFromGroupMutation();
+  const router = useRouter();
 
   const handleLeaveGroup = () => {
     removeMember(
       { groupId, memberId: currentUserId },
       {
         onSuccess: () => {
-          onSuccess?.();
+          router.refresh();
           setModalOpen(false); // Close the modal on success
         },
         onError: (error) => {
@@ -69,7 +69,7 @@ export const LeaveGroupModalContent = ({
           </Button>
           <Button
             type="button"
-            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+            variant="destructive"
             onClick={handleLeaveGroup}
           >
             {isRemoving ? <Spinner /> : 'Leave Group'}

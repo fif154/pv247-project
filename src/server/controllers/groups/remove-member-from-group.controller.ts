@@ -21,7 +21,7 @@ export const removeMemberFromGroupController =
 
         return result;
       } catch (error) {
-        console.error('Error creating grocery list:', error);
+        console.error('Error removing member from group:', error);
         tx.rollback();
       }
     });

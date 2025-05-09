@@ -1,3 +1,4 @@
+import { getUserGroupsWithMembersAction } from '@/app/(groups)/actions';
 import { auth } from '@/auth';
 import { GroupList } from '@/components/groups/group-list';
 
@@ -7,7 +8,8 @@ const Page = async () => {
     id: userSession?.user.id ?? '',
     email: userSession?.user.email ?? '',
   };
-  return <GroupList currentUser={currentUser} />;
+  const data = await getUserGroupsWithMembersAction(currentUser.id);
+  return <GroupList groups={data ?? []} currentUser={currentUser} />;
 };
 
 export default Page;

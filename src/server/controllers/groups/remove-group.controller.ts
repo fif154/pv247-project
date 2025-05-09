@@ -20,7 +20,7 @@ export const removeGroupController =
 
         return result;
       } catch (error) {
-        console.error('Error creating grocery list:', error);
+        console.error('Error removing group:', error);
         tx.rollback();
       }
     });

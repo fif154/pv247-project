@@ -3,7 +3,7 @@ import { groupMembers } from '@/db/schema';
 import { IGroupMembersRepository } from '@/server/application/repositories/groupMembers.repository.interface';
 import { DatabaseOperationError } from '@/server/entities/errors/common';
 import { GroupMember } from '@/server/entities/models/groupMember';
-import { and, eq, inArray, isNull } from 'drizzle-orm';
+import { and, eq, inArray, isNotNull, isNull } from 'drizzle-orm';
 
 export class GroupMembersRepository implements IGroupMembersRepository {
   constructor() {}
@@ -139,5 +139,42 @@ export class GroupMembersRepository implements IGroupMembersRepository {
     } else {
       throw new DatabaseOperationError('Cannot create group.');
     }
+  }
+
+  async undeleteUserFromGroup(
+    userId: string,
+    groupId: string,
+    tx?: Transaction
+  ): Promise<GroupMember | undefined> {
+    const query = (tx ?? db)
+      .update(groupMembers)
+      .set({ deletedAt: null })
+      .where(
+        and(eq(groupMembers.userId, userId), eq(groupMembers.groupId, groupId))
+      )
+      .returning();
+
+    const undeletedGroupMember = await query.execute();
+
+    return undeletedGroupMember.at(0);
+  }
+
+  async isUserSoftDeletedInGroup(
+    userId: string,
+    groupId: string
+  ): Promise<boolean> {
+    const query = db
+      .select()
+      .from(groupMembers)
+      .where(
+        and(
+          eq(groupMembers.userId, userId),
+          eq(groupMembers.groupId, groupId),
+          isNotNull(groupMembers.deletedAt)
+        )
+      );
+    const softDeletedGroupMembers = await query.execute();
+
+    return softDeletedGroupMembers.length !== 0;
   }
 }

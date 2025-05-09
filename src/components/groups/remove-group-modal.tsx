@@ -11,29 +11,29 @@ import {
 import { Button } from '../ui/button';
 import { Spinner } from '../ui/spinner';
 import { useRemoveGroupMutation } from '@/mutations/groups';
+import { useRouter } from 'next/navigation';
 
-type RemoveGroupModalContentProps = {
+type RemoveGroupModalContent = {
   modalOpen: boolean;
   setModalOpen: (open: boolean) => void;
   groupId: string;
   groupName: string;
-  onSuccess?: () => void;
 };
 
-export const RemoveGroupModalContent = ({
+export const RemoveGroupModal = ({
   modalOpen,
   setModalOpen,
   groupId,
   groupName,
-  onSuccess,
-}: RemoveGroupModalContentProps) => {
+}: RemoveGroupModalContent) => {
   const { mutate: removeGroup, isPending: isRemoving } =
     useRemoveGroupMutation();
+  const router = useRouter();
 
   const handleRemove = () => {
     removeGroup(groupId, {
       onSuccess: () => {
-        onSuccess?.();
+        router.refresh();
         setModalOpen(false); // Close the modal on success
       },
       onError: (error) => {
@@ -62,7 +62,7 @@ export const RemoveGroupModalContent = ({
           </Button>
           <Button
             type="button"
-            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+            variant="destructive"
             onClick={handleRemove}
             disabled={isRemoving}
           >

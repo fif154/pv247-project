@@ -26,4 +26,10 @@ export interface IGroupMembersRepository {
     groupId: string,
     tx?: Transaction
   ): Promise<GroupMember[]>;
+  isUserSoftDeletedInGroup(userId: string, groupId: string): Promise<boolean>;
+  undeleteUserFromGroup(
+    userId: string,
+    groupId: string,
+    tx?: Transaction
+  ): Promise<GroupMember | undefined>;
 }

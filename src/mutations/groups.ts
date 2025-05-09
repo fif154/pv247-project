@@ -1,13 +1,11 @@
 import {
   createGroupWithMembersAction,
   editGroupAction,
-  getGroupWithMembersAction,
-  getUserGroupsWithMembersAction,
   removeGroupAction,
   removeMemberFromGroupAction,
 } from '@/app/(groups)/actions';
 import { showErrorToast, showSuccessToast } from '@/utils/toast';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
 export const useCreateGroupWithMembersMutation = () =>
   useMutation({
@@ -23,22 +21,6 @@ export const useCreateGroupWithMembersMutation = () =>
     },
     onSuccess: () => {
       showSuccessToast('Group created successfully.');
-    },
-  });
-
-export const useGetGroupWithMembersQuery = (groupId: string) =>
-  useQuery({
-    queryKey: ['groupWithMembers', groupId],
-    queryFn: async () => {
-      return await getGroupWithMembersAction(groupId);
-    },
-  });
-
-export const useGetUserGroupsWithMembersQuery = (userId: string) =>
-  useQuery({
-    queryKey: ['userGroupsWithMembers', userId],
-    queryFn: async () => {
-      return await getUserGroupsWithMembersAction(userId);
     },
   });
 

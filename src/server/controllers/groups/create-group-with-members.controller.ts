@@ -34,7 +34,7 @@ export const createGroupWithMembersController =
 
         return createdGroup;
       } catch (error) {
-        console.error('Error creating grocery list:', error);
+        console.error('Error creating group:', error);
         tx.rollback();
       }
     });
