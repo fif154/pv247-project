@@ -8,6 +8,11 @@ import { IDeleteIngredientUseCase } from '../application/use-cases/ingredients/d
 import { IGetIngredientUseCase } from '../application/use-cases/ingredients/get-ingredient.use-case';
 import { IListIngredientsUseCase } from '../application/use-cases/ingredients/list-ingredients.use-case';
 import { IUpdateIngredientUseCase } from '../application/use-cases/ingredients/update-ingredient.use-case';
+import { ICreateRecipeUseCase } from '../application/use-cases/recipes/create-recipe.use-case';
+import { IDeleteRecipeUseCase } from '../application/use-cases/recipes/delete-recipe.use-case';
+import { IGetRecipeUseCase } from '../application/use-cases/recipes/get-recipe.use-case';
+import { IListRecipesUseCase } from '../application/use-cases/recipes/list-recipes.use-case';
+import { IUpdateRecipeUseCase } from '../application/use-cases/recipes/update-recipe.use-case';
 import { IRegisterController } from '../controllers/auth/register.controller';
 import { ISignInController } from '../controllers/auth/sign-in.controller';
 import { ICreateIngredientController } from '../controllers/ingredients/create-ingredient.controller';
@@ -15,6 +20,12 @@ import { IDeleteIngredientController } from '../controllers/ingredients/delete-i
 import { IGetIngredientController } from '../controllers/ingredients/get-ingredient.controller';
 import { IListIngredientsController } from '../controllers/ingredients/list-ingredients.controller';
 import { IUpdateIngredientController } from '../controllers/ingredients/update-ingredient.controller';
+import { ICreateRecipeController } from '../controllers/recipes/create-recipe.controller';
+import { IDeleteRecipeController } from '../controllers/recipes/delete-recipe.controller';
+import { IGetRecipeController } from '../controllers/recipes/get-recipe.controller';
+import { IListRecipesController } from '../controllers/recipes/list-recipes.controller';
+import { IUpdateRecipeController } from '../controllers/recipes/update-recipe.controller';
+
 
 export const DI_SYMBOLS = {
   // Services
@@ -33,6 +44,11 @@ export const DI_SYMBOLS = {
   IDeleteIngredientUseCase: Symbol.for('IDeleteIngredientUseCase'),
   IListIngredientsUseCase: Symbol.for('IListIngredientsUseCase'),
   IGetIngredientUseCase: Symbol.for('IGetIngredientUseCase'),
+  ICreateRecipeUseCase: Symbol.for('ICreateRecipeUseCase'),
+  IUpdateRecipeUseCase: Symbol.for('IUpdateRecipeUseCase'),
+  IDeleteRecipeUseCase: Symbol.for('IDeleteRecipeUseCase'),
+  IListRecipesUseCase: Symbol.for('IListRecipesUseCase'),
+  IGetRecipeUseCase: Symbol.for('IGetRecipeUseCase'),
 
   // Controllers
   ISignInController: Symbol.for('ISignInController'),
@@ -42,6 +58,12 @@ export const DI_SYMBOLS = {
   IDeleteIngredientController: Symbol.for('IDeleteIngredientController'),
   IListIngredientsController: Symbol.for('IListIngredientsController'),
   IGetIngredientController: Symbol.for('IGetIngredientController'),
+  ICreateRecipeController: Symbol.for('ICreateRecipeController'),
+  IUpdateRecipeController: Symbol.for('IUpdateRecipeController'),
+  IDeleteRecipeController: Symbol.for('IDeleteRecipeController'),
+  IListRecipesController: Symbol.for('IListRecipesController'),
+  IGetRecipeController: Symbol.for('IGetRecipeController'),
+
   // Repositories
 };
 
@@ -61,6 +83,11 @@ export interface DI_RETURN_TYPES {
   IDeleteIngredientUseCase: IDeleteIngredientUseCase;
   IListIngredientsUseCase: IListIngredientsUseCase;
   IGetIngredientUseCase: IGetIngredientUseCase;
+  ICreateRecipeUseCase: ICreateRecipeUseCase;
+  IUpdateRecipeUseCase: IUpdateRecipeUseCase;
+  IDeleteRecipeUseCase: IDeleteRecipeUseCase;
+  IListRecipesUseCase: IListRecipesUseCase;
+  IGetRecipeUseCase: IGetRecipeUseCase;
 
   // Controllers
   ISignInController: ISignInController;
@@ -70,4 +97,9 @@ export interface DI_RETURN_TYPES {
   IDeleteIngredientController: IDeleteIngredientController;
   IListIngredientsController: IListIngredientsController;
   IGetIngredientController: IGetIngredientController;
+  ICreateRecipeController: ICreateRecipeController;
+  IUpdateRecipeController: IUpdateRecipeController;
+  IDeleteRecipeController: IDeleteRecipeController;
+  IListRecipesController: IListRecipesController;
+  IGetRecipeController: IGetRecipeController;
 }
