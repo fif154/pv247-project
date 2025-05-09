@@ -53,6 +53,7 @@ export class IngredientsRepository implements IIngredientsRepository {
     await db.delete(ingredients).where(eq(ingredients.id, id));
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async listIngredients(userId: string): Promise<Ingredient[]> {
     const result = await db.query.ingredients.findMany({
       where: and(

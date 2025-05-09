@@ -136,6 +136,7 @@ export class MealPlansRepository implements IMealPlansRepository {
     await invoker.delete(mealPlans).where(eq(mealPlans.id, id));
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async listMealPlans(userId: string): Promise<MealPlan[]> {
     return await db.query.mealPlans.findMany({
       // TODO: add check for groupId or userId

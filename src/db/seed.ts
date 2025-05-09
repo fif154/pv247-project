@@ -5,13 +5,14 @@ import { faker } from '@faker-js/faker';
 import { createClient } from '@libsql/client';
 import { drizzle } from 'drizzle-orm/libsql';
 import * as schema from './schema';
+import { Ingredient } from '@/server/entities/models/ingredient';
+import { Unit } from '@/server/entities/models/unit';
 
 // --- Configuration ---
 const NUM_USERS = 20;
 const NUM_GROUPS = 5;
 const NUM_RECIPES_PER_USER = 3;
 const NUM_INGREDIENTS = 50;
-const NUM_UNITS = 10;
 const MAX_INGREDIENTS_PER_RECIPE = 8;
 const MAX_MEMBERS_PER_GROUP = 5;
 const MAX_ITEMS_PER_GROCERY_LIST = 15;
@@ -197,6 +198,7 @@ async function main() {
   // ---- 7. Seed Group Members (joining users and groups) ----
   const groupMembers = [];
   if (groups.length) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     for (const group of groups) {
       const numMembers = faker.number.int({
         min: 1,
@@ -205,7 +207,7 @@ async function main() {
       const shuffledUsers = faker.helpers.shuffle(users);
       for (let i = 0; i < numMembers; i++) {
         if (shuffledUsers[i]) {
-          const member = {
+          const user = {
             id: crypto.randomUUID(),
             name: faker.person.fullName(),
             email: faker.internet.email().toLowerCase(), // Ensure unique
@@ -388,7 +390,8 @@ async function main() {
   console.log(`Seeded ${groupMembers.length} group members.`);
 
   // ---- 8. Seed Ingredients ----
-  const ingredients = [];
+  const ingredients: Ingredient[] = [];
+  const units: Unit[] = [];
   const ingredientNames = new Set<string>(); // To help ensure unique names
 
   // First seed ingredient categories
@@ -430,6 +433,7 @@ async function main() {
     const categoryId = faker.datatype.boolean(0.7)
       ? faker.helpers.arrayElement(ingredientCategories)?.id
       : null;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const ingredient = {
       id: crypto.randomUUID(),
       name: name,
@@ -448,7 +452,7 @@ async function main() {
     };
     const [insertedUnit] = await db
       .insert(schema.units)
-      .values(unit)
+      .values(units[i])
       .returning();
     units.push(insertedUnit);
   }

@@ -48,6 +48,7 @@ export class IngredientCategoriesRepository
     return category || null;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async listCategories(userId: string): Promise<IngredientCategory[]> {
     const result = await db
       .select()
