@@ -884,7 +884,9 @@ async function main() {
       }
     }
   }
-  console.log(`Seeded ${mealPlans.length} meal plans and ${mealPlanMeals.length} meal plan meals.`);
+  console.log(
+    `Seeded ${mealPlans.length} meal plans and ${mealPlanMeals.length} meal plan meals.`
+  );
 
   console.log('Database seeding finished successfully!');
 }
