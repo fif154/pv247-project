@@ -1,4 +1,5 @@
 import { MacroItemType } from './macros';
+import { PercentageBar } from './percentage-bar';
 
 export const MacroItem = (props: MacroItemType) => {
   return (
@@ -10,12 +11,7 @@ export const MacroItem = (props: MacroItemType) => {
         </span>
         {props.unit}
       </div>
-      <div className="relative h-2 bg-muted-foreground rounded-full w-full">
-        <div
-          className={`absolute top-0 left-0 h-full ${props.bgColor} rounded-full`}
-          style={{ width: `${props.percentage * 100}%` }}
-        ></div>
-      </div>
+      <PercentageBar percentage={props.percentage} bgColor={props.bgColor} />
     </div>
   );
 };

@@ -1,12 +1,15 @@
 'use server';
 
 import { getInjection } from '@/server/di/container';
+import { revalidatePath } from 'next/cache';
 import { Ingredient } from '../auth/ingredients/schema';
 
 export async function createIngredientAction(data: Omit<Ingredient, 'id'>) {
   try {
     const ingredientController = getInjection('ICreateIngredientController');
-    return await ingredientController(data);
+    const res = await ingredientController(data);
+    revalidatePath('/ingredients');
+    return res;
   } catch (err) {
     // TODO: handle errors
     return {
@@ -35,7 +38,9 @@ export async function updateIngredientAction(
 ) {
   try {
     const ingredientController = getInjection('IUpdateIngredientController');
-    return await ingredientController(id, data);
+    const res = await ingredientController(id, data);
+    revalidatePath('/ingredients');
+    return res;
   } catch (err) {
     // TODO: handle errors
     return {
@@ -48,7 +53,8 @@ export async function updateIngredientAction(
 export async function deleteIngredientAction(id: string) {
   try {
     const ingredientController = getInjection('IDeleteIngredientController');
-    return await ingredientController(id);
+    await ingredientController(id);
+    revalidatePath('/ingredients');
   } catch (err) {
     return {
       error: 'An error occurred while deleting the ingredient',
@@ -57,11 +63,17 @@ export async function deleteIngredientAction(id: string) {
   }
 }
 
-export async function listIngredientsAction() {
+export async function listIngredientsAction(shouldThrow = false) {
   try {
     const ingredientController = getInjection('IListIngredientsController');
-    return await ingredientController();
+    const res = await ingredientController();
+
+    return res;
   } catch (err) {
+    if (shouldThrow) {
+      throw err;
+    }
+
     return {
       error: 'An error occurred while listing the ingredients',
       err,

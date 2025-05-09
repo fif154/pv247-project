@@ -28,7 +28,7 @@ const user_uuid_3 = generateMockUUID();
 
 const mockGramUnit = {
   ...getMockDateInfo(),
-  gramsPerUnit: '100',
+  gramsPerUnit: 100,
   name: 'grams',
   id: generateMockUUID(),
   description: 'grams',
@@ -44,139 +44,255 @@ export const mockIngredients: Ingredient[] = [
     description: 'Boneless, skinless chicken breast.',
     createdBy: user_uuid_1,
     imageUrl: 'https://example.com/images/chicken_breast.jpg',
-    protein: '31', // per 100g
-    carbs: '0', // per 100g
-    fats: '3.6', // per 100g
-    calories: '165', // per 100g
-    baseMacroQuantity: '100',
+    protein: 31, // per 100g
+    carbs: 0, // per 100g
+    fats: 3.6, // per 100g
+    calories: 165, // per 100g
+    baseMacroQuantity: 100,
+    categoryId: null,
   },
   {
     id: generateMockUUID(), // ingredient_uuid_spaghetti
     createdAt: getCurrentISODate(),
     updatedAt: getCurrentISODate(),
     deletedAt: null,
-
     name: 'Spaghetti Pasta',
     description: 'Dried spaghetti pasta.',
     createdBy: user_uuid_1,
+    categoryId: null,
     imageUrl: 'https://example.com/images/spaghetti.jpg',
-    protein: '13', // per 100g uncooked
-    carbs: '75', // per 100g uncooked
-    fats: '1.5', // per 100g uncooked
-    calories: '371', // per 100g uncooked
-    baseMacroQuantity: '100',
+    protein: 13, // per 100g uncooked
+    carbs: 75, // per 100g uncooked
+    fats: 1.5, // per 100g uncooked
+    calories: 371, // per 100g uncooked
+    baseMacroQuantity: 100,
   },
   {
     id: generateMockUUID(), // ingredient_uuid_t_sauce
     createdAt: getCurrentISODate(),
     updatedAt: getCurrentISODate(),
     deletedAt: null,
-
     name: 'Tomato Sauce',
     description: 'Basic tomato sauce or passata.',
     createdBy: user_uuid_2,
+    categoryId: 'category_uuid_sauce',
     imageUrl: 'https://example.com/images/tomato_sauce.jpg',
-    protein: '1.5', // per 100g
-    carbs: '7', // per 100g
-    fats: '0.2', // per 100g
-    calories: '35', // per 100g
-    baseMacroQuantity: '100',
+    protein: 1.5, // per 100g
+    carbs: 7, // per 100g
+    fats: 0.2, // per 100g
+    calories: 35, // per 100g
+    baseMacroQuantity: 100,
   },
   {
     id: generateMockUUID(), // ingredient_uuid_olive_oil
     createdAt: getCurrentISODate(),
     updatedAt: getCurrentISODate(),
     deletedAt: null,
-
     name: 'Olive Oil',
     description: 'Extra virgin olive oil.',
     createdBy: user_uuid_1,
+    categoryId: null,
     imageUrl: 'https://example.com/images/olive_oil.jpg',
-    protein: '0',
-    carbs: '0',
-    fats: '100',
-    calories: '884', // per 100g (or 100ml approx)
-    baseMacroQuantity: '100',
+    protein: 0,
+    carbs: 0,
+    fats: 100,
+    calories: 884, // per 100g (or 100ml approx)
+    baseMacroQuantity: 100,
   },
   {
     id: generateMockUUID(), // ingredient_uuid_garlic
     createdAt: getCurrentISODate(),
     updatedAt: getCurrentISODate(),
     deletedAt: null,
-
     name: 'Garlic Clove',
     description: 'Fresh garlic.',
     createdBy: user_uuid_2,
+    categoryId: null,
     imageUrl: null,
-    protein: '6.4', // per 100g
-    carbs: '33', // per 100g
-    fats: '0.5', // per 100g
-    calories: '149', // per 100g
-    baseMacroQuantity: '100', // Though often used in smaller quantities
+    protein: 6.4, // per 100g
+    carbs: 33, // per 100g
+    fats: 0.5, // per 100g
+    calories: 149, // per 100g
+    baseMacroQuantity: 100, // Though often used in smaller quantities
   },
   {
     id: generateMockUUID(), // ingredient_uuid_oats
     createdAt: getCurrentISODate(),
     updatedAt: getCurrentISODate(),
     deletedAt: null,
-
     name: 'Rolled Oats',
     description: 'Standard rolled oats for porridge.',
     createdBy: user_uuid_3,
+    categoryId: null,
     imageUrl: 'https://example.com/images/oats.jpg',
-    protein: '16.9',
-    carbs: '66.3',
-    fats: '6.9',
-    calories: '389',
-    baseMacroQuantity: '100',
+    protein: 16.9,
+    carbs: 66.3,
+    fats: 6.9,
+    calories: 389,
+    baseMacroQuantity: 100,
   },
   {
     id: generateMockUUID(), // ingredient_uuid_milk
     createdAt: getCurrentISODate(),
     updatedAt: getCurrentISODate(),
     deletedAt: null,
-
     name: 'Milk (Whole)',
     description: "Cow's milk, whole.",
     createdBy: user_uuid_1,
+    categoryId: null,
     imageUrl: 'https://example.com/images/milk.jpg',
-    protein: '3.3',
-    carbs: '4.8',
-    fats: '3.5', // Adjust for skimmed/semi-skimmed
-    calories: '62',
-    baseMacroQuantity: '100', // For 100ml
+    protein: 3.3,
+    carbs: 4.8,
+    fats: 3.5, // Adjust for skimmed/semi-skimmed
+    calories: 62,
+    baseMacroQuantity: 100, // For 100ml
   },
   {
     id: generateMockUUID(), // ingredient_uuid_banana
     createdAt: getCurrentISODate(),
     updatedAt: getCurrentISODate(),
     deletedAt: null,
-
     name: 'Banana',
     description: 'Fresh banana.',
     createdBy: user_uuid_2,
+    categoryId: null,
     imageUrl: 'https://example.com/images/banana.jpg',
-    protein: '1.1',
-    carbs: '22.8',
-    fats: '0.3',
-    calories: '89',
-    baseMacroQuantity: '100', // For 100g (approx 1 medium banana without skin)
+    protein: 1.1,
+    carbs: 22.8,
+    fats: 0.3,
+    calories: 89,
+    baseMacroQuantity: 100, // For 100g (approx 1 medium banana without skin)
   },
   {
     id: generateMockUUID(), // ingredient_uuid_eggs
     createdAt: getCurrentISODate(),
     updatedAt: getCurrentISODate(),
     deletedAt: null,
+    name: 'Egg (Large)',
+    description: 'Large chicken egg.',
+    createdBy: user_uuid_1,
+    categoryId: null,
+    imageUrl: 'https://example.com/images/egg.jpg',
+    protein: 12.6, // per 100g (approx 2 large eggs)
+    carbs: 1.1,
+    fats: 9.5,
+    calories: 143,
+    baseMacroQuantity: 100, // Or you could define per egg (~50-60g)
+  },
+  {
+    id: generateMockUUID(), // ingredient_uuid_t_sauce
+    createdAt: getCurrentISODate(),
+    updatedAt: getCurrentISODate(),
+    deletedAt: null,
+    name: 'Tomato Sauce',
+    description: 'Basic tomato sauce or passata.',
+    createdBy: user_uuid_2,
+    categoryId: null,
+    imageUrl: 'https://example.com/images/tomato_sauce.jpg',
+    protein: 1.5, // per 100g
+    carbs: 7, // per 100g
+    fats: 0.2, // per 100g
+    calories: 35, // per 100g
+    baseMacroQuantity: 100,
+  },
+  {
+    id: generateMockUUID(), // ingredient_uuid_olive_oil
+    createdAt: getCurrentISODate(),
+    updatedAt: getCurrentISODate(),
+    deletedAt: null,
+    name: 'Olive Oil',
+    description: 'Extra virgin olive oil.',
+    createdBy: user_uuid_1,
+    categoryId: null,
+    imageUrl: 'https://example.com/images/olive_oil.jpg',
+    protein: 0,
+    carbs: 0,
+    fats: 100,
+    calories: 884, // per 100g (or 100ml approx)
+    baseMacroQuantity: 100,
+  },
+  {
+    id: generateMockUUID(), // ingredient_uuid_garlic
+    createdAt: getCurrentISODate(),
+    updatedAt: getCurrentISODate(),
+    deletedAt: null,
+    name: 'Garlic Clove',
+    description: 'Fresh garlic.',
+    createdBy: user_uuid_2,
+    categoryId: null,
+    imageUrl: null,
+    protein: 6.4, // per 100g
+    carbs: 33, // per 100g
+    fats: 0.5, // per 100g
+    calories: 149, // per 100g
+    baseMacroQuantity: 100, // Though often used in smaller quantities
+  },
+  {
+    id: generateMockUUID(), // ingredient_uuid_oats
+    createdAt: getCurrentISODate(),
+    updatedAt: getCurrentISODate(),
+    deletedAt: null,
+    categoryId: null,
+    name: 'Rolled Oats',
+    description: 'Standard rolled oats for porridge.',
+    createdBy: user_uuid_3,
+    imageUrl: 'https://example.com/images/oats.jpg',
+    protein: 16.9,
+    carbs: 66.3,
+    fats: 6.9,
+    calories: 389,
+    baseMacroQuantity: 100,
+  },
+  {
+    id: generateMockUUID(), // ingredient_uuid_milk
+    createdAt: getCurrentISODate(),
+    updatedAt: getCurrentISODate(),
+    deletedAt: null,
+    categoryId: null,
+
+    name: 'Milk (Whole)',
+    description: "Cow's milk, whole.",
+    createdBy: user_uuid_1,
+    imageUrl: 'https://example.com/images/milk.jpg',
+    protein: 3.3,
+    carbs: 4.8,
+    fats: 3.5, // Adjust for skimmed/semi-skimmed
+    calories: 62,
+    baseMacroQuantity: 100, // For 100ml
+  },
+  {
+    id: generateMockUUID(), // ingredient_uuid_banana
+    createdAt: getCurrentISODate(),
+    updatedAt: getCurrentISODate(),
+    deletedAt: null,
+    categoryId: null,
+
+    name: 'Banana',
+    description: 'Fresh banana.',
+    createdBy: user_uuid_2,
+    imageUrl: 'https://example.com/images/banana.jpg',
+    protein: 1.1,
+    carbs: 22.8,
+    fats: 0.3,
+    calories: 89,
+    baseMacroQuantity: 100, // For 100g (approx 1 medium banana without skin)
+  },
+  {
+    id: generateMockUUID(), // ingredient_uuid_eggs
+    createdAt: getCurrentISODate(),
+    updatedAt: getCurrentISODate(),
+    deletedAt: null,
+    categoryId: null,
 
     name: 'Egg (Large)',
     description: 'Large chicken egg.',
     createdBy: user_uuid_1,
     imageUrl: 'https://example.com/images/egg.jpg',
-    protein: '12.6', // per 100g (approx 2 large eggs)
-    carbs: '1.1',
-    fats: '9.5',
-    calories: '143',
-    baseMacroQuantity: '100', // Or you could define per egg (~50-60g)
+    protein: 12.6, // per 100g (approx 2 large eggs)
+    carbs: 1.1,
+    fats: 9.5,
+    calories: 143,
+    baseMacroQuantity: 100, // Or you could define per egg (~50-60g)
   },
 ];
 
@@ -188,30 +304,29 @@ export const mockRecipes: Recipe[] = [
     deletedAt: null,
     name: 'Classic Spaghetti Bolognese',
     description:
-      'A hearty and traditional Italian meat sauce served with spaghetti. (Note: Bolognese ingredients like ground beef not yet added to sample ingredients above, add them for completeness)',
+      'A hearty and traditional Italian meat sauce served with spaghetti.',
     createdBy: user_uuid_1,
     servings: 4,
+    image: 'https://example.com/images/spaghetti_bolognese.jpg', // Added image
     ingredients: [
       {
         ...getMockDateInfo(),
         id: generateMockUUID(),
-        ingredientId: 'ingredient_uuid_spaghetti',
+        ingredientId: mockIngredients[1].id, // Spaghetti Pasta
         recipeId: generateMockUUID(),
-        quantity: '200',
-        unitId: generateMockUUID(),
+        quantity: 200, // Quantity in grams
+        unitId: mockGramUnit.id,
         unit: mockGramUnit,
-
         ingredient: mockIngredients[1],
       },
       {
         ...getMockDateInfo(),
         id: generateMockUUID(),
-        ingredientId: 'ingredient_uuid_t_sauce',
+        ingredientId: mockIngredients[2].id, // Tomato Sauce
         recipeId: generateMockUUID(),
-        quantity: '150',
-        unitId: generateMockUUID(),
+        quantity: 150, // Quantity in grams
+        unitId: mockGramUnit.id,
         unit: mockGramUnit,
-
         ingredient: mockIngredients[2],
       },
     ],
@@ -221,43 +336,41 @@ export const mockRecipes: Recipe[] = [
     createdAt: getCurrentISODate(),
     updatedAt: getCurrentISODate(),
     deletedAt: null,
-
     name: 'Simple Banana Oatmeal',
     description:
       'A quick and healthy breakfast made with rolled oats, milk, and topped with banana.',
     createdBy: user_uuid_2,
     servings: 1,
+    image: 'https://example.com/images/banana_oatmeal.jpg', // Added image
     ingredients: [
       {
         ...getMockDateInfo(),
         id: generateMockUUID(),
-        ingredientId: 'ingredient_uuid_oats',
+        ingredientId: mockIngredients[5].id, // Rolled Oats
         recipeId: generateMockUUID(),
-        quantity: '50',
-        unitId: generateMockUUID(),
+        quantity: 50, // Quantity in grams
+        unitId: mockGramUnit.id,
         unit: mockGramUnit,
         ingredient: mockIngredients[5],
       },
       {
         ...getMockDateInfo(),
         id: generateMockUUID(),
-        ingredientId: 'ingredient_uuid_milk',
+        ingredientId: mockIngredients[6].id, // Milk (Whole)
         recipeId: generateMockUUID(),
-        quantity: '200',
-        unitId: generateMockUUID(),
+        quantity: 200, // Quantity in ml
+        unitId: mockGramUnit.id,
         unit: mockGramUnit,
-
         ingredient: mockIngredients[6],
       },
       {
         ...getMockDateInfo(),
         id: generateMockUUID(),
-        ingredientId: 'ingredient_uuid_banana',
+        ingredientId: mockIngredients[7].id, // Banana
         recipeId: generateMockUUID(),
-        quantity: '130',
-        unitId: generateMockUUID(),
+        quantity: 130, // Quantity in grams
+        unitId: mockGramUnit.id,
         unit: mockGramUnit,
-
         ingredient: mockIngredients[7],
       },
     ],
@@ -267,24 +380,77 @@ export const mockRecipes: Recipe[] = [
     createdAt: getCurrentISODate(),
     updatedAt: getCurrentISODate(),
     deletedAt: null,
-
     name: 'Fluffy Scrambled Eggs',
     description:
       'Creamy and fluffy scrambled eggs, perfect for breakfast or a light meal.',
     createdBy: user_uuid_1,
     servings: 2,
+    image: 'https://example.com/images/scrambled_eggs.jpg', // Added image
+    ingredients: [
+      {
+        ...getMockDateInfo(),
+        id: generateMockUUID(),
+        ingredientId: mockIngredients[8].id, // Egg (Large)
+        recipeId: generateMockUUID(),
+        quantity: 100, // Quantity in grams (approx. 2 eggs)
+        unitId: mockGramUnit.id,
+        unit: mockGramUnit,
+        ingredient: mockIngredients[8],
+      },
+      {
+        ...getMockDateInfo(),
+        id: generateMockUUID(),
+        ingredientId: mockIngredients[6].id, // Milk (Whole)
+        recipeId: generateMockUUID(),
+        quantity: 50, // Quantity in ml
+        unitId: mockGramUnit.id,
+        unit: mockGramUnit,
+        ingredient: mockIngredients[6],
+      },
+    ],
   },
   {
     id: generateMockUUID(), // recipe_uuid_chicken_stir_fry
     createdAt: getCurrentISODate(),
     updatedAt: getCurrentISODate(),
     deletedAt: null,
-
     name: 'Quick Chicken Stir-fry',
-    description:
-      'A fast and flavorful chicken stir-fry with mixed vegetables. (Note: stir-fry vegetables and soy sauce not added to ingredients above, add for completeness)',
+    description: 'A fast and flavorful chicken stir-fry with mixed vegetables.',
     createdBy: user_uuid_3,
     servings: 2,
+    image: 'https://example.com/images/chicken_stir_fry.jpg', // Added image
+    ingredients: [
+      {
+        ...getMockDateInfo(),
+        id: generateMockUUID(),
+        ingredientId: mockIngredients[0].id, // Chicken Breast
+        recipeId: generateMockUUID(),
+        quantity: 200, // Quantity in grams
+        unitId: mockGramUnit.id,
+        unit: mockGramUnit,
+        ingredient: mockIngredients[0],
+      },
+      {
+        ...getMockDateInfo(),
+        id: generateMockUUID(),
+        ingredientId: mockIngredients[4].id, // Garlic Clove
+        recipeId: generateMockUUID(),
+        quantity: 10, // Quantity in grams
+        unitId: mockGramUnit.id,
+        unit: mockGramUnit,
+        ingredient: mockIngredients[4],
+      },
+      {
+        ...getMockDateInfo(),
+        id: generateMockUUID(),
+        ingredientId: mockIngredients[3].id, // Olive Oil
+        recipeId: generateMockUUID(),
+        quantity: 20, // Quantity in ml
+        unitId: mockGramUnit.id,
+        unit: mockGramUnit,
+        ingredient: mockIngredients[3],
+      },
+    ],
   },
 ];
 
@@ -338,7 +504,7 @@ export const mockMeals: Meal[] = [
         ...mockIngredients[0],
         ingredientId: mockIngredients[0].id,
         unitId: generateMockUUID(),
-        quantity: '200',
+        quantity: 200,
         mealId: generateMockUUID(),
         unit: mockGramUnit,
       },
