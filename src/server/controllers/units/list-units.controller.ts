@@ -1,14 +1,14 @@
-import { IListUnitsUseCase } from "@/server/application/use-cases/units/list-units.use-case";
-import { Unit } from "@/server/entities/models/unit";
+import { IListUnitsUseCase } from '@/server/application/use-cases/units/list-units.use-case';
+import { Unit } from '@/server/entities/models/unit';
 
 export interface IListUnitsController {
-    (): Promise<Unit[]>;
+  (): Promise<Unit[]>;
 }
 
 export const listUnitsController = (
-    listUnitsUseCase: IListUnitsUseCase
+  listUnitsUseCase: IListUnitsUseCase
 ): IListUnitsController => {
-    return async () => {
-        return listUnitsUseCase();
-    };
+  return async () => {
+    return listUnitsUseCase();
+  };
 };

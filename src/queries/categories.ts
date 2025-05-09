@@ -1,9 +1,9 @@
-import { listCategories } from "@/app/auth/categories/actions";
-import { useQuery } from "@tanstack/react-query";
+import { listCategories } from '@/app/auth/categories/actions';
+import { useQuery } from '@tanstack/react-query';
 
 export function useCategories() {
-    return useQuery({
-        queryKey: ["categories"],
-        queryFn: listCategories,
-    });
+  return useQuery({
+    queryKey: ['categories'],
+    queryFn: listCategories,
+  });
 }

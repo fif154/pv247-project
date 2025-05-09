@@ -1,5 +1,5 @@
-import { Unit } from "@/server/entities/models/unit";
+import { Unit } from '@/server/entities/models/unit';
 
 export interface IUnitsRepository {
-    listUnits(): Promise<Unit[]>;
+  listUnits(): Promise<Unit[]>;
 }
