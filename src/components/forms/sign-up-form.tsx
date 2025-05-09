@@ -1,36 +1,36 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useRegisterMutation } from "@/mutations/auth";
-import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { Spinner } from "../ui/spinner";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useRegisterMutation } from '@/mutations/auth';
+import { zodResolver } from '@hookform/resolvers/zod';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { Spinner } from '../ui/spinner';
 
 export const signUpFormSchema = z
   .object({
     firstName: z.string().min(1, {
-      message: "First name is required",
+      message: 'First name is required',
     }),
     lastName: z.string().min(1, {
-      message: "Last name is required",
+      message: 'Last name is required',
     }),
     email: z.string().email(),
     password: z.string().min(8, {
-      message: "Password must be at least 8 characters",
+      message: 'Password must be at least 8 characters',
     }),
     confirmPassword: z.string().min(8, {
-      message: "Password must be at least 8 characters",
+      message: 'Password must be at least 8 characters',
     }),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
   });
 export type SignUpFormSchema = z.infer<typeof signUpFormSchema>;
 
@@ -51,12 +51,12 @@ export function SignUpForm() {
     await registerMutation.mutateAsync(data);
 
     if (!registerMutation.isError) {
-      router.replace("/auth/home");
+      router.replace('/auth/home');
     }
   };
 
   return (
-    <div className={"flex flex-col gap-6 "}>
+    <div className={'flex flex-col gap-6 '}>
       <Card className="overflow-hidden shadow-xl bg-background/80 dark:bg-background/50 border border-muted">
         <CardContent className="p-0">
           <form className="p-6 md:p-8" onSubmit={handleSubmit(onSubmit)}>
@@ -75,8 +75,8 @@ export function SignUpForm() {
                     placeholder="John"
                     required
                     autoCapitalize="words"
-                    {...register("firstName", {
-                      required: "First name is required",
+                    {...register('firstName', {
+                      required: 'First name is required',
                     })}
                   />
                   {errors.firstName && (
@@ -92,8 +92,8 @@ export function SignUpForm() {
                     placeholder="Doe"
                     required
                     autoCapitalize="words"
-                    {...register("lastName", {
-                      required: "Last name is required",
+                    {...register('lastName', {
+                      required: 'Last name is required',
                     })}
                   />
                   {errors.lastName && (
@@ -109,8 +109,8 @@ export function SignUpForm() {
                   type="email"
                   placeholder="email@gmail.com"
                   required
-                  {...register("email", {
-                    required: "Email is required",
+                  {...register('email', {
+                    required: 'Email is required',
                   })}
                 />
                 {errors.email && (
@@ -121,7 +121,7 @@ export function SignUpForm() {
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="password">Password</Label>
-                <Input type="password" required {...register("password")} />
+                <Input type="password" required {...register('password')} />
                 {errors.password && (
                   <p className="text-destructive text-sm">
                     {errors.password.message}
@@ -133,7 +133,7 @@ export function SignUpForm() {
                 <Input
                   type="password"
                   required
-                  {...register("confirmPassword")}
+                  {...register('confirmPassword')}
                 />
                 {errors.confirmPassword && (
                   <p className="text-destructive text-sm">
@@ -146,11 +146,11 @@ export function SignUpForm() {
                 className="w-full"
                 disabled={registerMutation.isPending}
               >
-                {registerMutation.isPending ? <Spinner /> : "Sign up"}
+                {registerMutation.isPending ? <Spinner /> : 'Sign up'}
               </Button>
 
               <div className="text-center text-sm">
-                Already have an account?{" "}
+                Already have an account?{' '}
                 <Link className="underline underline-offset-4" href="/">
                   Log in
                 </Link>

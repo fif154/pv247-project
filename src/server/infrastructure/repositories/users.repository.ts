@@ -1,9 +1,9 @@
-import { db } from "@/db";
-import { users } from "@/db/schema";
-import { IUsersRepository } from "@/server/application/repositories/users.repository.interface";
-import { DatabaseOperationError } from "@/server/entities/errors/common";
-import { CreateUser, User } from "@/server/entities/models/user";
-import { eq } from "drizzle-orm";
+import { db } from '@/db';
+import { users } from '@/db/schema';
+import { IUsersRepository } from '@/server/application/repositories/users.repository.interface';
+import { DatabaseOperationError } from '@/server/entities/errors/common';
+import { CreateUser, User } from '@/server/entities/models/user';
+import { eq } from 'drizzle-orm';
 
 export class UsersRepository implements IUsersRepository {
   constructor() {}
@@ -43,7 +43,7 @@ export class UsersRepository implements IUsersRepository {
       if (created) {
         return created;
       } else {
-        throw new DatabaseOperationError("Cannot create user.");
+        throw new DatabaseOperationError('Cannot create user.');
       }
     } catch (err) {
       throw err;

@@ -1,9 +1,9 @@
-"use server";
+'use server';
 
-import { getInjection } from "@/server/di/container";
-import { Unit } from "@/server/entities/models/unit";
+import { getInjection } from '@/server/di/container';
+import { Unit } from '@/server/entities/models/unit';
 
 export async function listUnits(): Promise<Unit[]> {
-    const listUnitsController = getInjection("IListUnitsController");
-    return listUnitsController();
+  const listUnitsController = getInjection('IListUnitsController');
+  return listUnitsController();
 }

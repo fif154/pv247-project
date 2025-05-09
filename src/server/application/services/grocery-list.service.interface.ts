@@ -1,7 +1,7 @@
-import { CreateGroceryListItem } from "@/server/entities/models/grocery-list-item";
+import { CreateGroceryListItem } from '@/server/entities/models/grocery-list-item';
 
 export interface IGroceryListService {
-    combineIngredients(
-        ingredients: CreateGroceryListItem[]
-    ): CreateGroceryListItem[];
+  combineIngredients(
+    ingredients: CreateGroceryListItem[]
+  ): CreateGroceryListItem[];
 }

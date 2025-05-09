@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
-import { useMarkAllGroceryListItemsAsBoughtMutation } from "@/mutations/grocery-lists";
-import { Button } from "./ui/button";
-import { Spinner } from "./ui/spinner";
+import { useMarkAllGroceryListItemsAsBoughtMutation } from '@/mutations/grocery-lists';
+import { Button } from './ui/button';
+import { Spinner } from './ui/spinner';
 
 export const MarkAllBoughtButton = ({
-    groceryListId,
-    isAllBought,
+  groceryListId,
+  isAllBought,
 }: {
-    groceryListId: string;
-    isAllBought: boolean;
+  groceryListId: string;
+  isAllBought: boolean;
 }) => {
-    const markAllBoughtMutation = useMarkAllGroceryListItemsAsBoughtMutation();
+  const markAllBoughtMutation = useMarkAllGroceryListItemsAsBoughtMutation();
 
-    return (
-        <Button
-            variant="outline"
-            onClick={() => markAllBoughtMutation.mutateAsync(groceryListId)}
-            disabled={markAllBoughtMutation.isPending || isAllBought}
-        >
-            {markAllBoughtMutation.isPending ? <Spinner /> : "Mark all bought"}
-        </Button>
-    );
+  return (
+    <Button
+      variant="outline"
+      onClick={() => markAllBoughtMutation.mutateAsync(groceryListId)}
+      disabled={markAllBoughtMutation.isPending || isAllBought}
+    >
+      {markAllBoughtMutation.isPending ? <Spinner /> : 'Mark all bought'}
+    </Button>
+  );
 };
