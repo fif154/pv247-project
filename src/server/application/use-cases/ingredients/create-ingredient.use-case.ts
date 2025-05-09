@@ -14,6 +14,7 @@ export const createIngredientUseCase =
         calories: number;
         baseMacroQuantity: number;
         deletedAt: string | null;
+        categoryId?: string | null;
     }) => {
         const existingIngredient =
             await ingredientsRepository.getIngredientByName(input.name);
@@ -23,7 +24,10 @@ export const createIngredientUseCase =
             );
         }
 
-        return ingredientsRepository.createIngredient(input);
+        return ingredientsRepository.createIngredient({
+            ...input,
+            categoryId: input.categoryId ?? null,
+        });
     };
 
 export type ICreateIngredientUseCase = ReturnType<
