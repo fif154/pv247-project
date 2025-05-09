@@ -3,23 +3,26 @@ import { IGroceryListsRepository } from '@/server/application/repositories/groce
 import { IMealPlansRepository } from '@/server/application/repositories/meal-plans.repository.interface';
 import { IMealsRepository } from '@/server/application/repositories/meals.repository.interface';
 import { IUnitsRepository } from '@/server/application/repositories/units.repository.interface';
+import { IAddGroceryListItemsUseCase } from '@/server/application/use-cases/grocery-lists/add-grocery-list-items.use-case';
 import { ICreateGroceryListUseCase } from '@/server/application/use-cases/grocery-lists/create-grocery-list.use-case';
 import { IDeleteGroceryListItemUseCase } from '@/server/application/use-cases/grocery-lists/delete-grocery-list-item.use-case';
 import { IGetGroceryListUseCase } from '@/server/application/use-cases/grocery-lists/get-grocery-list.use-case';
 import { IListGroceryListsUseCase } from '@/server/application/use-cases/grocery-lists/list-grocery-lists.use-case';
 import { IMarkAllItemsBoughtUseCase } from '@/server/application/use-cases/grocery-lists/mark-all-items-bought.use-case';
 import { IUpdateGroceryListItemUseCase } from '@/server/application/use-cases/grocery-lists/update-grocery-list-item.use-case';
+import { IUpdateGroceryListUseCase } from '@/server/application/use-cases/grocery-lists/update-grocery-list.use-case';
 import { ICreateMealPlanUseCase } from '@/server/application/use-cases/meal-plans/create-meal-plan.use-case';
 import { IListMealPlansUseCase } from '@/server/application/use-cases/meal-plans/list-meal-plans.use-case';
 import { ICreateMealUseCase } from '@/server/application/use-cases/meals/create-meal.use-case';
 import { IListMealsUseCase } from '@/server/application/use-cases/meals/list-meals.use-case';
 import { IListUnitsUseCase } from '@/server/application/use-cases/units/list-units.use-case';
+import { IAddGroceryListItemsController } from '@/server/controllers/grocery-lists/add-grocery-list-items.controller';
 import { ICreateGroceryListController } from '@/server/controllers/grocery-lists/create-grocery-list.controller';
 import { IDeleteGroceryListItemController } from '@/server/controllers/grocery-lists/delete-grocery-list-item.controller';
 import { IGetGroceryListController } from '@/server/controllers/grocery-lists/get-grocery-list.controller';
 import { IListGroceryListsController } from '@/server/controllers/grocery-lists/list-grocery-lists.controller';
 import { IMarkAllItemsBoughtController } from '@/server/controllers/grocery-lists/mark-all-items-bought.controller';
-import { IUpdateGroceryListItemController } from '@/server/controllers/grocery-lists/update-grocery-list-item.controller';
+import { IUpdateGroceryListController } from '@/server/controllers/grocery-lists/update-grocery-list.controller';
 import { ICreateMealPlanController } from '@/server/controllers/meal-plans/create-meal-plan.controller';
 import { IListMealPlansController } from '@/server/controllers/meal-plans/list-meal-plans.controller';
 import { ICreateMealController } from '@/server/controllers/meals/create-meal.controller';
@@ -120,12 +123,16 @@ export const DI_SYMBOLS = {
   ICreateGroceryListUseCase: Symbol.for('ICreateGroceryListUseCase'),
   IListGroceryListsUseCase: Symbol.for('IListGroceryListsUseCase'),
   IGetGroceryListUseCase: Symbol.for('IGetGroceryListUseCase'),
+  IUpdateGroceryListUseCase: Symbol.for('IUpdateGroceryListUseCase'),
+  IAddGroceryListItemsUseCase: Symbol.for('IAddGroceryListItemsUseCase'),
   IUpdateGroceryListItemUseCase: Symbol.for('IUpdateGroceryListItemUseCase'),
   IDeleteGroceryListItemUseCase: Symbol.for('IDeleteGroceryListItemUseCase'),
   IMarkAllItemsBoughtUseCase: Symbol.for('IMarkAllItemsBoughtUseCase'),
   ICreateGroceryListController: Symbol.for('ICreateGroceryListController'),
   IListGroceryListsController: Symbol.for('IListGroceryListsController'),
   IGetGroceryListController: Symbol.for('IGetGroceryListController'),
+  IUpdateGroceryListController: Symbol.for('IUpdateGroceryListController'),
+  IAddGroceryListItemsController: Symbol.for('IAddGroceryListItemsController'),
   IUpdateGroceryListItemController: Symbol.for(
     'IUpdateGroceryListItemController'
   ),
@@ -206,12 +213,16 @@ export interface DI_RETURN_TYPES {
   ICreateGroceryListUseCase: ICreateGroceryListUseCase;
   IListGroceryListsUseCase: IListGroceryListsUseCase;
   IGetGroceryListUseCase: IGetGroceryListUseCase;
+  IUpdateGroceryListUseCase: IUpdateGroceryListUseCase;
+  IAddGroceryListItemsUseCase: IAddGroceryListItemsUseCase;
   IUpdateGroceryListItemUseCase: IUpdateGroceryListItemUseCase;
   IDeleteGroceryListItemUseCase: IDeleteGroceryListItemUseCase;
   IMarkAllItemsBoughtUseCase: IMarkAllItemsBoughtUseCase;
   ICreateGroceryListController: ICreateGroceryListController;
   IListGroceryListsController: IListGroceryListsController;
   IGetGroceryListController: IGetGroceryListController;
+  IUpdateGroceryListController: IUpdateGroceryListController;
+  IAddGroceryListItemsController: IAddGroceryListItemsController;
   IUpdateGroceryListItemController: IUpdateGroceryListItemController;
   IDeleteGroceryListItemController: IDeleteGroceryListItemController;
   IMarkAllItemsBoughtController: IMarkAllItemsBoughtController;

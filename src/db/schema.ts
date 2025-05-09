@@ -243,7 +243,6 @@ export const groceryListItems = sqliteTable(
     unitId: text('unit_id').references(() => units.id, {
       onDelete: 'set null',
     }),
-    name: text('name').notNull(),
     isBought: integer('is_bought', { mode: 'boolean' })
       .notNull()
       .default(false),

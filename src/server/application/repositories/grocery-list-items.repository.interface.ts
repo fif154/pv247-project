@@ -14,13 +14,15 @@ export interface IGroceryListItemsRepository {
     tx?: Transaction
   ): Promise<GroceryListItem[]>;
   getGroceryListItemsByGroceryListId(
-    groceryListId: string
+    groceryListId: string,
+    tx?: Transaction
   ): Promise<GroceryListItem[]>;
   updateGroceryListItem(
     id: string,
     input: Partial<
       Omit<GroceryListItem, 'id' | 'createdBy' | 'createdAt' | 'updatedAt'>
-    >
+    >,
+    tx?: Transaction
   ): Promise<GroceryListItem>;
   updateGroceryListItemsByGroceryListId(
     groceryListId: string,

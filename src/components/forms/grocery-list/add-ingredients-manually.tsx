@@ -1,3 +1,4 @@
+'use client';
 import { SelectField } from '@/components/forms/select-field';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -34,7 +35,11 @@ import { useState } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { GroceryListFormValues, IngredientFormValues } from './schema';
 
-export const AddIngredientsManuallyForm = () => {
+export const AddIngredientsManuallyForm = ({
+  editMode,
+}: {
+  editMode?: boolean;
+}) => {
   const form = useFormContext<GroceryListFormValues>();
   const { fields, append, remove } = useFieldArray({
     control: form.control,
@@ -62,12 +67,14 @@ export const AddIngredientsManuallyForm = () => {
 
   return (
     <Card>
-      <CardHeader>
-        <h2 className="text-2xl font-semibold">Add Ingredients Manually</h2>
-        <p className="text-md text-muted-foreground">
-          Add additional ingredients to your grocery list
-        </p>
-      </CardHeader>
+      {!editMode ? (
+        <CardHeader>
+          <h2 className="text-2xl font-semibold">Add Ingredients Manually</h2>
+          <p className="text-md text-muted-foreground">
+            Add additional ingredients to your grocery list
+          </p>
+        </CardHeader>
+      ) : null}
       <CardContent>
         <AddExistingIngredientsManually
           appendExisting={handleAddIngredient}
@@ -275,7 +282,7 @@ const IngredientListForm = ({
       >
         <div className="flex items-center gap-2 font-bold">
           <Plus className="h-4 w-4" />
-          <span>Add another ingredient</span>
+          <span>Add ingredient</span>
         </div>
       </Button>
     </div>

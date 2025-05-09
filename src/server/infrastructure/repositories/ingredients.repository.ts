@@ -26,8 +26,12 @@ export class IngredientsRepository implements IIngredientsRepository {
     return ingredient || null;
   }
 
-  async getIngredientByName(name: string): Promise<Ingredient | null> {
-    const [ingredient] = await db
+  async getIngredientByName(
+    name: string,
+    tx?: Transaction
+  ): Promise<Ingredient | null> {
+    const invoker = tx ?? db;
+    const [ingredient] = await invoker
       .select()
       .from(ingredients)
       .where(and(eq(ingredients.name, name), isNull(ingredients.deletedAt)))

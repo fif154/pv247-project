@@ -10,7 +10,10 @@ export interface IIngredientsRepository {
     tx?: Transaction
   ): Promise<Ingredient>;
   getIngredientById(id: string): Promise<Ingredient | null>;
-  getIngredientByName(name: string): Promise<Ingredient | null>;
+  getIngredientByName(
+    name: string,
+    tx?: Transaction
+  ): Promise<Ingredient | null>;
   updateIngredient(
     id: string,
     input: Partial<
