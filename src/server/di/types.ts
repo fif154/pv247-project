@@ -1,3 +1,5 @@
+import { IGroupMembersRepository } from '../application/repositories/groupMembers.repository.interface';
+import { IGroupsRepository } from '../application/repositories/groups.repository.interface';
 import { IGroceryListItemsRepository } from '@/server/application/repositories/grocery-list-items.repository.interface';
 import { IGroceryListsRepository } from '@/server/application/repositories/grocery-lists.repository.interface';
 import { IMealPlansRepository } from '@/server/application/repositories/meal-plans.repository.interface';
@@ -34,6 +36,16 @@ import { IGroceryListService } from '../application/services/grocery-list.servic
 import { ITransactionManagerService } from '../application/services/transaction-manager.service.interface';
 import { IRegisterUseCase } from '../application/use-cases/auth/register.use-case';
 import { ISignInUseCase } from '../application/use-cases/auth/sign-in.use-case';
+import { ICreateGroupWithMembersUseCase } from '../application/use-cases/groups/create-group-with-members.use-case';
+import { IEditGroupUseCase } from '../application/use-cases/groups/edit-group.use-case';
+import { IGetGroupWithMembersUseCase } from '../application/use-cases/groups/get-group-with-members.use-case';
+import { ISearchUsersByEmailUseCase } from '../application/use-cases/users/search-users.use-case';
+import { IGetGroupWithMembersController } from '../controllers/groups/get-group-with-members.controller';
+import { ISearchUsersByEmailController } from '../controllers/users/search-users.controller';
+import { IRemoveGroupUseCase } from '../application/use-cases/groups/remove-group.use-case';
+import { IRemoveGroupController } from '../controllers/groups/remove-group.controller';
+import { IRemoveMemberFromGroupUseCase } from '../application/use-cases/groups/remove-member-from-group.use-case';
+import { IRemoveMemberFromGroupController } from '../controllers/groups/remove-member-from-group.controller';
 import { ICreateCategoryUseCase } from '../application/use-cases/ingredient-categories/create-category.use-case';
 import { IListCategoriesUseCase } from '../application/use-cases/ingredient-categories/list-categories.use-case';
 import { ICreateIngredientUseCase } from '../application/use-cases/ingredients/create-ingredient.use-case';
@@ -48,18 +60,22 @@ import { IListRecipesUseCase } from '../application/use-cases/recipes/list-recip
 import { IUpdateRecipeUseCase } from '../application/use-cases/recipes/update-recipe.use-case';
 import { IRegisterController } from '../controllers/auth/register.controller';
 import { ISignInController } from '../controllers/auth/sign-in.controller';
-import { ICreateCategoryController } from '../controllers/ingredient-categories/create-category.controller';
-import { IListCategoriesController } from '../controllers/ingredient-categories/list-categories.controller';
 import { ICreateIngredientController } from '../controllers/ingredients/create-ingredient.controller';
 import { IDeleteIngredientController } from '../controllers/ingredients/delete-ingredient.controller';
 import { IGetIngredientController } from '../controllers/ingredients/get-ingredient.controller';
 import { IListIngredientsController } from '../controllers/ingredients/list-ingredients.controller';
 import { IUpdateIngredientController } from '../controllers/ingredients/update-ingredient.controller';
+import { IGetUserGroupsWithMembersUseCase } from '../application/use-cases/groups/get-user-groups-with-members.use-case';
+import { IGetUserGroupsWithMembersController } from '../controllers/groups/get-user-groups-with-members.controller';
 import { ICreateRecipeController } from '../controllers/recipes/create-recipe.controller';
 import { IDeleteRecipeController } from '../controllers/recipes/delete-recipe.controller';
 import { IGetRecipeController } from '../controllers/recipes/get-recipe.controller';
 import { IListRecipesController } from '../controllers/recipes/list-recipes.controller';
 import { IUpdateRecipeController } from '../controllers/recipes/update-recipe.controller';
+import { ICreateCategoryController } from '../controllers/ingredient-categories/create-category.controller';
+import { IListCategoriesController } from '../controllers/ingredient-categories/list-categories.controller';
+import { ICreateGroupWithMembersController } from '../controllers/groups/create-group-with-members.controller';
+import { IEditGroupController } from '../controllers/groups/edit-group.controller';
 
 export const DI_SYMBOLS = {
   // Services
@@ -69,12 +85,23 @@ export const DI_SYMBOLS = {
 
   // Repositories
   IUsersRepository: Symbol.for('IUsersRepository'),
+  IGroupsRepository: Symbol.for('IGroupsRepository'),
+  IGroupMembersRepository: Symbol.for('IGroupMembersRepository'),
   IIngredientsRepository: Symbol.for('IIngredientsRepository'),
   IRecipesRepository: Symbol.for('IRecipesRepository'),
 
   // Use Cases
   ISignInUseCase: Symbol.for('ISignInUseCase'),
   IRegisterUseCase: Symbol.for('IRegisterUseCase'),
+  IGetGroupWithMembersUseCase: Symbol.for('IGetGroupWithMembersUseCase'),
+  IGetUserGroupsWithMembersUseCase: Symbol.for(
+    'IGetUserGroupsWithMembersUseCase'
+  ),
+  ICreateGroupWithMembersUseCase: Symbol.for('ICreateGroupWithMembersUseCase'),
+  ISearchUsersByEmailUseCase: Symbol.for('ISearchUsersByEmailUseCase'),
+  IEditGroupUseCase: Symbol.for('IEditGroupUseCase'),
+  IRemoveGroupUseCase: Symbol.for('IRemoveGroupUseCase'),
+  IRemoveMemberFromGroupUseCase: Symbol.for('IRemoveMemberFromGroupUseCase'),
   ICreateIngredientUseCase: Symbol.for('ICreateIngredientUseCase'),
   IUpdateIngredientUseCase: Symbol.for('IUpdateIngredientUseCase'),
   IDeleteIngredientUseCase: Symbol.for('IDeleteIngredientUseCase'),
@@ -89,6 +116,19 @@ export const DI_SYMBOLS = {
   // Controllers
   ISignInController: Symbol.for('ISignInController'),
   IRegisterController: Symbol.for('IRegisterController'),
+  IGetGroupWithMembersController: Symbol.for('IGetGroupWithMembersController'),
+  IGetUserGroupsWithMembersController: Symbol.for(
+    'IGetUserGroupsWithMembersController'
+  ),
+  ICreateGroupWithMembersController: Symbol.for(
+    'ICreateGroupWithMembersController'
+  ),
+  ISearchUsersByEmailController: Symbol.for('ISearchUsersByEmailController'),
+  IEditGroupController: Symbol.for('IEditGroupController'),
+  IRemoveGroupController: Symbol.for('IRemoveGroupController'),
+  IRemoveMemberFromGroupController: Symbol.for(
+    'IRemoveMemberFromGroupController'
+  ),
   ICreateIngredientController: Symbol.for('ICreateIngredientController'),
   IUpdateIngredientController: Symbol.for('IUpdateIngredientController'),
   IDeleteIngredientController: Symbol.for('IDeleteIngredientController'),
@@ -157,12 +197,21 @@ export interface DI_RETURN_TYPES {
 
   // Repositories
   IUsersRepository: IUsersRepository;
+  IGroupsRepository: IGroupsRepository;
+  IGroupMembersRepository: IGroupMembersRepository;
   IIngredientsRepository: IIngredientsRepository;
   IRecipesRepository: IRecipesRepository;
 
   // Use Cases
   ISignInUseCase: ISignInUseCase;
   IRegisterUseCase: IRegisterUseCase;
+  IGetGroupWithMembersUseCase: IGetGroupWithMembersUseCase;
+  IGetUserGroupsWithMembersUseCase: IGetUserGroupsWithMembersUseCase;
+  ICreateGroupWithMembersUseCase: ICreateGroupWithMembersUseCase;
+  ISearchUsersByEmailUseCase: ISearchUsersByEmailUseCase;
+  IEditGroupUseCase: IEditGroupUseCase;
+  IRemoveGroupUseCase: IRemoveGroupUseCase;
+  IRemoveMemberFromGroupUseCase: IRemoveMemberFromGroupUseCase;
   ICreateIngredientUseCase: ICreateIngredientUseCase;
   IUpdateIngredientUseCase: IUpdateIngredientUseCase;
   IDeleteIngredientUseCase: IDeleteIngredientUseCase;
@@ -177,6 +226,13 @@ export interface DI_RETURN_TYPES {
   // Controllers
   ISignInController: ISignInController;
   IRegisterController: IRegisterController;
+  IGetGroupWithMembersController: IGetGroupWithMembersController;
+  IGetUserGroupsWithMembersController: IGetUserGroupsWithMembersController;
+  ICreateGroupWithMembersController: ICreateGroupWithMembersController;
+  ISearchUsersByEmailController: ISearchUsersByEmailController;
+  IEditGroupController: IEditGroupController;
+  IRemoveGroupController: IRemoveGroupController;
+  IRemoveMemberFromGroupController: IRemoveMemberFromGroupController;
   ICreateIngredientController: ICreateIngredientController;
   IUpdateIngredientController: IUpdateIngredientController;
   IDeleteIngredientController: IDeleteIngredientController;

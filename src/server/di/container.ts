@@ -2,6 +2,8 @@ import { createContainer } from '@evyweb/ioctopus';
 
 import { createAuthenticationModule } from './modules/authentication.module';
 import { createTransactionManagerModule } from './modules/database.module';
+import { createGroupMembersModule } from './modules/groupMembers.module';
+import { createGroupsModule } from './modules/groups.module';
 import { createGroceryListsModule } from './modules/grocery-lists.module';
 import { createIngredientCategoriesModule } from './modules/ingredient-categories.module';
 import { createIngredientsModule } from './modules/ingredients.module';
@@ -21,6 +23,11 @@ ApplicationContainer.load(
 ApplicationContainer.load(
   Symbol('AuthenticationModule'),
   createAuthenticationModule()
+);
+ApplicationContainer.load(Symbol('GroupsModule'), createGroupsModule());
+ApplicationContainer.load(
+  Symbol('GroupMembersModule'),
+  createGroupMembersModule()
 );
 ApplicationContainer.load(Symbol('UsersModule'), createUsersModule());
 
