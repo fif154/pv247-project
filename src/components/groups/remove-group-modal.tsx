@@ -26,15 +26,17 @@ export const RemoveGroupModal = ({
   groupId,
   groupName,
 }: RemoveGroupModalContent) => {
-  const { mutate: removeGroup, isPending: isRemoving } =
+  const { mutateAsync: removeGroup, isPending: isRemoving } =
     useRemoveGroupMutation();
   const router = useRouter();
 
-  const handleRemove = () => {
-    removeGroup(groupId, {
+  const handleRemove = async () => {
+    await removeGroup(groupId, {
       onSuccess: () => {
-        router.refresh();
         setModalOpen(false); // Close the modal on success
+        setTimeout(() => {
+          router.refresh();
+        }, 100);
       },
       onError: (error) => {
         console.error('Failed to remove group:', error);

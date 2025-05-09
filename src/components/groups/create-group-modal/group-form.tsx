@@ -46,20 +46,20 @@ export const GroupForm = ({
       email: u.email ?? '',
     })) ?? [currentUser]
   );
-  const { mutate: searchUsersByEmail, isPending: isSearchPending } =
+  const { mutateAsync: searchUsersByEmail, isPending: isSearchPending } =
     useSearchUsersByEmailMutation();
-  const { mutate: createGroup, isPending: isCreatePending } =
+  const { mutateAsync: createGroup, isPending: isCreatePending } =
     useCreateGroupWithMembersMutation();
-  const { mutate: editGroup, isPending: isEditPending } =
+  const { mutateAsync: editGroup, isPending: isEditPending } =
     useEditGroupMutation();
 
   const router = useRouter();
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleEmailChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const email = e.target.value;
     setEmailQuery(email);
 
     if (email.trim().length > 2) {
-      searchUsersByEmail(email, {
+      await searchUsersByEmail(email, {
         onSuccess: (data) => {
           setUsers(
             data.filter((user) => !selectedUsers.some((u) => u.id === user.id))
@@ -74,9 +74,9 @@ export const GroupForm = ({
     }
   };
 
-  const onSubmit = (data: GroupFormSchema) => {
+  const onSubmit = async (data: GroupFormSchema) => {
     if (isEditMode) {
-      editGroup(
+      await editGroup(
         {
           groupId: initialData?.id ?? '',
           name: data.groupName,
@@ -85,13 +85,15 @@ export const GroupForm = ({
         },
         {
           onSuccess: () => {
-            router.refresh();
             setModalOpen(false);
+            setTimeout(() => {
+              router.refresh();
+            }, 100);
           },
         }
       );
     } else {
-      createGroup(
+      await createGroup(
         {
           name: data.groupName,
           description: data.groupDescription,
@@ -99,8 +101,10 @@ export const GroupForm = ({
         },
         {
           onSuccess: () => {
-            router.refresh();
             setModalOpen(false);
+            setTimeout(() => {
+              router.refresh();
+            }, 100);
           },
         }
       );

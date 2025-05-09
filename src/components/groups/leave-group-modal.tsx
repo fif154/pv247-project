@@ -29,17 +29,19 @@ export const LeaveGroupModal = ({
   groupName,
   currentUserId,
 }: LeaveGroupModalProps) => {
-  const { mutate: removeMember, isPending: isRemoving } =
+  const { mutateAsync: removeMember, isPending: isRemoving } =
     useRemoveMemberFromGroupMutation();
   const router = useRouter();
 
-  const handleLeaveGroup = () => {
-    removeMember(
+  const handleLeaveGroup = async () => {
+    await removeMember(
       { groupId, memberId: currentUserId },
       {
         onSuccess: () => {
-          router.refresh();
           setModalOpen(false); // Close the modal on success
+          setTimeout(() => {
+            router.refresh(); // then refresh after DOM has handled modal state
+          }, 100);
         },
         onError: (error) => {
           console.error('Failed to leave group:', error);
