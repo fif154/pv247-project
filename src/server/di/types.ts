@@ -51,6 +51,7 @@ import { IListRecipesUseCase } from '../application/use-cases/recipes/list-recip
 import { IUpdateRecipeUseCase } from '../application/use-cases/recipes/update-recipe.use-case';
 import { IRegisterController } from '../controllers/auth/register.controller';
 import { ISignInController } from '../controllers/auth/sign-in.controller';
+import { IUpdateGroceryListItemController } from '../controllers/grocery-lists/update-grocery-list-item.controller';
 import { ICreateCategoryController } from '../controllers/ingredient-categories/create-category.controller';
 import { IListCategoriesController } from '../controllers/ingredient-categories/list-categories.controller';
 import { ICreateIngredientController } from '../controllers/ingredients/create-ingredient.controller';
