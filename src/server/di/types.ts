@@ -40,10 +40,6 @@ import { ICreateGroupWithMembersUseCase } from '../application/use-cases/groups/
 import { IEditGroupUseCase } from '../application/use-cases/groups/edit-group.use-case';
 import { IGetGroupWithMembersUseCase } from '../application/use-cases/groups/get-group-with-members.use-case';
 import { ISearchUsersByEmailUseCase } from '../application/use-cases/users/search-users.use-case';
-import { IRegisterController } from '../controllers/auth/register.controller';
-import { ISignInController } from '../controllers/auth/sign-in.controller';
-import { ICreateGroupWithMembersController } from '../controllers/groups/create-group-with-members.controller';
-import { IEditGroupController } from '../controllers/groups/edit-group.controller';
 import { IGetGroupWithMembersController } from '../controllers/groups/get-group-with-members.controller';
 import { ISearchUsersByEmailController } from '../controllers/users/search-users.controller';
 import { IRemoveGroupUseCase } from '../application/use-cases/groups/remove-group.use-case';
@@ -64,8 +60,6 @@ import { IListRecipesUseCase } from '../application/use-cases/recipes/list-recip
 import { IUpdateRecipeUseCase } from '../application/use-cases/recipes/update-recipe.use-case';
 import { IRegisterController } from '../controllers/auth/register.controller';
 import { ISignInController } from '../controllers/auth/sign-in.controller';
-import { ICreateCategoryController } from '../controllers/ingredient-categories/create-category.controller';
-import { IListCategoriesController } from '../controllers/ingredient-categories/list-categories.controller';
 import { ICreateIngredientController } from '../controllers/ingredients/create-ingredient.controller';
 import { IDeleteIngredientController } from '../controllers/ingredients/delete-ingredient.controller';
 import { IGetIngredientController } from '../controllers/ingredients/get-ingredient.controller';
@@ -78,6 +72,10 @@ import { IDeleteRecipeController } from '../controllers/recipes/delete-recipe.co
 import { IGetRecipeController } from '../controllers/recipes/get-recipe.controller';
 import { IListRecipesController } from '../controllers/recipes/list-recipes.controller';
 import { IUpdateRecipeController } from '../controllers/recipes/update-recipe.controller';
+import { ICreateCategoryController } from '../controllers/ingredient-categories/create-category.controller';
+import { IListCategoriesController } from '../controllers/ingredient-categories/list-categories.controller';
+import { ICreateGroupWithMembersController } from '../controllers/groups/create-group-with-members.controller';
+import { IEditGroupController } from '../controllers/groups/edit-group.controller';
 
 export const DI_SYMBOLS = {
   // Services

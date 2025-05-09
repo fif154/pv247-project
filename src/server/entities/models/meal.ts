@@ -1,4 +1,3 @@
-import { meals } from '@/db/schema';
 import { mealAdditionalIngredients, meals } from '@/db/schema';
 import { InferInsertModel } from 'drizzle-orm';
 import { TModelWithRelations } from '../utils';
