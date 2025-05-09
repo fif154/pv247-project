@@ -4,7 +4,6 @@ import { createAuthenticationModule } from './modules/authentication.module';
 import { createTransactionManagerModule } from './modules/database.module';
 import { createGroupMembersModule } from './modules/groupMembers.module';
 import { createGroupsModule } from './modules/groups.module';
-import { createIngredientsModule } from './modules/ingredients.module';
 import { createGroceryListsModule } from './modules/grocery-lists.module';
 import { createIngredientCategoriesModule } from './modules/ingredient-categories.module';
 import { createIngredientsModule } from './modules/ingredients.module';
