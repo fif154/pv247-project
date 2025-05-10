@@ -7,3 +7,13 @@ export const searchUsersByEmailAction = async (email: string) => {
 
   return await controller({ email });
 };
+
+export const editUserAction = async (data: {
+  userId: string;
+  name: string;
+  email: string;
+}) => {
+  const controller = getInjection('IEditUserController');
+
+  return await controller(data);
+};

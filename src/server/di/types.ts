@@ -76,6 +76,8 @@ import { ICreateCategoryController } from '../controllers/ingredient-categories/
 import { IListCategoriesController } from '../controllers/ingredient-categories/list-categories.controller';
 import { ICreateGroupWithMembersController } from '../controllers/groups/create-group-with-members.controller';
 import { IEditGroupController } from '../controllers/groups/edit-group.controller';
+import { IEditUserUseCase } from '../application/use-cases/users/edit-user.use-case';
+import { IEditUserController } from '../controllers/users/edit-user.controller';
 
 export const DI_SYMBOLS = {
   // Services
@@ -112,6 +114,7 @@ export const DI_SYMBOLS = {
   IDeleteRecipeUseCase: Symbol.for('IDeleteRecipeUseCase'),
   IListRecipesUseCase: Symbol.for('IListRecipesUseCase'),
   IGetRecipeUseCase: Symbol.for('IGetRecipeUseCase'),
+  IEditUserUseCase: Symbol.for('IEditUserUseCase'),
 
   // Controllers
   ISignInController: Symbol.for('ISignInController'),
@@ -139,6 +142,7 @@ export const DI_SYMBOLS = {
   IDeleteRecipeController: Symbol.for('IDeleteRecipeController'),
   IListRecipesController: Symbol.for('IListRecipesController'),
   IGetRecipeController: Symbol.for('IGetRecipeController'),
+  IEditUserController: Symbol.for('IEditUserController'),
 
   // Ingredient Categories
   IIngredientCategoriesRepository: Symbol.for(
@@ -222,6 +226,7 @@ export interface DI_RETURN_TYPES {
   IDeleteRecipeUseCase: IDeleteRecipeUseCase;
   IListRecipesUseCase: IListRecipesUseCase;
   IGetRecipeUseCase: IGetRecipeUseCase;
+  IEditUserUseCase: IEditUserUseCase;
 
   // Controllers
   ISignInController: ISignInController;
@@ -243,6 +248,7 @@ export interface DI_RETURN_TYPES {
   IDeleteRecipeController: IDeleteRecipeController;
   IListRecipesController: IListRecipesController;
   IGetRecipeController: IGetRecipeController;
+  IEditUserController: IEditUserController;
 
   // Ingredient Categories
   IIngredientCategoriesRepository: IIngredientCategoriesRepository;
