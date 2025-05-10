@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // seed.ts
+import { Ingredient } from '@/server/entities/models/ingredient';
+import { Unit } from '@/server/entities/models/unit';
 import { AdapterAccountType } from '@auth/core/adapters'; // Ensure this type is accessible
 import { faker } from '@faker-js/faker';
 import { createClient } from '@libsql/client';
 import { drizzle } from 'drizzle-orm/libsql';
 import * as schema from './schema';
-import { Ingredient } from '@/server/entities/models/ingredient';
-import { Unit } from '@/server/entities/models/unit';
 
 // --- Configuration ---
 const NUM_USERS = 20;
@@ -661,7 +661,6 @@ async function main() {
                 fractionDigits: 1,
               }),
               unitId: unitId,
-              name: shuffledIngredients[j].name, // Often same as ingredient name
               isBought: faker.datatype.boolean(0.3), // 30% chance already bought
             };
             try {

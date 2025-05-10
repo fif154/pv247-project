@@ -1,7 +1,10 @@
 import { GroceryList } from '@/server/entities/models/grocery-list';
 import { format } from 'date-fns';
+import Link from 'next/link';
+import { EditGroceryListForm } from './edit-grocery-list-form';
 import { GroceryListItemComponent } from './grocery-list-item-component';
 import { MarkAllBoughtButton } from './mark-all-bought-button';
+import { Button } from './ui/button';
 
 export const formatGroceryListDate = (date: Date) => {
   return format(date, 'LLLL d');
@@ -9,8 +12,10 @@ export const formatGroceryListDate = (date: Date) => {
 
 export const GroceryListComponent = ({
   groceryList,
+  editMode = false,
 }: {
   groceryList: GroceryList;
+  editMode?: boolean;
 }) => {
   const itemsByCategory =
     groceryList.items?.reduce(
@@ -27,7 +32,7 @@ export const GroceryListComponent = ({
   const areAllBought = !!groceryList.items?.every((item) => item.isBought);
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 border rounded-lg p-4">
       <div className="flex flex-row items-center justify-between">
         <div className="flex flex-col gap-2">
           <h2 className="text-2xl font-bold">{groceryList.name}</h2>
@@ -38,11 +43,26 @@ export const GroceryListComponent = ({
             </p>
           ) : null}
         </div>
-        <MarkAllBoughtButton
-          groceryListId={groceryList.id}
-          isAllBought={areAllBought}
-        />
+        <div className="flex flex-col items-end md:flex-row gap-2">
+          <MarkAllBoughtButton
+            groceryListId={groceryList.id}
+            isAllBought={areAllBought}
+          />
+          <Link
+            href={
+              `/auth/grocery-lists/${groceryList.id}` +
+              (!editMode ? '/edit' : '')
+            }
+            className="flex items-center gap-2 w-full md:w-auto"
+          >
+            <Button variant="outline" className="w-full md:w-auto">
+              {editMode ? 'Cancel' : 'Add'}
+            </Button>
+          </Link>
+        </div>
       </div>
+
+      {editMode ? <EditGroceryListForm groceryList={groceryList} /> : null}
 
       <div className="flex flex-col gap-2">
         {Object.entries(itemsByCategory).map(([category, items]) => (

@@ -1,10 +1,14 @@
 import {
+  addGroceryListItemsAction,
   createGroceryListAction,
   deleteGroceryListItemAction,
   markAllItemsBoughtAction,
   updateGroceryListItemAction,
 } from '@/app/auth/grocery-lists/actions';
-import { GroceryListFormValues } from '@/components/forms/grocery-list/schema';
+import {
+  GroceryListFormValues,
+  IngredientFormValues,
+} from '@/components/forms/grocery-list/schema';
 import { showErrorToast, showSuccessToast } from '@/utils/toast';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
@@ -67,6 +71,26 @@ export const useDeleteGroceryListItemMutation = () => {
     },
     onSuccess: () => {
       showSuccessToast('Grocery list item deleted successfully');
+    },
+  });
+};
+
+export const useAddGroceryListItemsMutation = () => {
+  const router = useRouter();
+  return useMutation({
+    mutationFn: async (data: {
+      groceryListId: string;
+      items: IngredientFormValues[];
+    }) => {
+      const { groceryListId, items } = data;
+      await addGroceryListItemsAction(groceryListId, items);
+    },
+    onError: () => {
+      showErrorToast('Failed to add grocery list items');
+    },
+    onSuccess: () => {
+      showSuccessToast('Grocery list items added successfully');
+      router.back();
     },
   });
 };

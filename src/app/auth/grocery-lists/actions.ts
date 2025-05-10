@@ -1,6 +1,9 @@
 'use server';
 
-import { GroceryListFormValues } from '@/components/forms/grocery-list/schema';
+import {
+  GroceryListFormValues,
+  IngredientFormValues,
+} from '@/components/forms/grocery-list/schema';
 import { getInjection } from '@/server/di/container';
 import { NotFoundError } from '@/server/entities/errors/common';
 import { GroceryListItem } from '@/server/entities/models/grocery-list-item';
@@ -36,6 +39,26 @@ export async function listGroceryListsAction() {
     }
     throw error;
   }
+}
+
+export async function updateGroceryListAction(
+  id: string,
+  input: Partial<
+    Omit<GroceryListItem, 'id' | 'createdBy' | 'createdAt' | 'updatedAt'>
+  >
+) {
+  const updateController = getInjection('IUpdateGroceryListController');
+  await updateController(id, input);
+  revalidatePath('/grocery-lists');
+}
+
+export async function addGroceryListItemsAction(
+  groceryListId: string,
+  items: IngredientFormValues[]
+) {
+  const addItemsController = getInjection('IAddGroceryListItemsController');
+  await addItemsController({ groceryListId, items });
+  revalidatePath('/grocery-lists');
 }
 
 export async function updateGroceryListItemAction(
