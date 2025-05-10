@@ -1,6 +1,6 @@
-import { ISignInUseCase } from "@/server/application/use-cases/auth/sign-in.use-case";
-import { InputParseError } from "@/server/entities/errors/common";
-import { z } from "zod";
+import { ISignInUseCase } from '@/server/application/use-cases/auth/sign-in.use-case';
+import { InputParseError } from '@/server/entities/errors/common';
+import { z } from 'zod';
 
 const inputSchema = z.object({
   email: z.string().email(),
@@ -12,7 +12,7 @@ export const signInController =
     const { data, error } = inputSchema.safeParse(input);
 
     if (error) {
-      throw new InputParseError("Invalid data", { cause: error });
+      throw new InputParseError('Invalid data', { cause: error });
     }
 
     const user = await signInUseCase(data);

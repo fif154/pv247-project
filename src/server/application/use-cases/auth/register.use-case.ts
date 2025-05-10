@@ -1,11 +1,11 @@
-import { AuthenticationError } from "@/server/entities/errors/auth";
-import { IUsersRepository } from "../../repositories/users.repository.interface";
-import { IAuthenticationService } from "../../services/authentication.service.interface";
+import { AuthenticationError } from '@/server/entities/errors/auth';
+import { IUsersRepository } from '../../repositories/users.repository.interface';
+import { IAuthenticationService } from '../../services/authentication.service.interface';
 
 export const registerUseCase =
   (
     usersRepository: IUsersRepository,
-    authenticationService: IAuthenticationService,
+    authenticationService: IAuthenticationService
   ) =>
   async (input: {
     email: string;
@@ -16,11 +16,11 @@ export const registerUseCase =
     const existingUser = await usersRepository.getUserByEmail(input.email);
 
     if (existingUser) {
-      throw new AuthenticationError("User with this email already exists");
+      throw new AuthenticationError('User with this email already exists');
     }
 
     const passwordHash = await authenticationService.hashPassword(
-      input.password,
+      input.password
     );
 
     const newUser = await usersRepository.createUser({

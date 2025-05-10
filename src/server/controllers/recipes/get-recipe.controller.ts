@@ -5,7 +5,8 @@ const getRecipeSchema = z.object({
   id: z.string(),
 });
 
-export const getRecipeController = (getRecipeUseCase: IGetRecipeUseCase) => 
+export const getRecipeController =
+  (getRecipeUseCase: IGetRecipeUseCase) =>
   async (input: z.infer<typeof getRecipeSchema>) => {
     const validatedInput = getRecipeSchema.parse(input);
     return getRecipeUseCase(validatedInput.id);

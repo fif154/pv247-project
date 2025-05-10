@@ -1,12 +1,10 @@
-// src/server/application/use-cases/recipes/delete-recipe.use-case.ts
-
 import { auth } from '@/auth';
 import { IRecipesRepository } from '@/server/application/repositories/recipes.repository.interface';
 import { NotFoundError } from '@/server/entities/errors/common';
 import { canDeleteRecipe } from '../../policy/recipe';
 
-export const deleteRecipeUseCase = (recipesRepository: IRecipesRepository) => 
-  async (id: string) => {
+export const deleteRecipeUseCase =
+  (recipesRepository: IRecipesRepository) => async (id: string) => {
     const user = (await auth())?.user;
     if (!user) {
       throw new NotFoundError('User not found');

@@ -5,7 +5,9 @@ import { Recipe } from '@/server/entities/models/recipe';
 import { and, eq, inArray, isNull } from 'drizzle-orm';
 
 export class RecipesRepository implements IRecipesRepository {
-  async createRecipe(input: Omit<Recipe, 'id' | 'createdAt' | 'updatedAt'>): Promise<Recipe> {
+  async createRecipe(
+    input: Omit<Recipe, 'id' | 'createdAt' | 'updatedAt'>
+  ): Promise<Recipe> {
     const [recipe] = await db.insert(recipes).values(input).returning();
     return recipe;
   }

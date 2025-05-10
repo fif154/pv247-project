@@ -78,4 +78,8 @@ export function createRecipesModule() {
     .toHigherOrderFunction(getRecipeController, [DI_SYMBOLS.IGetRecipeUseCase]);
 
   return recipesModule;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> main

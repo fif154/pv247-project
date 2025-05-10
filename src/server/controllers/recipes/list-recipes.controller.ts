@@ -1,7 +1,7 @@
 import { IListRecipesUseCase } from '@/server/application/use-cases/recipes/list-recipes.use-case';
 
-export const listRecipesController = (listRecipesUseCase: IListRecipesUseCase) => 
-  async () => {
+export const listRecipesController =
+  (listRecipesUseCase: IListRecipesUseCase) => async () => {
     return listRecipesUseCase();
   };
 

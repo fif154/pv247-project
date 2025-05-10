@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { PropsWithChildren } from "react";
-import { ThemeProvider } from "./theme-provider";
-import { SidebarProvider } from "./ui/sidebar";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { PropsWithChildren } from 'react';
+import { ThemeProvider } from './theme-provider';
+import { SidebarProvider } from './ui/sidebar';
 
 const queryClient = new QueryClient();
 

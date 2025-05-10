@@ -9,7 +9,8 @@ const updateRecipeSchema = z.object({
   image: z.string().nullable().optional(),
 });
 
-export const updateRecipeController = (updateRecipeUseCase: IUpdateRecipeUseCase) => 
+export const updateRecipeController =
+  (updateRecipeUseCase: IUpdateRecipeUseCase) =>
   async (input: z.infer<typeof updateRecipeSchema>) => {
     const validatedInput = updateRecipeSchema.parse(input);
     const { id, ...updateData } = validatedInput;

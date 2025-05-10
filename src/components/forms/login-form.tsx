@@ -1,22 +1,22 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useLoginMutation } from "@/mutations/auth";
-import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { Spinner } from "../ui/spinner";
-import GitHubLoginButton from "./github-login-button";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useLoginMutation } from '@/mutations/auth';
+import { zodResolver } from '@hookform/resolvers/zod';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { Spinner } from '../ui/spinner';
+import GitHubLoginButton from './github-login-button';
 
 const loginFormSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8, {
-    message: "Password must be at least 8 characters",
+    message: 'Password must be at least 8 characters',
   }),
 });
 type LoginFormSchema = z.infer<typeof loginFormSchema>;
@@ -36,12 +36,12 @@ export function LoginForm() {
   const onSubmit = async (data: LoginFormSchema) => {
     await loginMutation.mutateAsync(data);
     if (!loginMutation.error) {
-      router.replace("/auth/home");
+      router.replace('/auth/home');
     }
   };
 
   return (
-    <div className={"flex flex-col gap-6 "}>
+    <div className={'flex flex-col gap-6 '}>
       <Card className="overflow-hidden shadow-xl bg-background/80 dark:bg-background/50 border border-muted">
         <CardContent className="p-0">
           <div className="flex flex-col gap-6 p-6 md:p-8">
@@ -61,8 +61,8 @@ export function LoginForm() {
                   type="email"
                   placeholder="email@gmail.com"
                   required
-                  {...register("email", {
-                    required: "Email is required",
+                  {...register('email', {
+                    required: 'Email is required',
                   })}
                 />
                 {errors.email && (
@@ -81,7 +81,7 @@ export function LoginForm() {
                     Forgot password?
                   </a>
                 </div>
-                <Input type="password" required {...register("password")} />
+                <Input type="password" required {...register('password')} />
                 {errors.password && (
                   <p className="text-destructive text-sm">
                     {errors.password.message}
@@ -93,13 +93,13 @@ export function LoginForm() {
                 className="w-full"
                 disabled={loginMutation.isPending}
               >
-                {loginMutation.isPending ? <Spinner /> : "Login"}
+                {loginMutation.isPending ? <Spinner /> : 'Login'}
               </Button>
             </form>
 
             <GitHubLoginButton />
             <div className="text-center text-sm">
-              Don&apos;t have an account?{" "}
+              Don&apos;t have an account?{' '}
               <Link className="underline underline-offset-4" href="sign-up">
                 Sign up
               </Link>

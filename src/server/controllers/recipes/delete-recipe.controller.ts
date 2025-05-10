@@ -5,7 +5,8 @@ const deleteRecipeSchema = z.object({
   id: z.string(),
 });
 
-export const deleteRecipeController = (deleteRecipeUseCase: IDeleteRecipeUseCase) => 
+export const deleteRecipeController =
+  (deleteRecipeUseCase: IDeleteRecipeUseCase) =>
   async (input: z.infer<typeof deleteRecipeSchema>) => {
     const validatedInput = deleteRecipeSchema.parse(input);
     await deleteRecipeUseCase(validatedInput.id);

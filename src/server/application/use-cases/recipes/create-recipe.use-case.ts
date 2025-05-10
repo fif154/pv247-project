@@ -1,7 +1,8 @@
 import { IRecipesRepository } from '@/server/application/repositories/recipes.repository.interface';
 import { InputParseError } from '@/server/entities/errors/common';
 
-export const createRecipeUseCase = (recipesRepository: IRecipesRepository) => 
+export const createRecipeUseCase =
+  (recipesRepository: IRecipesRepository) =>
   async (input: {
     name: string;
     description: string | null;

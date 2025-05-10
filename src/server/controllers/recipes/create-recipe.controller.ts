@@ -10,7 +10,8 @@ const createRecipeSchema = z.object({
   image: z.string().nullable(),
 });
 
-export const createRecipeController = (createRecipeUseCase: ICreateRecipeUseCase) => 
+export const createRecipeController =
+  (createRecipeUseCase: ICreateRecipeUseCase) =>
   async (input: z.infer<typeof createRecipeSchema>) => {
     const user = (await auth())?.user;
     if (!user) {

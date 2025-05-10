@@ -3,8 +3,13 @@ import { IRecipesRepository } from '@/server/application/repositories/recipes.re
 import { NotFoundError } from '@/server/entities/errors/common';
 import { canViewRecipe } from '../../policy/recipe';
 
+<<<<<<< HEAD
 export const getRecipeUseCase = (recipesRepository: IRecipesRepository) => 
   async (id: string) => {
+=======
+export const getRecipeUseCase =
+  (recipesRepository: IRecipesRepository) => async (id: string) => {
+>>>>>>> main
     const user = (await auth())?.user;
     if (!user) {
       throw new NotFoundError('User not found');
@@ -22,4 +27,8 @@ export const getRecipeUseCase = (recipesRepository: IRecipesRepository) =>
     return recipe;
   };
 
+<<<<<<< HEAD
 export type IGetRecipeUseCase = ReturnType<typeof getRecipeUseCase>;
+=======
+export type IGetRecipeUseCase = ReturnType<typeof getRecipeUseCase>;
+>>>>>>> main

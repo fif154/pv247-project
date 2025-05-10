@@ -1,7 +1,7 @@
-import { credentialsRegister, credentialsSignIn } from "@/app/(auth)/actions";
-import { SignUpFormSchema } from "@/components/forms/sign-up-form";
-import { showErrorToast, showSuccessToast } from "@/utils/toast";
-import { useMutation } from "@tanstack/react-query";
+import { credentialsRegister, credentialsSignIn } from '@/app/(auth)/actions';
+import { SignUpFormSchema } from '@/components/forms/sign-up-form';
+import { showErrorToast, showSuccessToast } from '@/utils/toast';
+import { useMutation } from '@tanstack/react-query';
 
 export const useLoginMutation = () =>
   useMutation({
@@ -9,7 +9,7 @@ export const useLoginMutation = () =>
       await credentialsSignIn(data.email, data.password);
     },
     onError: () => {
-      showErrorToast("Login failed. Please try again.");
+      showErrorToast('Login failed. Please try again.');
     },
   });
 
@@ -19,9 +19,9 @@ export const useRegisterMutation = () =>
       await credentialsRegister(data);
     },
     onError: () => {
-      showErrorToast("Registration failed. Please try again.");
+      showErrorToast('Registration failed. Please try again.');
     },
     onSuccess: () => {
-      showSuccessToast("Registration successful. You are now logged in.");
+      showSuccessToast('Registration successful. You are now logged in.');
     },
   });

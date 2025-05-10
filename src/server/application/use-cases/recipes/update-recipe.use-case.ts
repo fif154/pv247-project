@@ -3,13 +3,17 @@ import { IRecipesRepository } from '@/server/application/repositories/recipes.re
 import { NotFoundError } from '@/server/entities/errors/common';
 import { canEditRecipe } from '../../policy/recipe';
 
-export const updateRecipeUseCase = (recipesRepository: IRecipesRepository) => 
-  async (id: string, input: {
-    name?: string;
-    description?: string | null;
-    servings?: number;
-    image?: string | null;
-  }) => {
+export const updateRecipeUseCase =
+  (recipesRepository: IRecipesRepository) =>
+  async (
+    id: string,
+    input: {
+      name?: string;
+      description?: string | null;
+      servings?: number;
+      image?: string | null;
+    }
+  ) => {
     const user = (await auth())?.user;
     if (!user) {
       throw new NotFoundError('User not found');

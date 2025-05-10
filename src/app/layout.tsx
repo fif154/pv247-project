@@ -1,12 +1,12 @@
-import { Providers } from "@/components/providers";
-import { ThemeToggle } from "@/components/theme-toggle";
-import type { Metadata } from "next";
-import { Bounce, ToastContainer } from "react-toastify";
-import "./globals.css";
+import { Providers } from '@/components/providers';
+import { ThemeToggle } from '@/components/theme-toggle';
+import type { Metadata } from 'next';
+import { Bounce, ToastContainer } from 'react-toastify';
+import './globals.css';
 
 export const metadata: Metadata = {
-  title: "Meal Mate",
-  description: "Meal Mate - Your Recipe Companion",
+  title: 'Meal Mate',
+  description: 'Meal Mate - Your Recipe Companion',
 };
 
 export default function RootLayout({
