@@ -1,9 +1,9 @@
 import { IIngredientCategoriesRepository } from '@/server/application/repositories/ingredient-categories.repository.interface';
-import { IngredientCategory } from '@/server/entities/models/ingredient-category';
+import { CreateIngredientCategory } from '@/server/entities/models/ingredient-category';
 
 export const createCategoryUseCase =
   (ingredientCategoriesRepository: IIngredientCategoriesRepository) =>
-  async (input: Omit<IngredientCategory, 'id' | 'createdAt' | 'updatedAt'>) => {
+  async (input: CreateIngredientCategory) => {
     const existingCategory =
       await ingredientCategoriesRepository.getCategoryByName(input.name);
     if (existingCategory) {
