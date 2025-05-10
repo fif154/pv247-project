@@ -1,9 +1,9 @@
-import { db } from '@/db';
+import { db, Transaction } from '@/db';
 import { users } from '@/db/schema';
 import { IUsersRepository } from '@/server/application/repositories/users.repository.interface';
 import { DatabaseOperationError } from '@/server/entities/errors/common';
-import { CreateUser, User } from '@/server/entities/models/user';
-import { eq, inArray, like } from 'drizzle-orm';
+import { CreateUser, EditUser, User } from '@/server/entities/models/user';
+import { and, eq, inArray, isNull, like } from 'drizzle-orm';
 
 export class UsersRepository implements IUsersRepository {
   constructor() {}
@@ -74,5 +74,17 @@ export class UsersRepository implements IUsersRepository {
     } catch (err) {
       throw err;
     }
+  }
+
+  async editUser(user: EditUser, tx?: Transaction): Promise<User | undefined> {
+    const query = (tx ?? db)
+      .update(users)
+      .set(user)
+      .where(and(eq(users.id, user.id), isNull(users.deletedAt)))
+      .returning();
+
+    const updatedUser = await query.execute();
+
+    return updatedUser.at(0);
   }
 }
