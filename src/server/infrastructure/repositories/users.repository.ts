@@ -1,4 +1,4 @@
-import { db } from '@/db';
+import { db, Transaction } from '@/db';
 import { users } from '@/db/schema';
 import { IUsersRepository } from '@/server/application/repositories/users.repository.interface';
 import { DatabaseOperationError } from '@/server/entities/errors/common';
@@ -19,60 +19,68 @@ export class UsersRepository implements IUsersRepository {
     }
   }
   async getUser(id: string): Promise<User | undefined> {
-    try {
-      const query = db.query.users.findFirst({
-        where: eq(users.id, id),
-      });
+    const query = db.query.users.findFirst({
+      where: eq(users.id, id),
+    });
 
-      const user = await query.execute();
+    const user = await query.execute();
 
-      return user;
-    } catch (err) {
-      throw err;
-    }
+    return user;
   }
-  async getUserByEmail(email: string): Promise<User | undefined> {
-    try {
-      const query = db.query.users.findFirst({
-        where: eq(users.email, email),
-      });
 
-      const user = await query.execute();
+  async getUserByEmail(
+    email: string,
+    tx?: Transaction
+  ): Promise<User | undefined> {
+    const invoker = tx ?? db;
+    const query = invoker.query.users.findFirst({
+      where: eq(users.email, email),
+    });
 
-      return user;
-    } catch (err) {
-      throw err;
-    }
+    const user = await query.execute();
+
+    return user;
   }
-  async createUser(input: CreateUser): Promise<User> {
-    try {
-      const newUser: CreateUser = input;
-      const query = db.insert(users).values(newUser).returning();
 
-      const [created] = await query.execute();
+  async createUser(input: CreateUser, tx?: Transaction): Promise<User> {
+    const invoker = tx ?? db;
+    const newUser: CreateUser = input;
+    const query = invoker.insert(users).values(newUser).returning();
 
-      if (created) {
-        return created;
-      } else {
-        throw new DatabaseOperationError('Cannot create user.');
-      }
-    } catch (err) {
-      throw err;
+    const [created] = await query.execute();
+
+    if (created) {
+      return created;
+    } else {
+      throw new DatabaseOperationError('Cannot create user.');
     }
   }
 
   async searchUsersByEmail(email: string): Promise<User[] | undefined> {
-    try {
-      const query = db
-        .select()
-        .from(users)
-        .where(like(users.email, `%${email}%`)); // Dynamic search using LIKE
+    const query = db
+      .select()
+      .from(users)
+      .where(like(users.email, `%${email}%`));
 
-      const usersList = await query.execute();
+    const usersList = await query.execute();
 
-      return usersList.length > 0 ? usersList : undefined;
-    } catch (err) {
-      throw err;
-    }
+    return usersList.length > 0 ? usersList : undefined;
+  }
+
+  async updateUser(
+    id: string,
+    input: Partial<CreateUser>,
+    tx?: Transaction
+  ): Promise<User | undefined> {
+    const invoker = tx ?? db;
+    const query = invoker
+      .update(users)
+      .set(input)
+      .where(eq(users.id, id))
+      .returning();
+
+    const [updated] = await query.execute();
+
+    return updated;
   }
 }

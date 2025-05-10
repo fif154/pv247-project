@@ -101,7 +101,7 @@ export class MealsRepository implements IMealsRepository {
 
   async listMeals(userId: string): Promise<Meal[]> {
     return db.query.meals.findMany({
-      where: and(eq(meals.userId, userId), isNull(meals.deletedAt)),
+      where: isNull(meals.deletedAt),
       with: {
         additionalIngredients: {
           with: {
@@ -109,6 +109,17 @@ export class MealsRepository implements IMealsRepository {
             unit: true,
           },
         },
+        recipe: {
+          with: {
+            ingredients: {
+              with: {
+                ingredient: true,
+                unit: true,
+              },
+            },
+          },
+        },
+        mealType: true,
       },
     });
   }

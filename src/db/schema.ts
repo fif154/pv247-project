@@ -29,6 +29,8 @@ export const users = sqliteTable('user', {
   emailVerified: integer('emailVerified', { mode: 'timestamp_ms' }),
   image: text('image'),
   passwordHash: text('password'),
+  // Current group context
+  groupId: text('group_id'),
 });
 
 export const accounts = sqliteTable(
@@ -204,9 +206,11 @@ export const recipeIngredients = sqliteTable(
       .notNull()
       .references(() => ingredients.id, { onDelete: 'cascade' }),
     quantity: real('quantity').notNull(),
-    unitId: text('unit_id').references(() => units.id, {
-      onDelete: 'set null',
-    }),
+    unitId: text('unit_id')
+      .references(() => units.id, {
+        onDelete: 'set null',
+      })
+      .notNull(),
   },
   (table) => ({
     recipeIngredientsUnique: uniqueIndex('recipe_ingredients_unique').on(

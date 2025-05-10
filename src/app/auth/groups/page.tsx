@@ -10,6 +10,9 @@ const Page = async () => {
     id: userSession?.user.id ?? '',
     email: userSession?.user.email ?? '',
   };
+
+  console.log('currentUser', userSession);
+
   const groups = await getUserGroupsWithMembersAction(currentUser.id);
   return (
     <div className="flex flex-col gap-4">
