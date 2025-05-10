@@ -67,8 +67,6 @@ import { IGetGroupWithMembersController } from '../controllers/groups/get-group-
 import { IGetUserGroupsWithMembersController } from '../controllers/groups/get-user-groups-with-members.controller';
 import { IRemoveGroupController } from '../controllers/groups/remove-group.controller';
 import { IRemoveMemberFromGroupController } from '../controllers/groups/remove-member-from-group.controller';
-import { ICreateCategoryController } from '../controllers/ingredient-categories/create-category.controller';
-import { IListCategoriesController } from '../controllers/ingredient-categories/list-categories.controller';
 import { ICreateIngredientController } from '../controllers/ingredients/create-ingredient.controller';
 import { IDeleteIngredientController } from '../controllers/ingredients/delete-ingredient.controller';
 import { IGetIngredientController } from '../controllers/ingredients/get-ingredient.controller';
@@ -81,8 +79,6 @@ import { IListRecipesController } from '../controllers/recipes/list-recipes.cont
 import { IUpdateRecipeController } from '../controllers/recipes/update-recipe.controller';
 import { ICreateCategoryController } from '../controllers/ingredient-categories/create-category.controller';
 import { IListCategoriesController } from '../controllers/ingredient-categories/list-categories.controller';
-import { ICreateGroupWithMembersController } from '../controllers/groups/create-group-with-members.controller';
-import { IEditGroupController } from '../controllers/groups/edit-group.controller';
 import { IEditUserUseCase } from '../application/use-cases/users/edit-user.use-case';
 import { IEditUserController } from '../controllers/users/edit-user.controller';
 import { ISearchUsersByEmailController } from '../controllers/users/search-users.controller';
