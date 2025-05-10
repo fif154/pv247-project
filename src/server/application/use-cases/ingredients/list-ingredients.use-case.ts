@@ -9,7 +9,7 @@ export const listIngredientsUseCase =
       throw new NotFoundError('User not found');
     }
 
-    return ingredientsRepository.listIngredients(user.id);
+    return ingredientsRepository.listIngredients(user.groupId!);
   };
 
 export type IListIngredientsUseCase = ReturnType<typeof listIngredientsUseCase>;

@@ -3,13 +3,14 @@ import { IIngredientCategoriesRepository } from '@/server/application/repositori
 import { NotFoundError } from '@/server/entities/errors/common';
 
 export const listCategoriesUseCase =
-  (categoriesRepository: IIngredientCategoriesRepository) => async () => {
+  (ingredientCategoriesRepository: IIngredientCategoriesRepository) =>
+  async () => {
     const user = (await auth())?.user;
     if (!user) {
       throw new NotFoundError('User not found');
     }
 
-    return categoriesRepository.listCategories(user.id);
+    return ingredientCategoriesRepository.listCategories(user.groupId!);
   };
 
 export type IListCategoriesUseCase = ReturnType<typeof listCategoriesUseCase>;

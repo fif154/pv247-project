@@ -28,13 +28,20 @@ export class IngredientsRepository implements IIngredientsRepository {
 
   async getIngredientByName(
     name: string,
+    groupId: string,
     tx?: Transaction
   ): Promise<Ingredient | null> {
     const invoker = tx ?? db;
     const [ingredient] = await invoker
       .select()
       .from(ingredients)
-      .where(and(eq(ingredients.name, name), isNull(ingredients.deletedAt)))
+      .where(
+        and(
+          eq(ingredients.name, name),
+          eq(ingredients.groupId, groupId),
+          isNull(ingredients.deletedAt)
+        )
+      )
       .limit(1);
     return ingredient || null;
   }
@@ -54,22 +61,19 @@ export class IngredientsRepository implements IIngredientsRepository {
   }
 
   async deleteIngredient(id: string): Promise<void> {
-    await db.delete(ingredients).where(eq(ingredients.id, id));
+    await db
+      .update(ingredients)
+      .set({ deletedAt: new Date().toISOString() })
+      .where(eq(ingredients.id, id));
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async listIngredients(userId: string): Promise<Ingredient[]> {
-    const result = await db.query.ingredients.findMany({
-      where: and(
-        // TODO: add a check for the user
-        // eq(ingredients.createdBy, userId),
-        isNull(ingredients.deletedAt)
-      ),
-      with: {
-        category: true,
-      },
-    });
-
+  async listIngredients(groupId: string): Promise<Ingredient[]> {
+    const result = await db
+      .select()
+      .from(ingredients)
+      .where(
+        and(eq(ingredients.groupId, groupId), isNull(ingredients.deletedAt))
+      );
     return result;
   }
 }

@@ -1,11 +1,13 @@
 import { DefaultSession } from 'next-auth';
 
+export type User = DefaultSession['user'] & {
+  id: string;
+  groupId: string;
+};
+
 declare module 'next-auth' {
   export interface Session {
-    user: DefaultSession['user'] & {
-      id: string;
-      groupId: string;
-    };
+    user: User;
   }
 }
 

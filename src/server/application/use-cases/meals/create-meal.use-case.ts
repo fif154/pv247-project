@@ -24,6 +24,7 @@ export const createMealUseCase =
       {
         ...input,
         userId: user.id,
+        groupId: user.groupId!,
       },
       additionalIngredients,
       tx

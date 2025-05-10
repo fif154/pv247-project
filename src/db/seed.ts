@@ -91,7 +91,18 @@ async function main() {
   // ---------- 6. Groups ----------
   const groups = [] as Array<typeof schema.groups.$inferSelect>;
   const usedGroupNames = new Set<string>();
-  for (let i = 0; i < NUM_GROUPS; i++) {
+
+  // Create default group first
+  const defaultGroup = await insertOne(schema.groups, {
+    id: 'default',
+    name: 'Default Group',
+    description: 'Default group for testing and development',
+  });
+  groups.push(defaultGroup);
+  usedGroupNames.add(defaultGroup.name);
+
+  // Create additional groups
+  for (let i = 0; i < NUM_GROUPS - 1; i++) {
     let name = `${faker.commerce.department()} Team`;
     while (usedGroupNames.has(name)) {
       name = `${faker.commerce.department()} ${faker.word.adjective()} Team`;
@@ -238,12 +249,14 @@ async function main() {
       name = `${faker.commerce.department()} ${faker.word.adjective()}`;
     }
     catNames.add(name);
+    const group = faker.helpers.arrayElement(groups);
     ingredientCategories.push(
       await insertOne(schema.ingredientCategories, {
         id: crypto.randomUUID(),
         name,
         description: faker.lorem.sentence(),
         createdBy: faker.helpers.arrayElement(users).id,
+        groupId: group.id,
       })
     );
   }
@@ -286,6 +299,7 @@ async function main() {
       name = `${faker.commerce.productMaterial()} ${faker.word.adjective()}`;
     }
     ingNames.add(name);
+    const group = faker.helpers.arrayElement(groups);
     ingredients.push(
       await insertOne(schema.ingredients, {
         id: crypto.randomUUID(),
@@ -300,6 +314,7 @@ async function main() {
         carbs: faker.number.int({ min: 0, max: 80 }),
         fats: faker.number.int({ min: 0, max: 50 }),
         calories: faker.number.float({ min: 10, max: 500 }),
+        groupId: group.id,
       })
     );
   }
@@ -321,6 +336,7 @@ async function main() {
         image: randBool(0.3)
           ? faker.image.urlLoremFlickr({ category: 'food' })
           : null,
+        groupId: user.groupId!,
       });
       recipes.push(recipe);
 
@@ -429,6 +445,7 @@ async function main() {
         image: randBool(0.2)
           ? faker.image.urlLoremFlickr({ category: 'food' })
           : null,
+        groupId: user.groupId!,
       });
       meals.push(meal);
 

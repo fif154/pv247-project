@@ -6,12 +6,11 @@ import { GroupHeader } from '@/components/groups/group-header';
 
 const Page = async () => {
   const userSession = await auth();
-  const currentUser = {
-    id: userSession?.user.id ?? '',
-    email: userSession?.user.email ?? '',
-  };
+  const currentUser = userSession?.user;
 
-  console.log('currentUser', userSession);
+  if (!currentUser) {
+    throw new Error('User not found, this should not happen');
+  }
 
   const groups = await getUserGroupsWithMembersAction(currentUser.id);
   return (

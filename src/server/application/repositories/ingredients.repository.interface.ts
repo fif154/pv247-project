@@ -12,6 +12,7 @@ export interface IIngredientsRepository {
   getIngredientById(id: string): Promise<Ingredient | null>;
   getIngredientByName(
     name: string,
+    groupId: string,
     tx?: Transaction
   ): Promise<Ingredient | null>;
   updateIngredient(
@@ -21,5 +22,5 @@ export interface IIngredientsRepository {
     >
   ): Promise<Ingredient>;
   deleteIngredient(id: string): Promise<void>;
-  listIngredients(userId: string): Promise<Ingredient[]>;
+  listIngredients(groupId: string): Promise<Ingredient[]>;
 }

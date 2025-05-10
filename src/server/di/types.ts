@@ -58,6 +58,7 @@ import { IGetRecipeUseCase } from '../application/use-cases/recipes/get-recipe.u
 import { IListRecipesUseCase } from '../application/use-cases/recipes/list-recipes.use-case';
 import { IUpdateRecipeUseCase } from '../application/use-cases/recipes/update-recipe.use-case';
 import { ISearchUsersByEmailUseCase } from '../application/use-cases/users/search-users.use-case';
+import { ISetCurrentGroupUseCase } from '../application/use-cases/users/set-current-group.use-case';
 import { IRegisterController } from '../controllers/auth/register.controller';
 import { ISignInController } from '../controllers/auth/sign-in.controller';
 import { IUpdateGroceryListItemController } from '../controllers/grocery-lists/update-grocery-list-item.controller';
@@ -80,6 +81,7 @@ import { IGetRecipeController } from '../controllers/recipes/get-recipe.controll
 import { IListRecipesController } from '../controllers/recipes/list-recipes.controller';
 import { IUpdateRecipeController } from '../controllers/recipes/update-recipe.controller';
 import { ISearchUsersByEmailController } from '../controllers/users/search-users.controller';
+import { ISetCurrentGroupController } from '../infrastructure/controllers/users/set-current-group.controller';
 
 export const DI_SYMBOLS = {
   // Services
@@ -116,6 +118,7 @@ export const DI_SYMBOLS = {
   IDeleteRecipeUseCase: Symbol.for('IDeleteRecipeUseCase'),
   IListRecipesUseCase: Symbol.for('IListRecipesUseCase'),
   IGetRecipeUseCase: Symbol.for('IGetRecipeUseCase'),
+  ISetCurrentGroupUseCase: Symbol.for('ISetCurrentGroupUseCase'),
 
   // Controllers
   ISignInController: Symbol.for('ISignInController'),
@@ -143,6 +146,7 @@ export const DI_SYMBOLS = {
   IDeleteRecipeController: Symbol.for('IDeleteRecipeController'),
   IListRecipesController: Symbol.for('IListRecipesController'),
   IGetRecipeController: Symbol.for('IGetRecipeController'),
+  ISetCurrentGroupController: Symbol.for('ISetCurrentGroupController'),
 
   // Ingredient Categories
   IIngredientCategoriesRepository: Symbol.for(
@@ -230,6 +234,7 @@ export interface DI_RETURN_TYPES {
   IDeleteRecipeUseCase: IDeleteRecipeUseCase;
   IListRecipesUseCase: IListRecipesUseCase;
   IGetRecipeUseCase: IGetRecipeUseCase;
+  ISetCurrentGroupUseCase: ISetCurrentGroupUseCase;
 
   // Controllers
   ISignInController: ISignInController;
@@ -251,6 +256,7 @@ export interface DI_RETURN_TYPES {
   IDeleteRecipeController: IDeleteRecipeController;
   IListRecipesController: IListRecipesController;
   IGetRecipeController: IGetRecipeController;
+  ISetCurrentGroupController: ISetCurrentGroupController;
 
   // Ingredient Categories
   IIngredientCategoriesRepository: IIngredientCategoriesRepository;

@@ -9,7 +9,7 @@ export const listGroceryListsUseCase =
       throw new NotFoundError('User not found');
     }
 
-    return groceryListsRepository.listGroceryLists(user.id);
+    return groceryListsRepository.listGroceryLists(user.id, user.groupId);
   };
 
 export type IListGroceryListsUseCase = ReturnType<

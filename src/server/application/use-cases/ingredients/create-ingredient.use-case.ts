@@ -1,31 +1,27 @@
+import { auth } from '@/auth';
 import { IIngredientsRepository } from '@/server/application/repositories/ingredients.repository.interface';
-import { InputParseError } from '@/server/entities/errors/common';
+import { NotFoundError } from '@/server/entities/errors/common';
+import { Ingredient } from '@/server/entities/models/ingredient';
 
 export const createIngredientUseCase =
   (ingredientsRepository: IIngredientsRepository) =>
-  async (input: {
-    name: string;
-    description: string | null;
-    createdBy: string;
-    imageUrl: string | null;
-    protein: number;
-    carbs: number;
-    fats: number;
-    calories: number;
-    baseMacroQuantity: number;
-    deletedAt: string | null;
-    categoryId?: string | null;
-  }) => {
+  async (input: Omit<Ingredient, 'id' | 'createdAt' | 'updatedAt'>) => {
+    const user = (await auth())?.user;
+    if (!user) {
+      throw new NotFoundError('User not found');
+    }
+
     const existingIngredient = await ingredientsRepository.getIngredientByName(
-      input.name
+      input.name,
+      user.groupId!
     );
     if (existingIngredient) {
-      throw new InputParseError('Ingredient with this name already exists');
+      throw new Error('Ingredient with this name already exists');
     }
 
     return ingredientsRepository.createIngredient({
       ...input,
-      categoryId: input.categoryId ?? null,
+      groupId: user.groupId!,
     });
   };
 

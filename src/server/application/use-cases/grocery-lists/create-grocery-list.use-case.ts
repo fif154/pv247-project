@@ -32,7 +32,7 @@ export const createGroceryListUseCase =
     const groceryList = await groceryListsRepository.createGroceryList(
       {
         name: input.name,
-        groupId: 'default', // TODO: get from user's context
+        groupId: user.groupId,
         createdBy: user!.id,
         fromDate: input.dateRange.from,
         toDate: input.dateRange.to,

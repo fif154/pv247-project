@@ -1,8 +1,8 @@
-import { UserInfo } from '@/server/entities/models/user';
+import { User } from 'next-auth';
 import { CreateGroupButton } from './create-group-modal/create-group-button';
 
 type GroupHeaderProps = {
-  currentUser: UserInfo;
+  currentUser: User;
 };
 
 export const GroupHeader = ({ currentUser }: GroupHeaderProps) => {

@@ -2,9 +2,9 @@ import { createContainer } from '@evyweb/ioctopus';
 
 import { createAuthenticationModule } from './modules/authentication.module';
 import { createTransactionManagerModule } from './modules/database.module';
+import { createGroceryListsModule } from './modules/grocery-lists.module';
 import { createGroupMembersModule } from './modules/groupMembers.module';
 import { createGroupsModule } from './modules/groups.module';
-import { createGroceryListsModule } from './modules/grocery-lists.module';
 import { createIngredientCategoriesModule } from './modules/ingredient-categories.module';
 import { createIngredientsModule } from './modules/ingredients.module';
 import { createMealPlansModule } from './modules/meal-plans.module';
