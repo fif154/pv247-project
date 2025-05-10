@@ -17,8 +17,8 @@ export const updateGroceryListItemController =
       try {
         return await updateGroceryListItemUseCase(id, input);
       } catch (error) {
+        console.error('Error updating grocery list item', error);
         tx.rollback();
-        throw error;
       }
     });
   };

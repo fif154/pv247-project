@@ -18,5 +18,5 @@ export interface IGroceryListsRepository {
     >
   ): Promise<GroceryList>;
   deleteGroceryList(id: string): Promise<void>;
-  listGroceryLists(userId: string): Promise<GroceryList[]>;
+  listGroceryLists(userId: string, groupId: string): Promise<GroceryList[]>;
 }

@@ -2,15 +2,29 @@ import { auth } from '@/auth';
 import { IIngredientsRepository } from '@/server/application/repositories/ingredients.repository.interface';
 import { NotFoundError } from '@/server/entities/errors/common';
 import { canDeleteIngredient } from '../../policy/ingredient';
+import { IGroupService } from '../../services/group.service.interface';
 
 export const deleteIngredientUseCase =
-  (ingredientsRepository: IIngredientsRepository) => async (id: string) => {
+  (
+    ingredientsRepository: IIngredientsRepository,
+    groupService: IGroupService
+  ) =>
+  async (id: string) => {
     const user = (await auth())?.user;
     if (!user) {
       throw new NotFoundError('User not found');
     }
 
-    const ingredient = await ingredientsRepository.getIngredientById(id);
+    if (!user.groupId) {
+      throw new NotFoundError('User not in a group');
+    }
+
+    await groupService.verifyUserInGroup(user.id, user.groupId);
+
+    const ingredient = await ingredientsRepository.getIngredientById(
+      id,
+      user.groupId
+    );
     if (!ingredient) {
       throw new NotFoundError('Ingredient not found');
     }

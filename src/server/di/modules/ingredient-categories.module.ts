@@ -23,6 +23,7 @@ export function createIngredientCategoriesModule() {
     .bind(DI_SYMBOLS.ICreateCategoryUseCase)
     .toHigherOrderFunction(createCategoryUseCase, [
       DI_SYMBOLS.IIngredientCategoriesRepository,
+      DI_SYMBOLS.IGroupService,
     ]);
 
   categoriesModule

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { IGroupsRepository } from '@/server/application/repositories/groups.repository.interface';
 import { IGroupMembersRepository } from '@/server/application/repositories/groupMembers.repository.interface';
+import { IGroupsRepository } from '@/server/application/repositories/groups.repository.interface';
 import {
   CreateGroup,
   GroupWithMemberIds,

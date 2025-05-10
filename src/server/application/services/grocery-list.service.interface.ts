@@ -14,6 +14,7 @@ export interface IGroceryListService {
       categoryId?: string;
     },
     userId: string,
+    groupId: string,
     ingredientsRepository: IIngredientsRepository,
     tx?: Transaction
   ): Promise<string>;

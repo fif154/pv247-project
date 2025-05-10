@@ -1,20 +1,21 @@
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { GroupFormFields } from './group-form-fields';
-import { User, UserInfo } from '@/server/entities/models/user';
-import { GroupWithMembers } from '@/server/entities/models/group';
-import { UserSearch } from './user-search';
-import { SelectedUsers } from './selected-users';
 import {
   useCreateGroupWithMembersMutation,
   useEditGroupMutation,
 } from '@/mutations/groups';
+import { useSearchUsersByEmailMutation } from '@/mutations/users';
+import { GroupWithMembers } from '@/server/entities/models/group';
+import { User, UserInfo } from '@/server/entities/models/user';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { User as UserSession } from 'next-auth';
 import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 import { Button } from '../../ui/button';
 import { Spinner } from '../../ui/spinner';
-import { useSearchUsersByEmailMutation } from '@/mutations/users';
+import { GroupFormFields } from './group-form-fields';
+import { SelectedUsers } from './selected-users';
+import { UserSearch } from './user-search';
 
 const groupFormSchema = z.object({
   groupName: z
@@ -27,7 +28,7 @@ export type GroupFormSchema = z.infer<typeof groupFormSchema>;
 
 type GroupFormProps = {
   initialData?: GroupWithMembers;
-  currentUser: UserInfo;
+  currentUser: UserSession;
   setModalOpen: (open: boolean) => void;
   isEditMode?: boolean;
 };
@@ -44,7 +45,12 @@ export const GroupForm = ({
     initialData?.members.map((u) => ({
       id: u.id ?? '',
       email: u.email ?? '',
-    })) ?? [currentUser]
+    })) ?? [
+      {
+        id: currentUser.id ?? '',
+        email: currentUser.email ?? '',
+      },
+    ]
   );
   const { mutateAsync: searchUsersByEmail, isPending: isSearchPending } =
     useSearchUsersByEmailMutation();
@@ -149,7 +155,7 @@ export const GroupForm = ({
       {selectedUsers.length > 0 && (
         <SelectedUsers
           selectedUsers={selectedUsers}
-          currentUserId={currentUser.id}
+          currentUserId={currentUser.id!}
           onRemoveUser={handleRemoveSelectedUser}
         />
       )}

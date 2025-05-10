@@ -26,6 +26,8 @@ export function createAuthenticationModule() {
     .toHigherOrderFunction(registerUseCase, [
       DI_SYMBOLS.IUsersRepository,
       DI_SYMBOLS.IAuthenticationService,
+      DI_SYMBOLS.IGroupsRepository,
+      DI_SYMBOLS.IGroupMembersRepository,
     ]);
 
   authenticationModule
@@ -34,7 +36,10 @@ export function createAuthenticationModule() {
 
   authenticationModule
     .bind(DI_SYMBOLS.IRegisterController)
-    .toHigherOrderFunction(registerController, [DI_SYMBOLS.IRegisterUseCase]);
+    .toHigherOrderFunction(registerController, [
+      DI_SYMBOLS.IRegisterUseCase,
+      DI_SYMBOLS.ITransactionManagerService,
+    ]);
 
   return authenticationModule;
 }

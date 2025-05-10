@@ -15,3 +15,10 @@ export class InputParseError extends Error {
     super(message, options);
   }
 }
+
+export class GroupAccessError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'GroupAccessError';
+  }
+}

@@ -1,18 +1,16 @@
 import { IIngredientCategoriesRepository } from '@/server/application/repositories/ingredient-categories.repository.interface';
-import { InputParseError } from '@/server/entities/errors/common';
 import { CreateIngredientCategory } from '@/server/entities/models/ingredient-category';
 
 export const createCategoryUseCase =
-  (categoriesRepository: IIngredientCategoriesRepository) =>
+  (ingredientCategoriesRepository: IIngredientCategoriesRepository) =>
   async (input: CreateIngredientCategory) => {
-    const existingCategory = await categoriesRepository.getCategoryByName(
-      input.name
-    );
+    const existingCategory =
+      await ingredientCategoriesRepository.getCategoryByName(input.name);
     if (existingCategory) {
-      throw new InputParseError('Category with this name already exists');
+      throw new Error('Category with this name already exists');
     }
 
-    return categoriesRepository.createCategory(input);
+    return ingredientCategoriesRepository.createCategory(input);
   };
 
 export type ICreateCategoryUseCase = ReturnType<typeof createCategoryUseCase>;

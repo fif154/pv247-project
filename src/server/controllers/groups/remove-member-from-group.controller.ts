@@ -1,6 +1,6 @@
-import { z } from 'zod';
-import { IRemoveMemberFromGroupUseCase } from '@/server/application/use-cases/groups/remove-member-from-group.use-case';
 import { ITransactionManagerService } from '@/server/application/services/transaction-manager.service.interface';
+import { IRemoveMemberFromGroupUseCase } from '@/server/application/use-cases/groups/remove-member-from-group.use-case';
+import { z } from 'zod';
 
 const removeMemberFromGroupInputSchema = z.object({
   groupId: z.string().min(1),
@@ -17,7 +17,7 @@ export const removeMemberFromGroupController =
       try {
         const data = removeMemberFromGroupInputSchema.parse(input);
 
-        const result = await removeMemberFromGroupUseCase(data);
+        const result = await removeMemberFromGroupUseCase(data, tx);
 
         return result;
       } catch (error) {

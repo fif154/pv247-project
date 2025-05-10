@@ -1,10 +1,10 @@
 import { auth } from '@/auth';
 import { IRecipesRepository } from '@/server/application/repositories/recipes.repository.interface';
 import { NotFoundError } from '@/server/entities/errors/common';
-import { canEditRecipe } from '../../policy/recipe';
+import { IGroupService } from '../../services/group.service.interface';
 
 export const updateRecipeUseCase =
-  (recipesRepository: IRecipesRepository) =>
+  (recipesRepository: IRecipesRepository, groupService: IGroupService) =>
   async (
     id: string,
     input: {
@@ -19,12 +19,14 @@ export const updateRecipeUseCase =
       throw new NotFoundError('User not found');
     }
 
-    const recipe = await recipesRepository.getRecipeById(id);
-    if (!recipe) {
-      throw new NotFoundError('Recipe not found');
+    if (!user.groupId) {
+      throw new NotFoundError('User not in a group');
     }
 
-    if (!canEditRecipe(recipe, user)) {
+    await groupService.verifyUserInGroup(user.id, user.groupId);
+
+    const recipe = await recipesRepository.getRecipeById(id);
+    if (!recipe || recipe.groupId !== user.groupId) {
       throw new NotFoundError('Recipe not found');
     }
 

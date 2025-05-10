@@ -2,9 +2,10 @@ import { auth } from '@/auth';
 import { IMealPlansRepository } from '@/server/application/repositories/meal-plans.repository.interface';
 import { NotFoundError } from '@/server/entities/errors/common';
 import { CreateMealPlan } from '@/server/entities/models/meal-plan';
+import { IGroupService } from '../../services/group.service.interface';
 
 export const createMealPlanUseCase =
-  (mealPlansRepository: IMealPlansRepository) =>
+  (mealPlansRepository: IMealPlansRepository, groupService: IGroupService) =>
   async (
     input: CreateMealPlan,
     mealIds: string[],
@@ -17,10 +18,17 @@ export const createMealPlanUseCase =
       throw new NotFoundError('User not found');
     }
 
+    if (!user.groupId) {
+      throw new NotFoundError('User is not in a group');
+    }
+
+    await groupService.verifyUserInGroup(user.id, user.groupId);
+
     return mealPlansRepository.createMealPlan(
       {
         ...input,
         createdBy: user.id,
+        groupId: user.groupId,
       },
       mealIds,
       tx

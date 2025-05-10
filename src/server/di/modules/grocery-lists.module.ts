@@ -50,24 +50,28 @@ export function createGroceryListsModule() {
       DI_SYMBOLS.IIngredientsRepository,
       DI_SYMBOLS.IMealPlansRepository,
       DI_SYMBOLS.IGroceryListService,
+      DI_SYMBOLS.IGroupService,
     ]);
 
   groceryListsModule
     .bind(DI_SYMBOLS.IListGroceryListsUseCase)
     .toHigherOrderFunction(listGroceryListsUseCase, [
       DI_SYMBOLS.IGroceryListsRepository,
+      DI_SYMBOLS.IGroupService,
     ]);
 
   groceryListsModule
     .bind(DI_SYMBOLS.IGetGroceryListUseCase)
     .toHigherOrderFunction(getGroceryListUseCase, [
       DI_SYMBOLS.IGroceryListsRepository,
+      DI_SYMBOLS.IGroupService,
     ]);
 
   groceryListsModule
     .bind(DI_SYMBOLS.IUpdateGroceryListUseCase)
     .toHigherOrderFunction(updateGroceryListUseCase, [
       DI_SYMBOLS.IGroceryListsRepository,
+      DI_SYMBOLS.IGroupService,
     ]);
 
   groceryListsModule
@@ -77,24 +81,31 @@ export function createGroceryListsModule() {
       DI_SYMBOLS.IGroceryListItemsRepository,
       DI_SYMBOLS.IIngredientsRepository,
       DI_SYMBOLS.IGroceryListService,
+      DI_SYMBOLS.IGroupService,
     ]);
 
   groceryListsModule
     .bind(DI_SYMBOLS.IUpdateGroceryListItemUseCase)
     .toHigherOrderFunction(updateGroceryListItemUseCase, [
       DI_SYMBOLS.IGroceryListItemsRepository,
+      DI_SYMBOLS.IGroceryListsRepository,
+      DI_SYMBOLS.IGroupService,
     ]);
 
   groceryListsModule
     .bind(DI_SYMBOLS.IDeleteGroceryListItemUseCase)
     .toHigherOrderFunction(deleteGroceryListItemUseCase, [
       DI_SYMBOLS.IGroceryListItemsRepository,
+      DI_SYMBOLS.IGroceryListsRepository,
+      DI_SYMBOLS.IGroupService,
     ]);
 
   groceryListsModule
     .bind(DI_SYMBOLS.IMarkAllItemsBoughtUseCase)
     .toHigherOrderFunction(markAllItemsBoughtUseCase, [
       DI_SYMBOLS.IGroceryListItemsRepository,
+      DI_SYMBOLS.IGroceryListsRepository,
+      DI_SYMBOLS.IGroupService,
     ]);
 
   groceryListsModule

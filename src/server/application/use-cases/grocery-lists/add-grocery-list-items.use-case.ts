@@ -12,6 +12,7 @@ import {
 } from '@/server/entities/models/grocery-list-item';
 import { z } from 'zod';
 import { IGroceryListService } from '../../services/grocery-list.service.interface';
+import { IGroupService } from '../../services/group.service.interface';
 
 export const addGroceryListItemsSchema = z.object({
   groceryListId: z.string(),
@@ -30,7 +31,8 @@ export const addGroceryListItemsUseCase =
     groceryListsRepository: IGroceryListsRepository,
     groceryListItemsRepository: IGroceryListItemsRepository,
     ingredientsRepository: IIngredientsRepository,
-    groceryListService: IGroceryListService
+    groceryListService: IGroceryListService,
+    groupService: IGroupService
   ) =>
   async (input: AddGroceryListItemsInput, tx?: Transaction) => {
     const session = await auth();
@@ -43,7 +45,17 @@ export const addGroceryListItemsUseCase =
       throw new AuthenticationError('User not found');
     }
 
+    if (!user.groupId) {
+      throw new NotFoundError('User is not in a group');
+    }
+
+    await groupService.verifyUserInGroup(user.id, user.groupId);
+
     if (!groceryList) {
+      throw new NotFoundError('Grocery list not found');
+    }
+
+    if (groceryList.groupId !== user.groupId) {
       throw new NotFoundError('Grocery list not found');
     }
 
@@ -57,6 +69,7 @@ export const addGroceryListItemsUseCase =
           categoryId: item.category.id,
         },
         user!.id,
+        user.groupId,
         ingredientsRepository,
         tx
       );

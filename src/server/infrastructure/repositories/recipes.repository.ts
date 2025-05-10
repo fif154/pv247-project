@@ -44,11 +44,17 @@ export class RecipesRepository implements IRecipesRepository {
     return result;
   }
 
-  async getRecipeByName(name: string): Promise<Recipe | null> {
+  async getRecipeByName(name: string, groupId: string): Promise<Recipe | null> {
     const [recipe] = await db
       .select()
       .from(recipes)
-      .where(and(eq(recipes.name, name), isNull(recipes.deletedAt)))
+      .where(
+        and(
+          eq(recipes.name, name),
+          eq(recipes.groupId, groupId),
+          isNull(recipes.deletedAt)
+        )
+      )
       .limit(1);
     return recipe || null;
   }
@@ -66,13 +72,15 @@ export class RecipesRepository implements IRecipesRepository {
   }
 
   async deleteRecipe(id: string): Promise<void> {
-    await db.delete(recipes).where(eq(recipes.id, id));
+    await db
+      .update(recipes)
+      .set({ deletedAt: new Date().toISOString() })
+      .where(eq(recipes.id, id));
   }
 
-  // TODO: should accept filters
-  async listRecipes(): Promise<Recipe[]> {
+  async listRecipes(groupId: string): Promise<Recipe[]> {
     const result = await db.query.recipes.findMany({
-      where: and(isNull(recipes.deletedAt)),
+      where: and(isNull(recipes.deletedAt), eq(recipes.groupId, groupId)),
       with: {
         ingredients: {
           with: {

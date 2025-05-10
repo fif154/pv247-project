@@ -1,13 +1,4 @@
-import {
-  CreateGroup,
-  GroupWithMemberIds,
-  GroupWithMembers,
-} from '@/server/entities/models/group';
-
 export interface IGroupService {
-  getGroupWithMembers(id: string): Promise<GroupWithMembers | undefined>;
-  createGroupWithMembers(
-    group: CreateGroup,
-    members: string[]
-  ): Promise<GroupWithMemberIds | undefined>;
+  verifyUserInGroup(userId: string, groupId: string): Promise<void>;
+  isUserInGroup(userId: string, groupId: string): Promise<boolean>;
 }

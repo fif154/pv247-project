@@ -18,12 +18,14 @@ export function createMealPlansModule() {
     .bind(DI_SYMBOLS.ICreateMealPlanUseCase)
     .toHigherOrderFunction(createMealPlanUseCase, [
       DI_SYMBOLS.IMealPlansRepository,
+      DI_SYMBOLS.IGroupService,
     ]);
 
   mealPlansModule
     .bind(DI_SYMBOLS.IListMealPlansUseCase)
     .toHigherOrderFunction(listMealPlansUseCase, [
       DI_SYMBOLS.IMealPlansRepository,
+      DI_SYMBOLS.IGroupService,
     ]);
 
   mealPlansModule

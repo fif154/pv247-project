@@ -4,6 +4,7 @@ import { GroupMember } from '@/server/entities/models/groupMember';
 export interface IGroupMembersRepository {
   getUserGroups(userId: string): Promise<string[] | undefined>;
   getGroupUsers(groupId: string): Promise<string[] | undefined>;
+  getGroupMembersByGroupId(groupId: string): Promise<GroupMember[]>;
   removeUserFromAllGroups(userId: string, tx?: Transaction): Promise<boolean>;
   removeUserFromGroup(
     userId: string,

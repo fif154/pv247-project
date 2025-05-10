@@ -36,6 +36,21 @@ export class GroceryListItemsRepository implements IGroceryListItemsRepository {
     return items;
   }
 
+  async getGroceryListItemById(
+    id: string,
+    tx?: Transaction
+  ): Promise<GroceryListItem | null> {
+    const invoker = tx ?? db;
+    const [item] = await invoker
+      .select()
+      .from(groceryListItems)
+      .where(
+        and(eq(groceryListItems.id, id), isNull(groceryListItems.deletedAt))
+      )
+      .limit(1);
+    return item || null;
+  }
+
   async getGroceryListItemsByGroceryListId(
     groceryListId: string,
     tx?: Transaction

@@ -96,12 +96,15 @@ export class MealsRepository implements IMealsRepository {
 
   async deleteMeal(id: string, tx?: Transaction): Promise<void> {
     const invoker = tx ?? db;
-    await invoker.delete(meals).where(eq(meals.id, id));
+    await invoker
+      .update(meals)
+      .set({ deletedAt: new Date().toISOString() })
+      .where(eq(meals.id, id));
   }
 
-  async listMeals(userId: string): Promise<Meal[]> {
+  async listMeals(groupId: string): Promise<Meal[]> {
     return db.query.meals.findMany({
-      where: and(eq(meals.userId, userId), isNull(meals.deletedAt)),
+      where: and(eq(meals.groupId, groupId), isNull(meals.deletedAt)),
       with: {
         additionalIngredients: {
           with: {
@@ -109,6 +112,17 @@ export class MealsRepository implements IMealsRepository {
             unit: true,
           },
         },
+        recipe: {
+          with: {
+            ingredients: {
+              with: {
+                ingredient: true,
+                unit: true,
+              },
+            },
+          },
+        },
+        mealType: true,
       },
     });
   }

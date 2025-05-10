@@ -40,10 +40,25 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           email: user.email ?? '',
           name: user.name ?? '',
           image: user.image ?? null,
+          groupId: user.groupId ?? null,
         };
       },
     }),
   ],
+  events: {
+    createUser: async (message) => {
+      const { user } = message;
+      const registerController = getInjection('IRegisterController');
+      await registerController(
+        {
+          email: user.email,
+          name: user.name,
+          image: user.image,
+        },
+        true
+      );
+    },
+  },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
@@ -58,7 +73,21 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         session.user.id = token.id as string;
         session.user.email = token.email!;
         session.user.name = token.name!;
+        session.user.groupId = token.groupId as string;
       }
+
+      if (session.user.groupId) {
+        return session;
+      }
+
+      const userRepo = getInjection('IUsersRepository');
+      const user = await userRepo.getUser(session.user.id);
+      if (!user) {
+        throw new Error('User not found');
+      }
+
+      session.user.groupId = user.groupId!;
+
       return session;
     },
   },
