@@ -65,24 +65,17 @@ import { IDeleteIngredientController } from '../controllers/ingredients/delete-i
 import { IGetIngredientController } from '../controllers/ingredients/get-ingredient.controller';
 import { IListIngredientsController } from '../controllers/ingredients/list-ingredients.controller';
 import { IUpdateIngredientController } from '../controllers/ingredients/update-ingredient.controller';
-<<<<<<< HEAD
-=======
 import { IGetUserGroupsWithMembersUseCase } from '../application/use-cases/groups/get-user-groups-with-members.use-case';
 import { IGetUserGroupsWithMembersController } from '../controllers/groups/get-user-groups-with-members.controller';
->>>>>>> main
 import { ICreateRecipeController } from '../controllers/recipes/create-recipe.controller';
 import { IDeleteRecipeController } from '../controllers/recipes/delete-recipe.controller';
 import { IGetRecipeController } from '../controllers/recipes/get-recipe.controller';
 import { IListRecipesController } from '../controllers/recipes/list-recipes.controller';
 import { IUpdateRecipeController } from '../controllers/recipes/update-recipe.controller';
-<<<<<<< HEAD
-
-=======
 import { ICreateCategoryController } from '../controllers/ingredient-categories/create-category.controller';
 import { IListCategoriesController } from '../controllers/ingredient-categories/list-categories.controller';
 import { ICreateGroupWithMembersController } from '../controllers/groups/create-group-with-members.controller';
 import { IEditGroupController } from '../controllers/groups/edit-group.controller';
->>>>>>> main
 
 export const DI_SYMBOLS = {
   // Services
@@ -147,9 +140,6 @@ export const DI_SYMBOLS = {
   IListRecipesController: Symbol.for('IListRecipesController'),
   IGetRecipeController: Symbol.for('IGetRecipeController'),
 
-<<<<<<< HEAD
-  // Repositories
-=======
   // Ingredient Categories
   IIngredientCategoriesRepository: Symbol.for(
     'IIngredientCategoriesRepository'
@@ -197,7 +187,6 @@ export const DI_SYMBOLS = {
   IListMealPlansUseCase: Symbol.for('IListMealPlansUseCase'),
   ICreateMealPlanController: Symbol.for('ICreateMealPlanController'),
   IListMealPlansController: Symbol.for('IListMealPlansController'),
->>>>>>> main
 };
 
 export interface DI_RETURN_TYPES {
@@ -254,8 +243,6 @@ export interface DI_RETURN_TYPES {
   IDeleteRecipeController: IDeleteRecipeController;
   IListRecipesController: IListRecipesController;
   IGetRecipeController: IGetRecipeController;
-<<<<<<< HEAD
-=======
 
   // Ingredient Categories
   IIngredientCategoriesRepository: IIngredientCategoriesRepository;
@@ -298,5 +285,4 @@ export interface DI_RETURN_TYPES {
   IListMealPlansUseCase: IListMealPlansUseCase;
   ICreateMealPlanController: ICreateMealPlanController;
   IListMealPlansController: IListMealPlansController;
->>>>>>> main
 }
