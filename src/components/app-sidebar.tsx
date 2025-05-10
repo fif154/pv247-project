@@ -12,7 +12,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from '@/components/ui/sidebar';
-import { navItems } from '@/config/nav'; // Assuming you moved navItems as per previous suggestion
+import { navItems } from '@/config/nav';
 import { ChefHat } from 'lucide-react';
 import { MobileNav } from './mobile-nav';
 import {

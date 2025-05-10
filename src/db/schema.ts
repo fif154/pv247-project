@@ -579,3 +579,6 @@ export const groceryListItemsRelations = relations(
     }),
   })
 );
+
+export type Group = typeof groups.$inferSelect;
+export type User = typeof users.$inferInsert;
