@@ -33,7 +33,7 @@ export const createGroceryListUseCase =
       {
         name: input.name,
         groupId: 'default', // TODO: get from user's context
-        createdBy: user.id,
+        createdBy: user!.id,
         fromDate: input.dateRange.from,
         toDate: input.dateRange.to,
       },
@@ -72,7 +72,6 @@ export const createGroceryListUseCase =
           ingredientId: ingredient.ingredientId,
           quantity: ingredient.quantity,
           unitId: ingredient.unitId,
-          name: ingredient.ingredient?.name || '',
           isBought: false,
         }));
         allIngredients.push(...items);
@@ -82,26 +81,22 @@ export const createGroceryListUseCase =
     if (input.manualIngredients?.length) {
       const items: CreateGroceryListItem[] = await Promise.all(
         input.manualIngredients.map(async (ingredient) => {
-          let ingredientId = ingredient.id;
-          if (!ingredientId) {
-            ingredientId = (
-              await ingredientsRepository.createIngredient(
-                {
-                  name: ingredient.name,
-                  categoryId: ingredient.category.id,
-                  createdBy: user.id,
-                },
-                tx
-              )
-            ).id;
-          }
+          const ingredientId = await groceryListService.processIngredient(
+            {
+              ingredientId: ingredient.id,
+              ingredientName: ingredient.name,
+              categoryId: ingredient.category.id,
+            },
+            user!.id,
+            ingredientsRepository,
+            tx
+          );
 
           return {
             groceryListId: groceryList.id,
             ingredientId,
             quantity: ingredient.quantity,
             unitId: ingredient.unit?.id,
-            name: ingredient.name,
             isBought: false,
           };
         })
