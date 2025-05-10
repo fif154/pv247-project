@@ -1,11 +1,14 @@
-import { IGroupsRepository } from '@/server/application/repositories/groups.repository.interface';
+import { auth } from '@/auth';
 import { IGroupMembersRepository } from '@/server/application/repositories/groupMembers.repository.interface';
+import { IGroupsRepository } from '@/server/application/repositories/groups.repository.interface';
 import { GroupWithMemberIds } from '@/server/entities/models/group';
+import { IGroupService } from '../../services/group.service.interface';
 
 export const editGroupUseCase =
   (
     groupsRepository: IGroupsRepository,
-    groupMembersRepository: IGroupMembersRepository
+    groupMembersRepository: IGroupMembersRepository,
+    groupService: IGroupService
   ) =>
   async (
     data: {
@@ -18,6 +21,13 @@ export const editGroupUseCase =
     tx?: any
   ): Promise<GroupWithMemberIds | undefined> => {
     const { groupId, name, description, members } = data;
+
+    const user = (await auth())?.user;
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    await groupService.verifyUserInGroup(user.id, groupId);
 
     // Update the group details
     const updatedGroup = await groupsRepository.editGroup(

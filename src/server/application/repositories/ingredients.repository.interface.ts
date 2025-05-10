@@ -9,7 +9,7 @@ export interface IIngredientsRepository {
     input: CreateIngredient,
     tx?: Transaction
   ): Promise<Ingredient>;
-  getIngredientById(id: string): Promise<Ingredient | null>;
+  getIngredientById(id: string, groupId: string): Promise<Ingredient | null>;
   getIngredientByName(
     name: string,
     groupId: string,

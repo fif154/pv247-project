@@ -34,17 +34,13 @@ export class IngredientCategoriesRepository
     return category || null;
   }
 
-  async getCategoryByName(
-    name: string,
-    groupId: string
-  ): Promise<IngredientCategory | null> {
+  async getCategoryByName(name: string): Promise<IngredientCategory | null> {
     const [category] = await db
       .select()
       .from(ingredientCategories)
       .where(
         and(
           eq(ingredientCategories.name, name),
-          eq(ingredientCategories.groupId, groupId),
           isNull(ingredientCategories.deletedAt)
         )
       )
@@ -52,16 +48,11 @@ export class IngredientCategoriesRepository
     return category || null;
   }
 
-  async listCategories(groupId: string): Promise<IngredientCategory[]> {
+  async listCategories(): Promise<IngredientCategory[]> {
     const result = await db
       .select()
       .from(ingredientCategories)
-      .where(
-        and(
-          eq(ingredientCategories.groupId, groupId),
-          isNull(ingredientCategories.deletedAt)
-        )
-      );
+      .where(and(isNull(ingredientCategories.deletedAt)));
     return result;
   }
 }

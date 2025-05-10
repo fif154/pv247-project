@@ -3,6 +3,7 @@ import { createContainer } from '@evyweb/ioctopus';
 import { createAuthenticationModule } from './modules/authentication.module';
 import { createTransactionManagerModule } from './modules/database.module';
 import { createGroceryListsModule } from './modules/grocery-lists.module';
+import { createGroupModule } from './modules/group.module';
 import { createGroupMembersModule } from './modules/groupMembers.module';
 import { createGroupsModule } from './modules/groups.module';
 import { createIngredientCategoriesModule } from './modules/ingredient-categories.module';
@@ -14,7 +15,7 @@ import { createUnitsModule } from './modules/units.module';
 import { createUsersModule } from './modules/users.module';
 import { DI_RETURN_TYPES, DI_SYMBOLS } from './types';
 
-const ApplicationContainer = createContainer();
+export const ApplicationContainer = createContainer();
 
 ApplicationContainer.load(
   Symbol('TransactionManagerModule'),
@@ -29,6 +30,7 @@ ApplicationContainer.load(
   Symbol('GroupMembersModule'),
   createGroupMembersModule()
 );
+ApplicationContainer.load(Symbol('GroupModule'), createGroupModule());
 ApplicationContainer.load(Symbol('UsersModule'), createUsersModule());
 
 ApplicationContainer.load(

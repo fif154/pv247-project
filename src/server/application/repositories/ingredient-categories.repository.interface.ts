@@ -6,9 +6,6 @@ import {
 export interface IIngredientCategoriesRepository {
   createCategory(input: CreateIngredientCategory): Promise<IngredientCategory>;
   getCategoryById(id: string): Promise<IngredientCategory | null>;
-  getCategoryByName(
-    name: string,
-    groupId: string
-  ): Promise<IngredientCategory | null>;
-  listCategories(groupId: string): Promise<IngredientCategory[]>;
+  getCategoryByName(name: string): Promise<IngredientCategory | null>;
+  listCategories(): Promise<IngredientCategory[]>;
 }

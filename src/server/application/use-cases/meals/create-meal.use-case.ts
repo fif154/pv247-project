@@ -5,9 +5,10 @@ import {
   CreateMeal,
   CreateMealAdditionalIngredient,
 } from '@/server/entities/models/meal';
+import { IGroupService } from '../../services/group.service.interface';
 
 export const createMealUseCase =
-  (mealsRepository: IMealsRepository) =>
+  (mealsRepository: IMealsRepository, groupService: IGroupService) =>
   async (
     input: CreateMeal,
     additionalIngredients?: CreateMealAdditionalIngredient[],
@@ -20,11 +21,17 @@ export const createMealUseCase =
       throw new NotFoundError('User not found');
     }
 
+    if (!user.groupId) {
+      throw new NotFoundError('User not in a group');
+    }
+
+    await groupService.verifyUserInGroup(user.id, user.groupId);
+
     return mealsRepository.createMeal(
       {
         ...input,
         userId: user.id,
-        groupId: user.groupId!,
+        groupId: user.groupId,
       },
       additionalIngredients,
       tx

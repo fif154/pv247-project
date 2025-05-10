@@ -150,14 +150,11 @@ export const ingredientCategories = sqliteTable(
     createdBy: text('created_by')
       .notNull()
       .references(() => users.id, { onDelete: 'set null' }),
-    groupId: text('group_id')
-      .notNull()
-      .references(() => groups.id, { onDelete: 'cascade' }),
   },
   (table) => ({
     ingredientCategoriesNameUnique: uniqueIndex(
       'ingredient_categories_name_unique'
-    ).on(table.name, table.groupId),
+    ).on(table.name),
   })
 );
 

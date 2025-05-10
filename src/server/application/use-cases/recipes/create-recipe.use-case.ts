@@ -5,18 +5,25 @@ import {
   NotFoundError,
 } from '@/server/entities/errors/common';
 import { Recipe } from '@/server/entities/models/recipe';
+import { IGroupService } from '../../services/group.service.interface';
 
 export const createRecipeUseCase =
-  (recipesRepository: IRecipesRepository) =>
+  (recipesRepository: IRecipesRepository, groupService: IGroupService) =>
   async (input: Omit<Recipe, 'id' | 'createdAt' | 'updatedAt'>) => {
     const user = (await auth())?.user;
     if (!user) {
       throw new NotFoundError('User not found');
     }
 
+    if (!user.groupId) {
+      throw new NotFoundError('User not in a group');
+    }
+
+    await groupService.verifyUserInGroup(user.id, user.groupId);
+
     const existingRecipe = await recipesRepository.getRecipeByName(
       input.name,
-      user.groupId!
+      user.groupId
     );
     if (existingRecipe) {
       throw new InputParseError('Recipe with this name already exists');
@@ -24,7 +31,7 @@ export const createRecipeUseCase =
 
     return recipesRepository.createRecipe({
       ...input,
-      groupId: user.groupId!,
+      groupId: user.groupId,
     });
   };
 

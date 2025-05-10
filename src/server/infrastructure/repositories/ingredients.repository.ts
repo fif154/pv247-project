@@ -17,11 +17,20 @@ export class IngredientsRepository implements IIngredientsRepository {
     return ingredient;
   }
 
-  async getIngredientById(id: string): Promise<Ingredient | null> {
+  async getIngredientById(
+    id: string,
+    groupId: string
+  ): Promise<Ingredient | null> {
     const [ingredient] = await db
       .select()
       .from(ingredients)
-      .where(and(eq(ingredients.id, id), isNull(ingredients.deletedAt)))
+      .where(
+        and(
+          eq(ingredients.id, id),
+          eq(ingredients.groupId, groupId),
+          isNull(ingredients.deletedAt)
+        )
+      )
       .limit(1);
     return ingredient || null;
   }

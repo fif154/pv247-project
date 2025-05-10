@@ -183,4 +183,13 @@ export class GroupMembersRepository implements IGroupMembersRepository {
 
     return softDeletedGroupMembers.length !== 0;
   }
+
+  async getGroupMembersByGroupId(groupId: string): Promise<GroupMember[]> {
+    return db.query.groupMembers.findMany({
+      where: and(
+        eq(groupMembers.groupId, groupId),
+        isNull(groupMembers.deletedAt)
+      ),
+    });
+  }
 }

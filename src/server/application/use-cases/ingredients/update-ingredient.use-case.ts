@@ -5,9 +5,13 @@ import {
   NotFoundError,
 } from '@/server/entities/errors/common';
 import { canEditIngredient } from '../../policy/ingredient';
+import { IGroupService } from '../../services/group.service.interface';
 
 export const updateIngredientUseCase =
-  (ingredientsRepository: IIngredientsRepository) =>
+  (
+    ingredientsRepository: IIngredientsRepository,
+    groupService: IGroupService
+  ) =>
   async (
     id: string,
     input: {
@@ -26,7 +30,16 @@ export const updateIngredientUseCase =
       throw new NotFoundError('User not found');
     }
 
-    const ingredient = await ingredientsRepository.getIngredientById(id);
+    if (!user.groupId) {
+      throw new NotFoundError('User not in a group');
+    }
+
+    await groupService.verifyUserInGroup(user.id, user.groupId);
+
+    const ingredient = await ingredientsRepository.getIngredientById(
+      id,
+      user.groupId
+    );
     if (!ingredient) {
       throw new NotFoundError('Ingredient not found');
     }
@@ -37,7 +50,10 @@ export const updateIngredientUseCase =
 
     if (input.name !== ingredient.name) {
       const existingIngredient =
-        await ingredientsRepository.getIngredientByName(input.name);
+        await ingredientsRepository.getIngredientByName(
+          input.name,
+          user.groupId
+        );
       if (existingIngredient) {
         throw new InputParseError('Ingredient with this name already exists');
       }
