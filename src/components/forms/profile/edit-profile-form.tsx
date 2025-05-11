@@ -19,7 +19,7 @@ const editProfileSchema = z.object({
     message: 'Last name is required',
   }),
   email: z.string().email(),
-  image: z.string().url().optional()
+  image: z.string().url().optional(),
 });
 export type EditProfileSchema = z.infer<typeof editProfileSchema>;
 
@@ -39,7 +39,6 @@ export const EditProfileForm = ({
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   const onSubmit = async (data: EditProfileSchema) => {
-    console.log('data', data);
     await editUser(
       {
         userId: userInfo?.id ?? '',
@@ -82,9 +81,17 @@ export const EditProfileForm = ({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <EditProfileFormFields register={register} errors={errors} />
+      <EditProfileFormFields
+        register={register}
+        errors={errors}
+        setImageUrl={setImageUrl}
+      />
       <div className="flex justify-end space-x-2">
-        <Button type="button" variant="secondary" onClick={() => setModalOpen(false)}>
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={() => setModalOpen(false)}
+        >
           Cancel
         </Button>
         <Button type="submit" variant="coral">

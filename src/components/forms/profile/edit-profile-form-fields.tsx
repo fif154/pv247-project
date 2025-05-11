@@ -5,7 +5,6 @@ import { FieldErrors, UseFormRegister } from 'react-hook-form';
 import { EditProfileSchema } from './edit-profile-form';
 import Dropzone from '@/components/ui/dropzone';
 
-
 type EditProfileFormFieldsProps = {
   register: UseFormRegister<EditProfileSchema>;
   errors: FieldErrors<EditProfileSchema>;
@@ -15,7 +14,7 @@ type EditProfileFormFieldsProps = {
 export const EditProfileFormFields = ({
   register,
   errors,
-  setImageUrl
+  setImageUrl,
 }: EditProfileFormFieldsProps) => (
   <>
     <div>
@@ -56,7 +55,7 @@ export const EditProfileFormFields = ({
     </div>
     <div>
       <Label htmlFor="image">Profile Picture</Label>
-      <Dropzone />
+      <Dropzone onUploadComplete={setImageUrl} />
     </div>
   </>
 );
