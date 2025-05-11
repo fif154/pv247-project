@@ -29,6 +29,8 @@ export const users = sqliteTable('user', {
   emailVerified: integer('emailVerified', { mode: 'timestamp_ms' }),
   image: text('image'),
   passwordHash: text('password'),
+  // Current group context
+  groupId: text('group_id'),
 });
 
 export const accounts = sqliteTable(
@@ -104,6 +106,9 @@ export const groups = sqliteTable('groups', {
   ...baseSchema,
   name: text('name').notNull(),
   description: text('description'),
+  createdBy: text('created_by').references(() => users.id, {
+    onDelete: 'set null',
+  }),
 });
 
 export const groupMembers = sqliteTable(
@@ -134,6 +139,9 @@ export const recipes = sqliteTable('recipes', {
     .references(() => users.id, { onDelete: 'set null' }),
   servings: integer('servings').notNull().default(1),
   image: text('image'),
+  groupId: text('group_id')
+    .notNull()
+    .references(() => groups.id, { onDelete: 'cascade' }),
 });
 
 export const ingredientCategories = sqliteTable(
@@ -172,10 +180,14 @@ export const ingredients = sqliteTable(
     calories: real('calories'),
     // allow specifying macros per custom amount of grams
     baseMacroQuantity: real('base_macro_quantity').notNull().default(100),
+    groupId: text('group_id')
+      .notNull()
+      .references(() => groups.id, { onDelete: 'cascade' }),
   },
   (table) => ({
     ingredientsNameUnique: uniqueIndex('ingredients_name_unique').on(
-      table.name
+      table.name,
+      table.groupId
     ),
   })
 );
@@ -204,9 +216,11 @@ export const recipeIngredients = sqliteTable(
       .notNull()
       .references(() => ingredients.id, { onDelete: 'cascade' }),
     quantity: real('quantity').notNull(),
-    unitId: text('unit_id').references(() => units.id, {
-      onDelete: 'set null',
-    }),
+    unitId: text('unit_id')
+      .references(() => units.id, {
+        onDelete: 'set null',
+      })
+      .notNull(),
   },
   (table) => ({
     recipeIngredientsUnique: uniqueIndex('recipe_ingredients_unique').on(
@@ -300,6 +314,9 @@ export const meals = sqliteTable('meals', {
   plannedDate: integer('planned_date', { mode: 'timestamp_ms' }),
   notes: text('notes'),
   image: text('image'),
+  groupId: text('group_id')
+    .notNull()
+    .references(() => groups.id, { onDelete: 'cascade' }),
 });
 
 export const mealAdditionalIngredients = sqliteTable(

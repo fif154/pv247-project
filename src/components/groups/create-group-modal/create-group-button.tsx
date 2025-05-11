@@ -1,13 +1,13 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
+import { User } from 'next-auth';
 import { useState } from 'react';
 import { CreateGroupModal } from './create-group-modal';
-import { UserInfo } from '@/server/entities/models/user';
-import { Plus } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 
 type CreateGroupButtonProps = {
-  currentUser: UserInfo;
+  currentUser: User;
 };
 export const CreateGroupButton = ({ currentUser }: CreateGroupButtonProps) => {
   const [createModalOpen, setCreateModalOpen] = useState(false);

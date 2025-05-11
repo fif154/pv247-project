@@ -16,11 +16,17 @@ export function createMealsModule() {
 
   mealsModule
     .bind(DI_SYMBOLS.ICreateMealUseCase)
-    .toHigherOrderFunction(createMealUseCase, [DI_SYMBOLS.IMealsRepository]);
+    .toHigherOrderFunction(createMealUseCase, [
+      DI_SYMBOLS.IMealsRepository,
+      DI_SYMBOLS.IGroupService,
+    ]);
 
   mealsModule
     .bind(DI_SYMBOLS.IListMealsUseCase)
-    .toHigherOrderFunction(listMealsUseCase, [DI_SYMBOLS.IMealsRepository]);
+    .toHigherOrderFunction(listMealsUseCase, [
+      DI_SYMBOLS.IMealsRepository,
+      DI_SYMBOLS.IGroupService,
+    ]);
 
   mealsModule
     .bind(DI_SYMBOLS.ICreateMealController)

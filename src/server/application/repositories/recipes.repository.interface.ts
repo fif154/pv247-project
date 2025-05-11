@@ -7,11 +7,11 @@ export interface IRecipesRepository {
   ): Promise<Recipe>;
   getRecipeById(id: string, tx?: Transaction): Promise<Recipe | null>;
   getRecipesByIds(ids: string[], tx?: Transaction): Promise<Recipe[]>;
-  getRecipeByName(name: string): Promise<Recipe | null>;
+  getRecipeByName(name: string, groupId: string): Promise<Recipe | null>;
   updateRecipe(
     id: string,
     input: Partial<Omit<Recipe, 'id' | 'createdBy' | 'createdAt' | 'updatedAt'>>
   ): Promise<Recipe>;
   deleteRecipe(id: string): Promise<void>;
-  listRecipes(userId: string): Promise<Recipe[]>;
+  listRecipes(groupId: string): Promise<Recipe[]>;
 }

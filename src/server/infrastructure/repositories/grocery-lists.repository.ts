@@ -65,10 +65,13 @@ export class GroceryListsRepository implements IGroceryListsRepository {
     await db.delete(groceryLists).where(eq(groceryLists.id, id));
   }
 
-  async listGroceryLists(userId: string): Promise<GroceryList[]> {
+  async listGroceryLists(
+    userId: string,
+    groupId: string
+  ): Promise<GroceryList[]> {
     const result = await db.query.groceryLists.findMany({
       where: and(
-        eq(groceryLists.createdBy, userId),
+        eq(groceryLists.groupId, groupId),
         isNull(groceryLists.deletedAt)
       ),
       with: {
