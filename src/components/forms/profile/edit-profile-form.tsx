@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -19,6 +19,7 @@ const editProfileSchema = z.object({
     message: 'Last name is required',
   }),
   email: z.string().email(),
+  image: z.string().url().optional()
 });
 export type EditProfileSchema = z.infer<typeof editProfileSchema>;
 
@@ -35,6 +36,7 @@ export const EditProfileForm = ({
   const { mutateAsync: editUser, isPending: isEditPending } =
     useEditUserMutation();
   const { update } = useSession();
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   const onSubmit = async (data: EditProfileSchema) => {
     console.log('data', data);
@@ -43,6 +45,7 @@ export const EditProfileForm = ({
         userId: userInfo?.id ?? '',
         name: data.firstName + ' ' + data.lastName,
         email: data.email,
+        image: imageUrl ?? undefined,
       },
       {
         onSuccess: () => {
@@ -52,6 +55,7 @@ export const EditProfileForm = ({
               user: {
                 name: data.firstName + ' ' + data.lastName,
                 email: data.email,
+                image: imageUrl ?? undefined,
               },
             });
             router.refresh();
@@ -80,7 +84,7 @@ export const EditProfileForm = ({
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <EditProfileFormFields register={register} errors={errors} />
       <div className="flex justify-end space-x-2">
-        <Button type="button" variant="secondary">
+        <Button type="button" variant="secondary" onClick={() => setModalOpen(false)}>
           Cancel
         </Button>
         <Button type="submit" variant="coral">

@@ -3,15 +3,18 @@ import { Input } from '../../ui/input';
 import { Label } from '@radix-ui/react-label';
 import { FieldErrors, UseFormRegister } from 'react-hook-form';
 import { EditProfileSchema } from './edit-profile-form';
+import Dropzone from '@/components/ui/dropzone';
 
 type EditProfileFormFieldsProps = {
   register: UseFormRegister<EditProfileSchema>;
   errors: FieldErrors<EditProfileSchema>;
+  setImageUrl: (url: string) => void;
 };
 
 export const EditProfileFormFields = ({
   register,
   errors,
+  setImageUrl
 }: EditProfileFormFieldsProps) => (
   <>
     <div>
@@ -49,6 +52,10 @@ export const EditProfileFormFields = ({
       {errors.email && (
         <p className="text-destructive text-sm">{errors.email.message}</p>
       )}
+    </div>
+    <div>
+      <Label htmlFor="image">Profile Picture</Label>
+      <Dropzone />
     </div>
   </>
 );
