@@ -1,15 +1,16 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { Spinner } from '@/components/ui/spinner';
-import { useEditUserMutation } from '@/mutations/users';
-import { EditUser } from '@/server/entities/models/user';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
 import { EditProfileFormFields } from './edit-profile-form-fields';
+import { EditUser } from '@/server/entities/models/user';
+import { useEditUserMutation } from '@/mutations/users';
+import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
+import { useSession } from 'next-auth/react';
 const editProfileSchema = z.object({
   firstName: z.string().min(1, {
     message: 'First name is required',
@@ -18,6 +19,7 @@ const editProfileSchema = z.object({
     message: 'Last name is required',
   }),
   email: z.string().email(),
+  image: z.string().url().optional(),
 });
 export type EditProfileSchema = z.infer<typeof editProfileSchema>;
 
@@ -34,6 +36,7 @@ export const EditProfileForm = ({
   const { mutateAsync: editUser, isPending: isEditPending } =
     useEditUserMutation();
   const { update } = useSession();
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   const onSubmit = async (data: EditProfileSchema) => {
     await editUser(
@@ -41,6 +44,7 @@ export const EditProfileForm = ({
         userId: userInfo?.id ?? '',
         name: data.firstName + ' ' + data.lastName,
         email: data.email,
+        image: imageUrl ?? undefined,
       },
       {
         onSuccess: () => {
@@ -50,6 +54,7 @@ export const EditProfileForm = ({
               user: {
                 name: data.firstName + ' ' + data.lastName,
                 email: data.email,
+                image: imageUrl ?? undefined,
               },
             });
             router.refresh();
@@ -76,9 +81,17 @@ export const EditProfileForm = ({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <EditProfileFormFields register={register} errors={errors} />
+      <EditProfileFormFields
+        register={register}
+        errors={errors}
+        setImageUrl={setImageUrl}
+      />
       <div className="flex justify-end space-x-2">
-        <Button type="button" variant="secondary">
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={() => setModalOpen(false)}
+        >
           Cancel
         </Button>
         <Button type="submit" variant="coral">

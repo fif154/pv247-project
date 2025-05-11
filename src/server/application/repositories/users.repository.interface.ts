@@ -7,7 +7,6 @@ export interface IUsersRepository {
   getUsersByIds(ids: string[]): Promise<User[] | undefined>;
   createUser(input: CreateUser, tx?: Transaction): Promise<User>;
   searchUsersByEmail(email: string): Promise<User[] | undefined>;
-
   updateUser(
     id: string,
     input: Partial<CreateUser>,
