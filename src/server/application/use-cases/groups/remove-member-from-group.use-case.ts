@@ -1,10 +1,28 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { auth } from '@/auth';
 import { IGroupMembersRepository } from '@/server/application/repositories/groupMembers.repository.interface';
+import { IGroupService } from '../../services/group.service.interface';
 
 export const removeMemberFromGroupUseCase =
-  (groupMembersRepository: IGroupMembersRepository, tx?: any) =>
-  async (data: { groupId: string; memberId: string }): Promise<boolean> => {
+  (
+    groupMembersRepository: IGroupMembersRepository,
+    groupService: IGroupService
+  ) =>
+  async (
+    data: { groupId: string; memberId: string },
+    tx?: any
+  ): Promise<boolean> => {
     const { groupId, memberId } = data;
+
+    const user = (await auth())?.user;
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    await groupService.verifyUserInGroup(user.id, groupId);
+    if (!(await groupService.canUserModifyGroup(user.id, groupId))) {
+      throw new Error('User does not have permission to remove this member');
+    }
 
     // Remove the member from the group
     const memberRemoved = await groupMembersRepository.removeUserFromGroup(

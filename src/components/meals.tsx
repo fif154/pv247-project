@@ -1,10 +1,12 @@
-import { mockMeals } from '@/utils/mock';
+import { listMealsAction } from '@/app/meals/actions';
 import { MealCard } from './meal-card';
 
-export const Meals = () => {
+export const Meals = async () => {
+  const meals = await listMealsAction();
+
   return (
     <div className="grid gap-6">
-      {mockMeals.map((meal) => (
+      {meals.map((meal) => (
         <MealCard key={meal.id} meal={meal} />
       ))}
     </div>

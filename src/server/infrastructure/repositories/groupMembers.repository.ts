@@ -19,6 +19,7 @@ export class GroupMembersRepository implements IGroupMembersRepository {
 
     return groups.map((g) => g.groupId);
   }
+
   async getGroupUsers(groupId: string): Promise<string[] | undefined> {
     const query = db.query.groupMembers.findMany({
       where: and(
@@ -31,6 +32,7 @@ export class GroupMembersRepository implements IGroupMembersRepository {
 
     return users.map((g) => g.userId);
   }
+
   async removeUserFromAllGroups(
     userId: string,
     tx?: Transaction
@@ -47,6 +49,7 @@ export class GroupMembersRepository implements IGroupMembersRepository {
 
     return removed.length !== 0;
   }
+
   async removeUserFromGroup(
     userId: string,
     groupId: string,
@@ -68,6 +71,7 @@ export class GroupMembersRepository implements IGroupMembersRepository {
 
     return removed.length !== 0;
   }
+
   async removeUsersFromGroup(
     userIds: string[],
     groupId: string,
@@ -89,6 +93,7 @@ export class GroupMembersRepository implements IGroupMembersRepository {
 
     return removed.length !== 0;
   }
+
   async removeAllUsersFromGroup(
     groupId: string,
     tx?: Transaction
@@ -105,6 +110,7 @@ export class GroupMembersRepository implements IGroupMembersRepository {
 
     return removed.length !== 0;
   }
+
   async addUserToGroup(
     userId: string,
     groupId: string,
@@ -176,5 +182,14 @@ export class GroupMembersRepository implements IGroupMembersRepository {
     const softDeletedGroupMembers = await query.execute();
 
     return softDeletedGroupMembers.length !== 0;
+  }
+
+  async getGroupMembersByGroupId(groupId: string): Promise<GroupMember[]> {
+    return db.query.groupMembers.findMany({
+      where: and(
+        eq(groupMembers.groupId, groupId),
+        isNull(groupMembers.deletedAt)
+      ),
+    });
   }
 }

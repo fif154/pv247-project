@@ -28,6 +28,7 @@ export class GroceryListService implements IGroceryListService {
       categoryId?: string;
     },
     userId: string,
+    groupId: string,
     ingredientsRepository: IIngredientsRepository,
     tx?: Transaction
   ): Promise<string> {
@@ -37,6 +38,7 @@ export class GroceryListService implements IGroceryListService {
       const existingIngredient =
         await ingredientsRepository.getIngredientByName(
           ingredient.ingredientName!,
+          groupId,
           tx
         );
 
@@ -50,8 +52,9 @@ export class GroceryListService implements IGroceryListService {
       const newIngredient = await ingredientsRepository.createIngredient(
         {
           name: ingredient.ingredientName!,
-          categoryId: ingredient.categoryId,
+          categoryId: ingredient.categoryId!,
           createdBy: userId,
+          groupId,
         },
         tx
       );

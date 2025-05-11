@@ -1,8 +1,8 @@
 import { db, Transaction } from '@/db';
-import { groups } from '@/db/schema';
+import { Group, groups } from '@/db/schema';
 import { IGroupsRepository } from '@/server/application/repositories/groups.repository.interface';
 import { DatabaseOperationError } from '@/server/entities/errors/common';
-import { CreateGroup, EditGroup, Group } from '@/server/entities/models/group';
+import { CreateGroup, EditGroup } from '@/server/entities/models/group';
 import { and, eq, isNull } from 'drizzle-orm';
 
 export class GroupsRepository implements IGroupsRepository {
@@ -10,6 +10,13 @@ export class GroupsRepository implements IGroupsRepository {
   async getGroup(id: string): Promise<Group | undefined> {
     const query = db.query.groups.findFirst({
       where: and(eq(groups.id, id), isNull(groups.deletedAt)),
+      with: {
+        members: {
+          columns: {
+            userId: true,
+          },
+        },
+      },
     });
 
     const group = await query.execute();
