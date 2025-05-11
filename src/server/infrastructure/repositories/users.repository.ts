@@ -73,29 +73,4 @@ export class UsersRepository implements IUsersRepository {
     return updated;
   }
 
-  async editUser(user: EditUser, tx?: Transaction): Promise<User | undefined> {
-    const query = (tx ?? db)
-      .update(users)
-      .set(user)
-      .where(and(eq(users.id, user.id), isNull(users.deletedAt)))
-      .returning();
-
-    const updatedUser = await query.execute();
-
-    return updatedUser.at(0);
-  }
-
-  async editUser(user: EditUser, tx?: Transaction): Promise<User | undefined> {
-    const query = (tx ?? db)
-      .update(users)
-      .set(user)
-      .where(and(eq(users.id, user.id), isNull(users.deletedAt)))
-      .returning();
-
-    const updatedUser = await query.execute();
-
-    return updatedUser.at(0);
-  }
-}
-
 export const usersRepository = new UsersRepository();
