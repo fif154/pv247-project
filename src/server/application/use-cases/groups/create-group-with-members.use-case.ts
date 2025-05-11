@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { IGroupsRepository } from '@/server/application/repositories/groups.repository.interface';
+import { auth } from '@/auth';
 import { IGroupMembersRepository } from '@/server/application/repositories/groupMembers.repository.interface';
+import { IGroupsRepository } from '@/server/application/repositories/groups.repository.interface';
 import {
   CreateGroup,
   GroupWithMemberIds,
@@ -16,7 +17,12 @@ export const createGroupWithMembersUseCase =
     members: string[],
     tx?: any
   ): Promise<GroupWithMemberIds | undefined> => {
-    const createdGroup = await groupsRepository.createGroup(group, tx);
+    const user = (await auth())?.user;
+
+    const createdGroup = await groupsRepository.createGroup(
+      { ...group, createdBy: user?.id },
+      tx
+    );
     const groupMembers = await groupMembersRepository.addUsersToGroup(
       members,
       createdGroup.id,

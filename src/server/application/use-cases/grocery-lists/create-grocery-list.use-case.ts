@@ -9,6 +9,7 @@ import { CreateGroceryListItem } from '@/server/entities/models/grocery-list-ite
 import { Recipe } from '@/server/entities/models/recipe';
 import { IMealPlansRepository } from '../../repositories/meal-plans.repository.interface';
 import { IGroceryListService } from '../../services/grocery-list.service.interface';
+import { IGroupService } from '../../services/group.service.interface';
 
 export const createGroceryListUseCase =
   (
@@ -17,7 +18,8 @@ export const createGroceryListUseCase =
     recipesRepository: IRecipesRepository,
     ingredientsRepository: IIngredientsRepository,
     mealPlansRepository: IMealPlansRepository,
-    groceryListService: IGroceryListService
+    groceryListService: IGroceryListService,
+    groupService: IGroupService
   ) =>
   // TODO: typing the transaction as any is not great. However, in the
   // clean architecture template, they are doing it just like this.
@@ -29,11 +31,17 @@ export const createGroceryListUseCase =
       throw new NotFoundError('User not found');
     }
 
+    if (!user.groupId) {
+      throw new NotFoundError('User is not in a group');
+    }
+
+    await groupService.verifyUserInGroup(user.id, user.groupId);
+
     const groceryList = await groceryListsRepository.createGroceryList(
       {
         name: input.name,
-        groupId: 'default', // TODO: get from user's context
-        createdBy: user.id,
+        groupId: user.groupId,
+        createdBy: user!.id,
         fromDate: input.dateRange.from,
         toDate: input.dateRange.to,
       },
@@ -72,7 +80,6 @@ export const createGroceryListUseCase =
           ingredientId: ingredient.ingredientId,
           quantity: ingredient.quantity,
           unitId: ingredient.unitId,
-          name: ingredient.ingredient?.name || '',
           isBought: false,
         }));
         allIngredients.push(...items);
@@ -82,26 +89,23 @@ export const createGroceryListUseCase =
     if (input.manualIngredients?.length) {
       const items: CreateGroceryListItem[] = await Promise.all(
         input.manualIngredients.map(async (ingredient) => {
-          let ingredientId = ingredient.id;
-          if (!ingredientId) {
-            ingredientId = (
-              await ingredientsRepository.createIngredient(
-                {
-                  name: ingredient.name,
-                  categoryId: ingredient.category.id,
-                  createdBy: user.id,
-                },
-                tx
-              )
-            ).id;
-          }
+          const ingredientId = await groceryListService.processIngredient(
+            {
+              ingredientId: ingredient.id,
+              ingredientName: ingredient.name,
+              categoryId: ingredient.category.id,
+            },
+            user!.id,
+            user.groupId,
+            ingredientsRepository,
+            tx
+          );
 
           return {
             groceryListId: groceryList.id,
             ingredientId,
             quantity: ingredient.quantity,
             unitId: ingredient.unit?.id,
-            name: ingredient.name,
             isBought: false,
           };
         })

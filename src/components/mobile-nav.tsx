@@ -1,9 +1,9 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { navItems } from '@/config/nav';
 import { useCreateDialog } from '@/hooks/use-create-dialog';
 import { Plus } from 'lucide-react';
+import { FloatingButton } from './floating-button';
 
 export const mobileNavHeight = 'h-16';
 
@@ -27,14 +27,14 @@ export function MobileNav() {
         </div>
       </div>
 
-      <Button
+      <FloatingButton
         size="icon"
-        className="fixed bottom-20 right-4 z-50 h-14 w-14 rounded-full bg-coral text-coral-foreground shadow-lg md:hidden hover:bg-coral-hover"
+        className="md:hidden"
         onClick={() => setOpen(true)}
       >
         <Plus className="h-6 w-6" />
         <span className="sr-only">Add new</span>
-      </Button>
+      </FloatingButton>
 
       <CreateDialog />
     </>

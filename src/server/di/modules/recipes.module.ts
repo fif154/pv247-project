@@ -27,27 +27,36 @@ export function createRecipesModule() {
     .bind(DI_SYMBOLS.ICreateRecipeUseCase)
     .toHigherOrderFunction(createRecipeUseCase, [
       DI_SYMBOLS.IRecipesRepository,
+      DI_SYMBOLS.IGroupService,
     ]);
 
   recipesModule
     .bind(DI_SYMBOLS.IUpdateRecipeUseCase)
     .toHigherOrderFunction(updateRecipeUseCase, [
       DI_SYMBOLS.IRecipesRepository,
+      DI_SYMBOLS.IGroupService,
     ]);
 
   recipesModule
     .bind(DI_SYMBOLS.IDeleteRecipeUseCase)
     .toHigherOrderFunction(deleteRecipeUseCase, [
       DI_SYMBOLS.IRecipesRepository,
+      DI_SYMBOLS.IGroupService,
     ]);
 
   recipesModule
     .bind(DI_SYMBOLS.IListRecipesUseCase)
-    .toHigherOrderFunction(listRecipesUseCase, [DI_SYMBOLS.IRecipesRepository]);
+    .toHigherOrderFunction(listRecipesUseCase, [
+      DI_SYMBOLS.IRecipesRepository,
+      DI_SYMBOLS.IGroupService,
+    ]);
 
   recipesModule
     .bind(DI_SYMBOLS.IGetRecipeUseCase)
-    .toHigherOrderFunction(getRecipeUseCase, [DI_SYMBOLS.IRecipesRepository]);
+    .toHigherOrderFunction(getRecipeUseCase, [
+      DI_SYMBOLS.IRecipesRepository,
+      DI_SYMBOLS.IGroupService,
+    ]);
 
   recipesModule
     .bind(DI_SYMBOLS.ICreateRecipeController)

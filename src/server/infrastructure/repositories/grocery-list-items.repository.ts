@@ -36,10 +36,27 @@ export class GroceryListItemsRepository implements IGroceryListItemsRepository {
     return items;
   }
 
+  async getGroceryListItemById(
+    id: string,
+    tx?: Transaction
+  ): Promise<GroceryListItem | null> {
+    const invoker = tx ?? db;
+    const [item] = await invoker
+      .select()
+      .from(groceryListItems)
+      .where(
+        and(eq(groceryListItems.id, id), isNull(groceryListItems.deletedAt))
+      )
+      .limit(1);
+    return item || null;
+  }
+
   async getGroceryListItemsByGroceryListId(
-    groceryListId: string
+    groceryListId: string,
+    tx?: Transaction
   ): Promise<GroceryListItem[]> {
-    return await db.query.groceryListItems.findMany({
+    const invoker = tx ?? db;
+    return await invoker.query.groceryListItems.findMany({
       where: and(
         eq(groceryListItems.groceryListId, groceryListId),
         isNull(groceryListItems.deletedAt)
@@ -54,9 +71,11 @@ export class GroceryListItemsRepository implements IGroceryListItemsRepository {
     id: string,
     input: Partial<
       Omit<GroceryListItem, 'id' | 'createdBy' | 'createdAt' | 'updatedAt'>
-    >
+    >,
+    tx?: Transaction
   ): Promise<GroceryListItem> {
-    const [item] = await db
+    const invoker = tx ?? db;
+    const [item] = await invoker
       .update(groceryListItems)
       .set(input)
       .where(

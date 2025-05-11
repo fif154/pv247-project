@@ -26,7 +26,7 @@ export const GroceryListItemComponent = ({
               item.isBought ? 'text-muted-foreground line-through' : ''
             }`}
           >
-            {item.name}
+            {item.ingredient!.name}
           </label>
           <span className="text-xs">
             {item.quantity} {item.unit?.name}

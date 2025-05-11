@@ -1,6 +1,7 @@
 'use server';
 
 import { getInjection } from '@/server/di/container';
+import { revalidatePath } from 'next/cache';
 
 export const createGroupWithMembersAction = async (data: {
   name: string;
@@ -47,4 +48,14 @@ export const removeMemberFromGroupAction = async (data: {
   const controller = getInjection('IRemoveMemberFromGroupController');
 
   return await controller(data);
+};
+
+export const setCurrentGroupAction = async (groupId: string) => {
+  const controller = getInjection('ISetCurrentGroupController');
+
+  const res = await controller({ groupId });
+
+  revalidatePath('/groups');
+
+  return res;
 };

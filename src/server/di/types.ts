@@ -1,51 +1,51 @@
-import { IGroupMembersRepository } from '../application/repositories/groupMembers.repository.interface';
-import { IGroupsRepository } from '../application/repositories/groups.repository.interface';
 import { IGroceryListItemsRepository } from '@/server/application/repositories/grocery-list-items.repository.interface';
 import { IGroceryListsRepository } from '@/server/application/repositories/grocery-lists.repository.interface';
 import { IMealPlansRepository } from '@/server/application/repositories/meal-plans.repository.interface';
 import { IMealsRepository } from '@/server/application/repositories/meals.repository.interface';
 import { IUnitsRepository } from '@/server/application/repositories/units.repository.interface';
+import { IAddGroceryListItemsUseCase } from '@/server/application/use-cases/grocery-lists/add-grocery-list-items.use-case';
 import { ICreateGroceryListUseCase } from '@/server/application/use-cases/grocery-lists/create-grocery-list.use-case';
 import { IDeleteGroceryListItemUseCase } from '@/server/application/use-cases/grocery-lists/delete-grocery-list-item.use-case';
 import { IGetGroceryListUseCase } from '@/server/application/use-cases/grocery-lists/get-grocery-list.use-case';
 import { IListGroceryListsUseCase } from '@/server/application/use-cases/grocery-lists/list-grocery-lists.use-case';
 import { IMarkAllItemsBoughtUseCase } from '@/server/application/use-cases/grocery-lists/mark-all-items-bought.use-case';
 import { IUpdateGroceryListItemUseCase } from '@/server/application/use-cases/grocery-lists/update-grocery-list-item.use-case';
+import { IUpdateGroceryListUseCase } from '@/server/application/use-cases/grocery-lists/update-grocery-list.use-case';
 import { ICreateMealPlanUseCase } from '@/server/application/use-cases/meal-plans/create-meal-plan.use-case';
 import { IListMealPlansUseCase } from '@/server/application/use-cases/meal-plans/list-meal-plans.use-case';
 import { ICreateMealUseCase } from '@/server/application/use-cases/meals/create-meal.use-case';
 import { IListMealsUseCase } from '@/server/application/use-cases/meals/list-meals.use-case';
 import { IListUnitsUseCase } from '@/server/application/use-cases/units/list-units.use-case';
+import { IAddGroceryListItemsController } from '@/server/controllers/grocery-lists/add-grocery-list-items.controller';
 import { ICreateGroceryListController } from '@/server/controllers/grocery-lists/create-grocery-list.controller';
 import { IDeleteGroceryListItemController } from '@/server/controllers/grocery-lists/delete-grocery-list-item.controller';
 import { IGetGroceryListController } from '@/server/controllers/grocery-lists/get-grocery-list.controller';
 import { IListGroceryListsController } from '@/server/controllers/grocery-lists/list-grocery-lists.controller';
 import { IMarkAllItemsBoughtController } from '@/server/controllers/grocery-lists/mark-all-items-bought.controller';
-import { IUpdateGroceryListItemController } from '@/server/controllers/grocery-lists/update-grocery-list-item.controller';
+import { IUpdateGroceryListController } from '@/server/controllers/grocery-lists/update-grocery-list.controller';
 import { ICreateMealPlanController } from '@/server/controllers/meal-plans/create-meal-plan.controller';
 import { IListMealPlansController } from '@/server/controllers/meal-plans/list-meal-plans.controller';
 import { ICreateMealController } from '@/server/controllers/meals/create-meal.controller';
 import { IListMealsController } from '@/server/controllers/meals/list-meals.controller';
 import { IListUnitsController } from '@/server/controllers/units/list-units.controller';
+import { IGroupMembersRepository } from '../application/repositories/groupMembers.repository.interface';
+import { IGroupsRepository } from '../application/repositories/groups.repository.interface';
 import { IIngredientCategoriesRepository } from '../application/repositories/ingredient-categories.repository.interface';
 import { IIngredientsRepository } from '../application/repositories/ingredients.repository.interface';
 import { IRecipesRepository } from '../application/repositories/recipes.repository.interface';
 import { IUsersRepository } from '../application/repositories/users.repository.interface';
 import { IAuthenticationService } from '../application/services/authentication.service.interface';
 import { IGroceryListService } from '../application/services/grocery-list.service.interface';
+import { IGroupService } from '../application/services/group.service.interface';
 import { ITransactionManagerService } from '../application/services/transaction-manager.service.interface';
 import { IRegisterUseCase } from '../application/use-cases/auth/register.use-case';
 import { ISignInUseCase } from '../application/use-cases/auth/sign-in.use-case';
 import { ICreateGroupWithMembersUseCase } from '../application/use-cases/groups/create-group-with-members.use-case';
 import { IEditGroupUseCase } from '../application/use-cases/groups/edit-group.use-case';
 import { IGetGroupWithMembersUseCase } from '../application/use-cases/groups/get-group-with-members.use-case';
-import { ISearchUsersByEmailUseCase } from '../application/use-cases/users/search-users.use-case';
-import { IGetGroupWithMembersController } from '../controllers/groups/get-group-with-members.controller';
-import { ISearchUsersByEmailController } from '../controllers/users/search-users.controller';
+import { IGetUserGroupsWithMembersUseCase } from '../application/use-cases/groups/get-user-groups-with-members.use-case';
 import { IRemoveGroupUseCase } from '../application/use-cases/groups/remove-group.use-case';
-import { IRemoveGroupController } from '../controllers/groups/remove-group.controller';
 import { IRemoveMemberFromGroupUseCase } from '../application/use-cases/groups/remove-member-from-group.use-case';
-import { IRemoveMemberFromGroupController } from '../controllers/groups/remove-member-from-group.controller';
 import { ICreateCategoryUseCase } from '../application/use-cases/ingredient-categories/create-category.use-case';
 import { IListCategoriesUseCase } from '../application/use-cases/ingredient-categories/list-categories.use-case';
 import { ICreateIngredientUseCase } from '../application/use-cases/ingredients/create-ingredient.use-case';
@@ -58,15 +58,22 @@ import { IDeleteRecipeUseCase } from '../application/use-cases/recipes/delete-re
 import { IGetRecipeUseCase } from '../application/use-cases/recipes/get-recipe.use-case';
 import { IListRecipesUseCase } from '../application/use-cases/recipes/list-recipes.use-case';
 import { IUpdateRecipeUseCase } from '../application/use-cases/recipes/update-recipe.use-case';
+import { ISearchUsersByEmailUseCase } from '../application/use-cases/users/search-users.use-case';
+import { ISetCurrentGroupUseCase } from '../application/use-cases/users/set-current-group.use-case';
 import { IRegisterController } from '../controllers/auth/register.controller';
 import { ISignInController } from '../controllers/auth/sign-in.controller';
+import { IUpdateGroceryListItemController } from '../controllers/grocery-lists/update-grocery-list-item.controller';
+import { ICreateGroupWithMembersController } from '../controllers/groups/create-group-with-members.controller';
+import { IEditGroupController } from '../controllers/groups/edit-group.controller';
+import { IGetGroupWithMembersController } from '../controllers/groups/get-group-with-members.controller';
+import { IGetUserGroupsWithMembersController } from '../controllers/groups/get-user-groups-with-members.controller';
+import { IRemoveGroupController } from '../controllers/groups/remove-group.controller';
+import { IRemoveMemberFromGroupController } from '../controllers/groups/remove-member-from-group.controller';
 import { ICreateIngredientController } from '../controllers/ingredients/create-ingredient.controller';
 import { IDeleteIngredientController } from '../controllers/ingredients/delete-ingredient.controller';
 import { IGetIngredientController } from '../controllers/ingredients/get-ingredient.controller';
 import { IListIngredientsController } from '../controllers/ingredients/list-ingredients.controller';
 import { IUpdateIngredientController } from '../controllers/ingredients/update-ingredient.controller';
-import { IGetUserGroupsWithMembersUseCase } from '../application/use-cases/groups/get-user-groups-with-members.use-case';
-import { IGetUserGroupsWithMembersController } from '../controllers/groups/get-user-groups-with-members.controller';
 import { ICreateRecipeController } from '../controllers/recipes/create-recipe.controller';
 import { IDeleteRecipeController } from '../controllers/recipes/delete-recipe.controller';
 import { IGetRecipeController } from '../controllers/recipes/get-recipe.controller';
@@ -74,14 +81,17 @@ import { IListRecipesController } from '../controllers/recipes/list-recipes.cont
 import { IUpdateRecipeController } from '../controllers/recipes/update-recipe.controller';
 import { ICreateCategoryController } from '../controllers/ingredient-categories/create-category.controller';
 import { IListCategoriesController } from '../controllers/ingredient-categories/list-categories.controller';
-import { ICreateGroupWithMembersController } from '../controllers/groups/create-group-with-members.controller';
-import { IEditGroupController } from '../controllers/groups/edit-group.controller';
+import { IEditUserUseCase } from '../application/use-cases/users/edit-user.use-case';
+import { IEditUserController } from '../controllers/users/edit-user.controller';
+import { ISearchUsersByEmailController } from '../controllers/users/search-users.controller';
+import { ISetCurrentGroupController } from '../infrastructure/controllers/users/set-current-group.controller';
 
 export const DI_SYMBOLS = {
   // Services
   IAuthenticationService: Symbol.for('IAuthenticationService'),
   ITransactionManagerService: Symbol.for('ITransactionManagerService'),
   IGroceryListService: Symbol.for('IGroceryListService'),
+  IGroupService: Symbol.for('IGroupService'),
 
   // Repositories
   IUsersRepository: Symbol.for('IUsersRepository'),
@@ -112,6 +122,8 @@ export const DI_SYMBOLS = {
   IDeleteRecipeUseCase: Symbol.for('IDeleteRecipeUseCase'),
   IListRecipesUseCase: Symbol.for('IListRecipesUseCase'),
   IGetRecipeUseCase: Symbol.for('IGetRecipeUseCase'),
+  IEditUserUseCase: Symbol.for('IEditUserUseCase'),
+  ISetCurrentGroupUseCase: Symbol.for('ISetCurrentGroupUseCase'),
 
   // Controllers
   ISignInController: Symbol.for('ISignInController'),
@@ -139,6 +151,8 @@ export const DI_SYMBOLS = {
   IDeleteRecipeController: Symbol.for('IDeleteRecipeController'),
   IListRecipesController: Symbol.for('IListRecipesController'),
   IGetRecipeController: Symbol.for('IGetRecipeController'),
+  IEditUserController: Symbol.for('IEditUserController'),
+  ISetCurrentGroupController: Symbol.for('ISetCurrentGroupController'),
 
   // Ingredient Categories
   IIngredientCategoriesRepository: Symbol.for(
@@ -160,12 +174,16 @@ export const DI_SYMBOLS = {
   ICreateGroceryListUseCase: Symbol.for('ICreateGroceryListUseCase'),
   IListGroceryListsUseCase: Symbol.for('IListGroceryListsUseCase'),
   IGetGroceryListUseCase: Symbol.for('IGetGroceryListUseCase'),
+  IUpdateGroceryListUseCase: Symbol.for('IUpdateGroceryListUseCase'),
+  IAddGroceryListItemsUseCase: Symbol.for('IAddGroceryListItemsUseCase'),
   IUpdateGroceryListItemUseCase: Symbol.for('IUpdateGroceryListItemUseCase'),
   IDeleteGroceryListItemUseCase: Symbol.for('IDeleteGroceryListItemUseCase'),
   IMarkAllItemsBoughtUseCase: Symbol.for('IMarkAllItemsBoughtUseCase'),
   ICreateGroceryListController: Symbol.for('ICreateGroceryListController'),
   IListGroceryListsController: Symbol.for('IListGroceryListsController'),
   IGetGroceryListController: Symbol.for('IGetGroceryListController'),
+  IUpdateGroceryListController: Symbol.for('IUpdateGroceryListController'),
+  IAddGroceryListItemsController: Symbol.for('IAddGroceryListItemsController'),
   IUpdateGroceryListItemController: Symbol.for(
     'IUpdateGroceryListItemController'
   ),
@@ -189,11 +207,12 @@ export const DI_SYMBOLS = {
   IListMealPlansController: Symbol.for('IListMealPlansController'),
 };
 
-export interface DI_RETURN_TYPES {
+export type DI_RETURN_TYPES = {
   // Services
   IAuthenticationService: IAuthenticationService;
   ITransactionManagerService: ITransactionManagerService;
   IGroceryListService: IGroceryListService;
+  IGroupService: IGroupService;
 
   // Repositories
   IUsersRepository: IUsersRepository;
@@ -222,6 +241,8 @@ export interface DI_RETURN_TYPES {
   IDeleteRecipeUseCase: IDeleteRecipeUseCase;
   IListRecipesUseCase: IListRecipesUseCase;
   IGetRecipeUseCase: IGetRecipeUseCase;
+  IEditUserUseCase: IEditUserUseCase;
+  ISetCurrentGroupUseCase: ISetCurrentGroupUseCase;
 
   // Controllers
   ISignInController: ISignInController;
@@ -243,6 +264,8 @@ export interface DI_RETURN_TYPES {
   IDeleteRecipeController: IDeleteRecipeController;
   IListRecipesController: IListRecipesController;
   IGetRecipeController: IGetRecipeController;
+  IEditUserController: IEditUserController;
+  ISetCurrentGroupController: ISetCurrentGroupController;
 
   // Ingredient Categories
   IIngredientCategoriesRepository: IIngredientCategoriesRepository;
@@ -262,12 +285,16 @@ export interface DI_RETURN_TYPES {
   ICreateGroceryListUseCase: ICreateGroceryListUseCase;
   IListGroceryListsUseCase: IListGroceryListsUseCase;
   IGetGroceryListUseCase: IGetGroceryListUseCase;
+  IUpdateGroceryListUseCase: IUpdateGroceryListUseCase;
+  IAddGroceryListItemsUseCase: IAddGroceryListItemsUseCase;
   IUpdateGroceryListItemUseCase: IUpdateGroceryListItemUseCase;
   IDeleteGroceryListItemUseCase: IDeleteGroceryListItemUseCase;
   IMarkAllItemsBoughtUseCase: IMarkAllItemsBoughtUseCase;
   ICreateGroceryListController: ICreateGroceryListController;
   IListGroceryListsController: IListGroceryListsController;
   IGetGroceryListController: IGetGroceryListController;
+  IUpdateGroceryListController: IUpdateGroceryListController;
+  IAddGroceryListItemsController: IAddGroceryListItemsController;
   IUpdateGroceryListItemController: IUpdateGroceryListItemController;
   IDeleteGroceryListItemController: IDeleteGroceryListItemController;
   IMarkAllItemsBoughtController: IMarkAllItemsBoughtController;
@@ -285,4 +312,4 @@ export interface DI_RETURN_TYPES {
   IListMealPlansUseCase: IListMealPlansUseCase;
   ICreateMealPlanController: ICreateMealPlanController;
   IListMealPlansController: IListMealPlansController;
-}
+};
