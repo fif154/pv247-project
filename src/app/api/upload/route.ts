@@ -15,7 +15,11 @@ export async function POST(req: NextRequest) {
 
     const ext = file.name.split('.').pop();
     const filename = `${randomUUID()}.${ext}`;
+
+    console.log('Uploading file:', filename);
+
     const blob = await put(filename, file, { access: 'public' });
+    console.log('Blob URL:', blob.url);
 
     return Response.json(blob);
   } catch (err) {
