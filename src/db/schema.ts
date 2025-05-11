@@ -106,6 +106,9 @@ export const groups = sqliteTable('groups', {
   ...baseSchema,
   name: text('name').notNull(),
   description: text('description'),
+  createdBy: text('created_by').references(() => users.id, {
+    onDelete: 'set null',
+  }),
 });
 
 export const groupMembers = sqliteTable(

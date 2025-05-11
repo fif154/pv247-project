@@ -26,4 +26,16 @@ export class GroupService implements IGroupService {
       await this.groupMembersRepository.getGroupMembersByGroupId(groupId);
     return members.some((member) => member.userId === userId);
   }
+
+  async canUserModifyGroup(userId: string, groupId: string): Promise<boolean> {
+    const group = await this.groupsRepository.getGroup(groupId);
+    if (!group) {
+      return false;
+    }
+
+    return !!(
+      group.createdBy === userId ||
+      (group.members?.length === 1 && group.members[0].userId === userId)
+    );
+  }
 }

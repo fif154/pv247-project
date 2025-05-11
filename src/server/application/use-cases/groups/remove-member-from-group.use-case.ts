@@ -20,6 +20,9 @@ export const removeMemberFromGroupUseCase =
     }
 
     await groupService.verifyUserInGroup(user.id, groupId);
+    if (!(await groupService.canUserModifyGroup(user.id, groupId))) {
+      throw new Error('User does not have permission to remove this member');
+    }
 
     // Remove the member from the group
     const memberRemoved = await groupMembersRepository.removeUserFromGroup(

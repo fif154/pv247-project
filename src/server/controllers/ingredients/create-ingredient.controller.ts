@@ -1,3 +1,4 @@
+import { auth } from '@/auth';
 import { ICreateIngredientUseCase } from '@/server/application/use-cases/ingredients/create-ingredient.use-case';
 import { InputParseError } from '@/server/entities/errors/common';
 import { z } from 'zod';
@@ -22,7 +23,16 @@ export const createIngredientController =
     if (!result.success) {
       throw new InputParseError(result.error.message);
     }
-    return await createIngredientUseCase(result.data);
+
+    const user = (await auth())?.user;
+    if (!user) {
+      throw new InputParseError('User not found');
+    }
+
+    return await createIngredientUseCase({
+      ...result.data,
+      groupId: user.groupId,
+    });
   };
 
 export type ICreateIngredientController = ReturnType<

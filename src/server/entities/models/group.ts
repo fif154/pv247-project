@@ -6,7 +6,10 @@ import { TModelWithRelations } from '../utils';
 type GroupWithoutRelations = InferSelectModel<typeof groups>;
 export type Group = TModelWithRelations<'groups'>;
 export type CreateGroup = InferInsertModel<typeof groups>;
-export type EditGroup = Omit<Group, 'createdAt' | 'deletedAt' | 'updatedAt'>;
+export type EditGroup = Omit<
+  Group,
+  'createdAt' | 'deletedAt' | 'updatedAt' | 'createdBy'
+>;
 
 export type GroupWithMembers = GroupWithoutRelations & {
   members: User[];

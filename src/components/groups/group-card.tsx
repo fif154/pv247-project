@@ -43,23 +43,32 @@ export const GroupCard = ({ group, currentUser }: GroupCardProps) => {
           ) : null}
           <div className="flex justify-between w-full">
             <h2 className="text-xl font-bold">{group.name}</h2>
-            <div className="flex gap-5">
-              <Pencil
-                className="cursor-pointer hover:text-gray-500"
-                onClick={() => setEditModalOpen(true)}
-              />
-              <DoorOpen
-                className={
-                  group.members.length <= 1
-                    ? 'text-gray-400 cursor-not-allowed'
-                    : 'cursor-pointer hover:text-blue-500'
-                }
-                onClick={() => setLeaveModalOpen(true)}
-              />
-              <Trash2
-                className="cursor-pointer hover:text-red-500"
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setEditModalOpen(true);
+                }}
+              >
+                <Pencil onClick={() => setEditModalOpen(true)} />
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setLeaveModalOpen(true);
+                }}
+                disabled={group.members.length <= 1 || isCurrentUserGroup}
+              >
+                <DoorOpen />
+              </Button>
+              <Button
+                variant="outline"
+                className="hover:text-destructive"
                 onClick={() => setRemoveModalOpen(true)}
-              />
+                disabled={isCurrentUserGroup}
+              >
+                <Trash2 onClick={() => setRemoveModalOpen(true)} />
+              </Button>
             </div>
           </div>
 

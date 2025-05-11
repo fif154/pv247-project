@@ -28,6 +28,9 @@ export const editGroupUseCase =
     }
 
     await groupService.verifyUserInGroup(user.id, groupId);
+    if (!(await groupService.canUserModifyGroup(user.id, groupId))) {
+      throw new Error('User does not have permission to modify this group');
+    }
 
     // Update the group details
     const updatedGroup = await groupsRepository.editGroup(
