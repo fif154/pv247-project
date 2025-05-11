@@ -1,5 +1,4 @@
 import { Transaction } from '@/db';
-import { ITransaction } from '@/server/entities/models/transaction.interface';
 import { CreateUser, User } from '@/server/entities/models/user';
 
 export interface IUsersRepository {
