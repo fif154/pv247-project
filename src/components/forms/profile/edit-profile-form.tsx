@@ -1,16 +1,15 @@
 'use client';
 
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
-import { EditProfileFormFields } from './edit-profile-form-fields';
-import { EditUser } from '@/server/entities/models/user';
-import { useEditUserMutation } from '@/mutations/users';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
+import { useEditUserMutation } from '@/mutations/users';
+import { EditUser } from '@/server/entities/models/user';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { EditProfileFormFields } from './edit-profile-form-fields';
 const editProfileSchema = z.object({
   firstName: z.string().min(1, {
     message: 'First name is required',
@@ -37,7 +36,6 @@ export const EditProfileForm = ({
   const { update } = useSession();
 
   const onSubmit = async (data: EditProfileSchema) => {
-    console.log('data', data);
     await editUser(
       {
         userId: userInfo?.id ?? '',
