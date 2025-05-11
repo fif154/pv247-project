@@ -274,6 +274,7 @@ export const mealTypes = sqliteTable(
     ...baseSchema,
     name: text('name').notNull(),
     description: text('description'),
+    sortOrder: integer('sort_order').notNull().default(0),
   },
   (table) => ({
     mealTypeNameUnique: uniqueIndex('meal_type_name_unique').on(table.name),
