@@ -36,6 +36,7 @@ import { IRecipesRepository } from '../application/repositories/recipes.reposito
 import { IUsersRepository } from '../application/repositories/users.repository.interface';
 import { IAuthenticationService } from '../application/services/authentication.service.interface';
 import { IGroceryListService } from '../application/services/grocery-list.service.interface';
+import { IGroupService } from '../application/services/group.service.interface';
 import { ITransactionManagerService } from '../application/services/transaction-manager.service.interface';
 import { IRegisterUseCase } from '../application/use-cases/auth/register.use-case';
 import { ISignInUseCase } from '../application/use-cases/auth/sign-in.use-case';
@@ -58,6 +59,7 @@ import { IGetRecipeUseCase } from '../application/use-cases/recipes/get-recipe.u
 import { IListRecipesUseCase } from '../application/use-cases/recipes/list-recipes.use-case';
 import { IUpdateRecipeUseCase } from '../application/use-cases/recipes/update-recipe.use-case';
 import { ISearchUsersByEmailUseCase } from '../application/use-cases/users/search-users.use-case';
+import { ISetCurrentGroupUseCase } from '../application/use-cases/users/set-current-group.use-case';
 import { IRegisterController } from '../controllers/auth/register.controller';
 import { ISignInController } from '../controllers/auth/sign-in.controller';
 import { IUpdateGroceryListItemController } from '../controllers/grocery-lists/update-grocery-list-item.controller';
@@ -82,12 +84,14 @@ import { IListCategoriesController } from '../controllers/ingredient-categories/
 import { IEditUserUseCase } from '../application/use-cases/users/edit-user.use-case';
 import { IEditUserController } from '../controllers/users/edit-user.controller';
 import { ISearchUsersByEmailController } from '../controllers/users/search-users.controller';
+import { ISetCurrentGroupController } from '../infrastructure/controllers/users/set-current-group.controller';
 
 export const DI_SYMBOLS = {
   // Services
   IAuthenticationService: Symbol.for('IAuthenticationService'),
   ITransactionManagerService: Symbol.for('ITransactionManagerService'),
   IGroceryListService: Symbol.for('IGroceryListService'),
+  IGroupService: Symbol.for('IGroupService'),
 
   // Repositories
   IUsersRepository: Symbol.for('IUsersRepository'),
@@ -119,6 +123,7 @@ export const DI_SYMBOLS = {
   IListRecipesUseCase: Symbol.for('IListRecipesUseCase'),
   IGetRecipeUseCase: Symbol.for('IGetRecipeUseCase'),
   IEditUserUseCase: Symbol.for('IEditUserUseCase'),
+  ISetCurrentGroupUseCase: Symbol.for('ISetCurrentGroupUseCase'),
 
   // Controllers
   ISignInController: Symbol.for('ISignInController'),
@@ -147,6 +152,7 @@ export const DI_SYMBOLS = {
   IListRecipesController: Symbol.for('IListRecipesController'),
   IGetRecipeController: Symbol.for('IGetRecipeController'),
   IEditUserController: Symbol.for('IEditUserController'),
+  ISetCurrentGroupController: Symbol.for('ISetCurrentGroupController'),
 
   // Ingredient Categories
   IIngredientCategoriesRepository: Symbol.for(
@@ -201,11 +207,12 @@ export const DI_SYMBOLS = {
   IListMealPlansController: Symbol.for('IListMealPlansController'),
 };
 
-export interface DI_RETURN_TYPES {
+export type DI_RETURN_TYPES = {
   // Services
   IAuthenticationService: IAuthenticationService;
   ITransactionManagerService: ITransactionManagerService;
   IGroceryListService: IGroceryListService;
+  IGroupService: IGroupService;
 
   // Repositories
   IUsersRepository: IUsersRepository;
@@ -235,6 +242,7 @@ export interface DI_RETURN_TYPES {
   IListRecipesUseCase: IListRecipesUseCase;
   IGetRecipeUseCase: IGetRecipeUseCase;
   IEditUserUseCase: IEditUserUseCase;
+  ISetCurrentGroupUseCase: ISetCurrentGroupUseCase;
 
   // Controllers
   ISignInController: ISignInController;
@@ -257,6 +265,7 @@ export interface DI_RETURN_TYPES {
   IListRecipesController: IListRecipesController;
   IGetRecipeController: IGetRecipeController;
   IEditUserController: IEditUserController;
+  ISetCurrentGroupController: ISetCurrentGroupController;
 
   // Ingredient Categories
   IIngredientCategoriesRepository: IIngredientCategoriesRepository;
@@ -303,4 +312,4 @@ export interface DI_RETURN_TYPES {
   IListMealPlansUseCase: IListMealPlansUseCase;
   ICreateMealPlanController: ICreateMealPlanController;
   IListMealPlansController: IListMealPlansController;
-}
+};

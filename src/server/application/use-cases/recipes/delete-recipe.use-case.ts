@@ -1,25 +1,28 @@
 import { auth } from '@/auth';
 import { IRecipesRepository } from '@/server/application/repositories/recipes.repository.interface';
 import { NotFoundError } from '@/server/entities/errors/common';
-import { canDeleteRecipe } from '../../policy/recipe';
+import { IGroupService } from '../../services/group.service.interface';
 
 export const deleteRecipeUseCase =
-  (recipesRepository: IRecipesRepository) => async (id: string) => {
+  (recipesRepository: IRecipesRepository, groupService: IGroupService) =>
+  async (id: string) => {
     const user = (await auth())?.user;
     if (!user) {
       throw new NotFoundError('User not found');
     }
 
+    if (!user.groupId) {
+      throw new NotFoundError('User not in a group');
+    }
+
+    await groupService.verifyUserInGroup(user.id, user.groupId);
+
     const recipe = await recipesRepository.getRecipeById(id);
-    if (!recipe) {
+    if (!recipe || recipe.groupId !== user.groupId) {
       throw new NotFoundError('Recipe not found');
     }
 
-    if (!canDeleteRecipe(recipe, user)) {
-      throw new NotFoundError('Recipe not found');
-    }
-
-    await recipesRepository.deleteRecipe(id);
+    return recipesRepository.deleteRecipe(id);
   };
 
 export type IDeleteRecipeUseCase = ReturnType<typeof deleteRecipeUseCase>;

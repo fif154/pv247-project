@@ -15,9 +15,9 @@ export const editUserUseCase =
     const { userId, name, email } = data;
 
     // Update the group details
-    const updatedUser = await usersRepository.editUser(
+    const updatedUser = await usersRepository.updateUser(
+      userId,
       {
-        id: userId,
         name,
         email,
       },

@@ -1,5 +1,5 @@
-import { IGroupsRepository } from '@/server/application/repositories/groups.repository.interface';
 import { IGroupMembersRepository } from '@/server/application/repositories/groupMembers.repository.interface';
+import { IGroupsRepository } from '@/server/application/repositories/groups.repository.interface';
 import { IUsersRepository } from '@/server/application/repositories/users.repository.interface';
 import { GroupWithMembers } from '@/server/entities/models/group';
 

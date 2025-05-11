@@ -3,6 +3,7 @@ import {
   editGroupAction,
   removeGroupAction,
   removeMemberFromGroupAction,
+  setCurrentGroupAction,
 } from '@/app/(groups)/actions';
 import { showErrorToast, showSuccessToast } from '@/utils/toast';
 import { useMutation } from '@tanstack/react-query';
@@ -65,5 +66,18 @@ export const useRemoveMemberFromGroupMutation = () =>
     },
     onSuccess: () => {
       showSuccessToast('Member removed from group successfully.');
+    },
+  });
+
+export const useSelectCurrentGroupMutation = () =>
+  useMutation({
+    mutationFn: async (groupId: string) => {
+      return await setCurrentGroupAction(groupId);
+    },
+    onError: () => {
+      showErrorToast('Failed to select group. Please try again.');
+    },
+    onSuccess: () => {
+      showSuccessToast('Group selected successfully.');
     },
   });

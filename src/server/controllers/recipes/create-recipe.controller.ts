@@ -24,6 +24,7 @@ export const createRecipeController =
       ...validatedInput,
       createdBy: user.id,
       deletedAt: null,
+      groupId: user.groupId,
     });
   };
 

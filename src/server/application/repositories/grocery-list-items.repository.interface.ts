@@ -13,6 +13,10 @@ export interface IGroceryListItemsRepository {
     inputs: CreateGroceryListItem[],
     tx?: Transaction
   ): Promise<GroceryListItem[]>;
+  getGroceryListItemById(
+    id: string,
+    tx?: Transaction
+  ): Promise<GroceryListItem | null>;
   getGroceryListItemsByGroceryListId(
     groceryListId: string,
     tx?: Transaction

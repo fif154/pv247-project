@@ -1,20 +1,19 @@
-import React from 'react';
 import {
   Dialog,
+  DialogClose,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
-  DialogClose,
 } from '@/components/ui/dialog';
-import { GroupForm } from './group-form';
-import { UserInfo } from '@/server/entities/models/user';
 import { GroupWithMembers } from '@/server/entities/models/group';
+import { User } from 'next-auth';
+import { GroupForm } from './group-form';
 
 type CreateGroupModalProps = {
   modalOpen: boolean;
   setModalOpen: (open: boolean) => void;
-  currentUser: UserInfo;
+  currentUser: User;
   initialData?: GroupWithMembers;
   isEditMode?: boolean;
   isPending?: boolean;

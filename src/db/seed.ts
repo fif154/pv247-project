@@ -1,41 +1,63 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// seed.ts
-import { Ingredient } from '@/server/entities/models/ingredient';
-import { Unit } from '@/server/entities/models/unit';
-import { AdapterAccountType } from '@auth/core/adapters'; // Ensure this type is accessible
+
+// seed.ts – complete database seeder aligned with ./schema
+// Uses @faker-js/faker v9.7.0 (no deprecated `unique` helper)
+// -----------------------------------------------------------
+import { AdapterAccountType } from '@auth/core/adapters';
 import { faker } from '@faker-js/faker';
 import { createClient } from '@libsql/client';
 import { drizzle } from 'drizzle-orm/libsql';
 import * as schema from './schema';
 
-// --- Configuration ---
+// ---------------------------
+// Configuration & Constants
+// ---------------------------
+
 const NUM_USERS = 20;
 const NUM_GROUPS = 5;
 const NUM_RECIPES_PER_USER = 3;
+const NUM_INGREDIENT_CATEGORIES = 10;
 const NUM_INGREDIENTS = 50;
 const MAX_INGREDIENTS_PER_RECIPE = 8;
-const MAX_MEMBERS_PER_GROUP = 5;
+const MAX_MEMBERS_PER_GROUP = 6;
 const MAX_ITEMS_PER_GROCERY_LIST = 15;
+const MAX_GROCERY_LISTS_PER_GROUP = 3;
 const MAX_MEALS_PER_USER = 10;
 const MAX_ADDITIONAL_INGREDIENTS_PER_MEAL = 3;
-const NUM_INGREDIENT_CATEGORIES = 10;
 const NUM_MEAL_PLANS_PER_GROUP = 3;
 const MAX_MEALS_PER_MEAL_PLAN = 7;
 
-// --- Database Connection ---
-// Replace 'your-database.db' with your actual database file
+// ---------------------------
+// DB connection
+// ---------------------------
 const sqlite = createClient({
   url: process.env.DATABASE_URL!,
   authToken: process.env.AUTH_TOKEN!,
 });
+
 const db = drizzle(sqlite, { schema });
 
-console.log('Seeding database...');
+// ---------------------------
+// Utilities
+// ---------------------------
+const randBool = (probability = 0.5) => faker.datatype.boolean(probability);
 
-async function main() {
-  // ---- 0. Optional: Clear Existing Data (in reverse order of creation due to FKs) ----
-  // Be very careful with this in a production environment!
-  console.log('Clearing existing data (if any)...');
+/**
+ * Inserts a record and returns the inserted row (via RETURNING)
+ */
+async function insertOne<T extends keyof typeof schema>(
+  table: (typeof schema)[T],
+  row: any
+) {
+  // @ts-expect-error: Type 'typeof schema[T]' is not assignable to type 'typeof schema[T]'.
+  const [inserted] = await db.insert(table).values(row).returning();
+  return inserted as typeof row;
+}
+
+/**
+ * Bulk-delete all rows in reverse dependency order so that FK constraints are respected.
+ */
+async function clearExistingData() {
   await db.delete(schema.mealPlanMeals).execute();
   await db.delete(schema.mealPlans).execute();
   await db.delete(schema.mealAdditionalIngredients).execute();
@@ -56,108 +78,129 @@ async function main() {
   await db.delete(schema.sessions).execute();
   await db.delete(schema.accounts).execute();
   await db.delete(schema.users).execute();
-  console.log('Data cleared.');
+}
 
-  // ---- 1. Seed Users ----
-  const users = [];
+// ---------------------------
+// Main seeding routine
+// ---------------------------
+async function main() {
+  console.log('Clearing old data …');
+  await clearExistingData();
+  console.log('Seeding fresh data …');
+
+  // ---------- 6. Groups ----------
+  const groups = [] as Array<typeof schema.groups.$inferSelect>;
+  const usedGroupNames = new Set<string>();
+
+  // Create default group first
+  const defaultGroup = await insertOne(schema.groups, {
+    id: 'default',
+    name: 'Default Group',
+    description: 'Default group for testing and development',
+  });
+  groups.push(defaultGroup);
+  usedGroupNames.add(defaultGroup.name);
+
+  // Create additional groups
+  for (let i = 0; i < NUM_GROUPS - 1; i++) {
+    let name = `${faker.commerce.department()} Team`;
+    while (usedGroupNames.has(name)) {
+      name = `${faker.commerce.department()} ${faker.word.adjective()} Team`;
+    }
+    usedGroupNames.add(name);
+    groups.push(
+      await insertOne(schema.groups, {
+        id: crypto.randomUUID(),
+        name,
+        description: faker.lorem.sentence(),
+      })
+    );
+  }
+  console.log(`✓ Groups: ${groups.length}`);
+
+  // ---------- 1. Users ----------
+  const users = [] as Array<typeof schema.users.$inferSelect>;
   for (let i = 0; i < NUM_USERS; i++) {
-    const user = {
+    const row = {
       id: crypto.randomUUID(),
       name: faker.person.fullName(),
-      email: faker.internet.email().toLowerCase(), // Ensure unique
-      emailVerified: faker.datatype.boolean() ? new Date() : null,
+      email: faker.internet.email().toLowerCase(),
+      emailVerified: randBool(0.4) ? new Date() : null,
       image: faker.image.avatar(),
-      passwordHash: faker.internet.password(), // In a real app, hash this!
+      passwordHash: faker.internet.password(),
+      groupId: faker.helpers.arrayElement(groups).id,
     };
-    const [insertedUser] = await db
-      .insert(schema.users)
-      .values(user)
-      .returning();
-    users.push(insertedUser);
+    users.push(await insertOne(schema.users, row));
   }
-  console.log(`Seeded ${users.length} users.`);
-  if (!users.length) return; // Stop if no users created
+  console.log(`✓ Users: ${users.length}`);
 
-  // ---- 2. Seed Accounts (related to users) ----
-  const accounts = [];
+  // ---------- 2. Accounts ----------
+  const accounts: any[] = [];
   for (const user of users) {
-    if (faker.datatype.boolean(0.7)) {
-      // 70% chance of having an account
-      const accountTypes: AdapterAccountType[] = ['oauth', 'oidc', 'email'];
-      const account = {
+    if (randBool(0.7)) {
+      const accountRow = {
         userId: user.id,
-        type: faker.helpers.arrayElement(accountTypes),
+        type: faker.helpers.arrayElement<AdapterAccountType>([
+          'oauth',
+          'oidc',
+          'email',
+        ]),
         provider: faker.company.name().replace(/\s+/g, '-').toLowerCase(),
         providerAccountId: faker.string.uuid(),
         refresh_token: faker.string.alphanumeric(30),
         access_token: faker.string.alphanumeric(30),
-        expires_at: Math.floor(faker.date.future().getTime() / 1000), // s
+        expires_at: Math.floor(faker.date.future().getTime() / 1000),
         token_type: faker.helpers.arrayElement(['bearer', 'mac']),
         scope: 'read write profile email',
         id_token: faker.string.alphanumeric(50),
         session_state: faker.string.alphanumeric(20),
       };
-      const [insertedAccount] = await db
-        .insert(schema.accounts)
-        .values(account)
-        .returning();
-      accounts.push(insertedAccount);
+      accounts.push(await insertOne(schema.accounts, accountRow));
     }
   }
-  console.log(`Seeded ${accounts.length} accounts.`);
+  console.log(`✓ Accounts: ${accounts.length}`);
 
-  // ---- 3. Seed Sessions (related to users) ----
-  const sessions = [];
+  // ---------- 3. Sessions ----------
+  const sessions: any[] = [];
   for (const user of users) {
-    if (faker.datatype.boolean(0.5)) {
-      // 50% chance of having an active session
-      const session = {
+    if (randBool(0.5)) {
+      const sessRow = {
         sessionToken: faker.string.uuid(),
         userId: user.id,
         expires: faker.date.future({ years: 1 }),
       };
-      const [insertedSession] = await db
-        .insert(schema.sessions)
-        .values(session)
-        .returning();
-      sessions.push(insertedSession);
+      sessions.push(await insertOne(schema.sessions, sessRow));
     }
   }
-  console.log(`Seeded ${sessions.length} sessions.`);
+  console.log(`✓ Sessions: ${sessions.length}`);
 
-  // ---- 4. Seed Verification Tokens ----
-  const verificationTokens = [];
+  // ---------- 4. Verification Tokens ----------
+  const verificationTokens: any[] = [];
   for (let i = 0; i < NUM_USERS / 2; i++) {
-    // Some tokens
-    const token = {
+    const vtRow = {
       identifier: faker.internet.email().toLowerCase(),
       token: faker.string.uuid(),
       expires: faker.date.future({ years: 1 }),
     };
-    const [insertedToken] = await db
-      .insert(schema.verificationTokens)
-      .values(token)
-      .returning();
-    verificationTokens.push(insertedToken);
+    verificationTokens.push(await insertOne(schema.verificationTokens, vtRow));
   }
-  console.log(`Seeded ${verificationTokens.length} verification tokens.`);
+  console.log(`✓ VerificationTokens: ${verificationTokens.length}`);
 
-  // ---- 5. Seed Authenticators (related to users) ----
-  const authenticators = [];
+  // ---------- 5. Authenticators ----------
+  const authenticators: any[] = [];
   for (const user of users) {
-    if (faker.datatype.boolean(0.2)) {
-      // 20% chance of having an authenticator
-      const authenticator = {
+    if (randBool(0.2)) {
+      const authRow = {
         credentialID: faker.string.uuid(),
         userId: user.id,
-        providerAccountId: faker.string.uuid(), // Could link to an actual account if needed
+        providerAccountId: faker.string.uuid(),
         credentialPublicKey: faker.string.hexadecimal({ length: 128 }),
         counter: faker.number.int({ min: 0, max: 100 }),
         credentialDeviceType: faker.helpers.arrayElement([
           'platform',
           'cross-platform',
         ]),
-        credentialBackedUp: faker.datatype.boolean(),
+        credentialBackedUp: randBool(),
         transports: faker.helpers.arrayElement([
           'usb',
           'nfc',
@@ -166,378 +209,164 @@ async function main() {
           null,
         ]),
       };
-      const [insertedAuth] = await db
-        .insert(schema.authenticators)
-        .values(authenticator)
-        .returning();
-      authenticators.push(insertedAuth);
+      authenticators.push(await insertOne(schema.authenticators, authRow));
     }
   }
-  console.log(`Seeded ${authenticators.length} authenticators.`);
+  console.log(`✓ Authenticators: ${authenticators.length}`);
 
-  // ---- 6. Seed Groups ----
-  const groups = [];
-  for (let i = 0; i < NUM_GROUPS; i++) {
-    const group = {
-      id: crypto.randomUUID(),
-      name: faker.commerce.department() + ' Team',
-      description: faker.lorem.sentence(),
-    };
-    // Handle potential unique name collision for groups if you add unique index later
-    const [insertedGroup] = await db
-      .insert(schema.groups)
-      .values(group)
-      .returning();
-    groups.push(insertedGroup);
-  }
-  console.log(`Seeded ${groups.length} groups.`);
-  if (!groups.length) {
-    console.log('No groups, skipping dependent seeds.');
-  }
-
-  // ---- 7. Seed Group Members (joining users and groups) ----
-  const groupMembers = [];
-  if (groups.length) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    for (const group of groups) {
-      const numMembers = faker.number.int({
-        min: 1,
-        max: Math.min(MAX_MEMBERS_PER_GROUP, users.length),
-      });
-      const shuffledUsers = faker.helpers.shuffle(users);
-      for (let i = 0; i < numMembers; i++) {
-        if (shuffledUsers[i]) {
-          const user = {
-            id: crypto.randomUUID(),
-            name: faker.person.fullName(),
-            email: faker.internet.email().toLowerCase(), // Ensure unique
-            emailVerified: faker.datatype.boolean() ? new Date() : null,
-            image: faker.image.avatar(),
-            passwordHash: faker.internet.password(), // In a real app, hash this!
-          };
-          const [insertedUser] = await db
-            .insert(schema.users)
-            .values(user)
-            .returning();
-          users.push(insertedUser);
-        }
-        console.log(`Seeded ${users.length} users.`);
-        if (!users.length) return; // Stop if no users created
-
-        // ---- 2. Seed Accounts (related to users) ----
-        const accounts = [];
-        for (const user of users) {
-          if (faker.datatype.boolean(0.7)) {
-            // 70% chance of having an account
-            const accountTypes: AdapterAccountType[] = [
-              'oauth',
-              'oidc',
-              'email',
-            ];
-            const account = {
-              userId: user.id,
-              type: faker.helpers.arrayElement(accountTypes),
-              provider: faker.company.name().replace(/\s+/g, '-').toLowerCase(),
-              providerAccountId: faker.string.uuid(),
-              refresh_token: faker.string.alphanumeric(30),
-              access_token: faker.string.alphanumeric(30),
-              expires_at: Math.floor(faker.date.future().getTime() / 1000), // s
-              token_type: faker.helpers.arrayElement(['bearer', 'mac']),
-              scope: 'read write profile email',
-              id_token: faker.string.alphanumeric(50),
-              session_state: faker.string.alphanumeric(20),
-            };
-            const [insertedAccount] = await db
-              .insert(schema.accounts)
-              .values(account)
-              .returning();
-            accounts.push(insertedAccount);
-          }
-        }
-        console.log(`Seeded ${accounts.length} accounts.`);
-
-        // ---- 3. Seed Sessions (related to users) ----
-        const sessions = [];
-        for (const user of users) {
-          if (faker.datatype.boolean(0.5)) {
-            // 50% chance of having an active session
-            const session = {
-              sessionToken: faker.string.uuid(),
-              userId: user.id,
-              expires: faker.date.future({ years: 1 }),
-            };
-            const [insertedSession] = await db
-              .insert(schema.sessions)
-              .values(session)
-              .returning();
-            sessions.push(insertedSession);
-          }
-        }
-        console.log(`Seeded ${sessions.length} sessions.`);
-
-        // ---- 4. Seed Verification Tokens ----
-        const verificationTokens = [];
-        for (let i = 0; i < NUM_USERS / 2; i++) {
-          // Some tokens
-          const token = {
-            identifier: faker.internet.email().toLowerCase(),
-            token: faker.string.uuid(),
-            expires: faker.date.future({ years: 1 }),
-          };
-          const [insertedToken] = await db
-            .insert(schema.verificationTokens)
-            .values(token)
-            .returning();
-          verificationTokens.push(insertedToken);
-        }
-        console.log(`Seeded ${verificationTokens.length} verification tokens.`);
-
-        // ---- 5. Seed Authenticators (related to users) ----
-        const authenticators = [];
-        for (const user of users) {
-          if (faker.datatype.boolean(0.2)) {
-            // 20% chance of having an authenticator
-            const authenticator = {
-              credentialID: faker.string.uuid(),
-              userId: user.id,
-              providerAccountId: faker.string.uuid(), // Could link to an actual account if needed
-              credentialPublicKey: faker.string.hexadecimal({ length: 128 }),
-              counter: faker.number.int({ min: 0, max: 100 }),
-              credentialDeviceType: faker.helpers.arrayElement([
-                'platform',
-                'cross-platform',
-              ]),
-              credentialBackedUp: faker.datatype.boolean(),
-              transports: faker.helpers.arrayElement([
-                'usb',
-                'nfc',
-                'ble',
-                'internal',
-                null,
-              ]),
-            };
-            const [insertedAuth] = await db
-              .insert(schema.authenticators)
-              .values(authenticator)
-              .returning();
-            authenticators.push(insertedAuth);
-          }
-        }
-        console.log(`Seeded ${authenticators.length} authenticators.`);
-
-        // ---- 6. Seed Groups ----
-        const groups = [];
-        for (let i = 0; i < NUM_GROUPS; i++) {
-          const group = {
-            id: i === 0 ? 'default' : crypto.randomUUID(),
-            name: faker.commerce.department() + ' Team',
-            description: faker.lorem.sentence(),
-          };
-          // Handle potential unique name collision for groups if you add unique index later
-          const [insertedGroup] = await db
-            .insert(schema.groups)
-            .values(group)
-            .returning();
-          groups.push(insertedGroup);
-        }
-        console.log(`Seeded ${groups.length} groups.`);
-        if (!groups.length) {
-          console.log('No groups, skipping dependent seeds.');
-        }
-
-        // ---- 7. Seed Group Members (joining users and groups) ----
-        const groupMembers = [];
-        if (groups.length) {
-          for (const group of groups) {
-            const numMembers = faker.number.int({
-              min: 1,
-              max: Math.min(MAX_MEMBERS_PER_GROUP, users.length),
-            });
-            const shuffledUsers = faker.helpers.shuffle(users);
-            for (let i = 0; i < numMembers; i++) {
-              if (shuffledUsers[i]) {
-                const member = {
-                  id: crypto.randomUUID(),
-                  userId: shuffledUsers[i].id,
-                  groupId: group.id,
-                };
-                try {
-                  const [insertedMember] = await db
-                    .insert(schema.groupMembers)
-                    .values(member)
-                    .returning();
-                  groupMembers.push(insertedMember);
-                } catch (e: any) {
-                  // Catch unique constraint violations (group_user_unique)
-                  if (
-                    e.message &&
-                    e.message.toLowerCase().includes('unique constraint failed')
-                  ) {
-                    console.warn(
-                      `Skipping duplicate group member: User ${member.userId} in Group ${member.groupId}`
-                    );
-                  } else {
-                    throw e;
-                  }
-                }
-              }
-            }
-          }
-        }
+  // ---------- 7. Group Members ----------
+  const groupMembers: any[] = [];
+  for (const group of groups) {
+    const shuffled = faker.helpers.shuffle(users);
+    const count = faker.number.int({
+      min: 1,
+      max: Math.min(MAX_MEMBERS_PER_GROUP, users.length),
+    });
+    for (let i = 0; i < count; i++) {
+      const member = {
+        id: crypto.randomUUID(),
+        userId: shuffled[i].id,
+        groupId: group.id,
+      };
+      try {
+        groupMembers.push(await insertOne(schema.groupMembers, member));
+      } catch (e: any) {
+        if (e.message?.toLowerCase().includes('unique')) continue; // skip duplicates
+        throw e;
       }
     }
   }
-  console.log(`Seeded ${groupMembers.length} group members.`);
+  console.log(`✓ GroupMembers: ${groupMembers.length}`);
 
-  // ---- 8. Seed Ingredients ----
-  const ingredients: Ingredient[] = [];
-  const units: Unit[] = [];
-  const ingredientNames = new Set<string>(); // To help ensure unique names
-
-  // First seed ingredient categories
-  const ingredientCategories = [];
-  const categoryNames = new Set<string>();
+  // ---------- 8. Ingredient Categories ----------
+  const ingredientCategories = [] as Array<
+    typeof schema.ingredientCategories.$inferSelect
+  >;
+  const catNames = new Set<string>();
   for (let i = 0; i < NUM_INGREDIENT_CATEGORIES; i++) {
     let name = faker.commerce.department();
-    while (categoryNames.has(name)) {
+    while (catNames.has(name)) {
       name = `${faker.commerce.department()} ${faker.word.adjective()}`;
     }
-    categoryNames.add(name);
-
-    const createdBy = faker.helpers.arrayElement(users).id; // Always assign a user
-    const category = {
-      id: crypto.randomUUID(),
-      name: name,
-      description: faker.lorem.sentence(),
-      createdBy: createdBy,
-    };
-    const [insertedCategory] = await db
-      .insert(schema.ingredientCategories)
-      .values(category)
-      .returning();
-    ingredientCategories.push(insertedCategory);
+    catNames.add(name);
+    const group = faker.helpers.arrayElement(groups);
+    ingredientCategories.push(
+      await insertOne(schema.ingredientCategories, {
+        id: crypto.randomUUID(),
+        name,
+        description: faker.lorem.sentence(),
+        createdBy: faker.helpers.arrayElement(users).id,
+        groupId: group.id,
+      })
+    );
   }
-  console.log(`Seeded ${ingredientCategories.length} ingredient categories.`);
+  console.log(`✓ IngredientCategories: ${ingredientCategories.length}`);
 
-  // Now seed ingredients with categories
+  // ---------- 9. Units ----------
+  const UNIT_PRESETS: Array<{
+    name: string;
+    description: string;
+    grams: number;
+  }> = [
+    { name: 'gram', description: 'Metric gram', grams: 1 },
+    { name: 'kilogram', description: 'Metric kilogram', grams: 1000 },
+    { name: 'millilitre', description: 'Metric millilitre', grams: 1 },
+    { name: 'litre', description: 'Metric litre', grams: 1000 },
+    { name: 'piece', description: 'Piece / unit', grams: 50 },
+    { name: 'cup', description: 'US cup', grams: 240 },
+    { name: 'tablespoon', description: 'Tablespoon', grams: 15 },
+    { name: 'teaspoon', description: 'Teaspoon', grams: 5 },
+  ];
+  const units = [] as Array<typeof schema.units.$inferSelect>;
+  for (const u of UNIT_PRESETS) {
+    units.push(
+      await insertOne(schema.units, {
+        id: crypto.randomUUID(),
+        name: u.name,
+        description: u.description,
+        gramsPerUnit: u.grams,
+      })
+    );
+  }
+  console.log(`✓ Units: ${units.length}`);
+
+  // ---------- 10. Ingredients ----------
+  const ingredients = [] as Array<typeof schema.ingredients.$inferSelect>;
+  const ingNames = new Set<string>();
   for (let i = 0; i < NUM_INGREDIENTS; i++) {
     let name = faker.commerce.productMaterial();
-    while (ingredientNames.has(name)) {
+    while (ingNames.has(name)) {
       name = `${faker.commerce.productMaterial()} ${faker.word.adjective()}`;
     }
-    ingredientNames.add(name);
-
-    const createdBy = faker.datatype.boolean(0.8)
-      ? faker.helpers.arrayElement(users)?.id
-      : null;
-    const categoryId = faker.datatype.boolean(0.7)
-      ? faker.helpers.arrayElement(ingredientCategories)?.id
-      : null;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const ingredient = {
-      id: crypto.randomUUID(),
-      name: name,
-      description: faker.lorem.sentence(),
-      createdBy: createdBy,
-      categoryId: categoryId,
-      imageUrl: faker.image.urlLoremFlickr({ category: 'food' }),
-      protein: faker.number.float({ min: 0, max: 30, fractionDigits: 1 }),
-      carbs: faker.number.float({ min: 0, max: 80, fractionDigits: 1 }),
-      fats: faker.number.float({ min: 0, max: 50, fractionDigits: 1 }),
-      calories: faker.number.float({
-        min: 10,
-        max: 500,
-        fractionDigits: 1,
-      }),
-    };
-    const [insertedUnit] = await db
-      .insert(schema.units)
-      .values(units[i])
-      .returning();
-    units.push(insertedUnit);
-  }
-  console.log(`Seeded ${units.length} units.`);
-  if (!units.length) {
-    console.log('No units, recipe/grocery items might not have units.');
-  }
-
-  // ---- 10. Seed Recipes & Recipe Ingredients ----
-  const recipes = [];
-  const recipeIngredients = [];
-  for (const user of users) {
-    for (
-      let i = 0;
-      i < faker.number.int({ min: 1, max: NUM_RECIPES_PER_USER });
-      i++
-    ) {
-      const recipe = {
+    ingNames.add(name);
+    const group = faker.helpers.arrayElement(groups);
+    ingredients.push(
+      await insertOne(schema.ingredients, {
         id: crypto.randomUUID(),
-        name: faker.commerce.productName() + ' Delight',
-        description: faker.lorem.paragraphs(2),
+        name,
+        description: faker.lorem.sentence(),
+        createdBy: randBool(0.8) ? faker.helpers.arrayElement(users).id : null,
+        categoryId: randBool(0.7)
+          ? faker.helpers.arrayElement(ingredientCategories).id
+          : null,
+        imageUrl: faker.image.urlLoremFlickr({ category: 'food' }),
+        protein: faker.number.int({ min: 0, max: 80 }),
+        carbs: faker.number.int({ min: 0, max: 80 }),
+        fats: faker.number.int({ min: 0, max: 50 }),
+        calories: faker.number.float({ min: 10, max: 500 }),
+        groupId: group.id,
+      })
+    );
+  }
+  console.log(`✓ Ingredients: ${ingredients.length}`);
+
+  // ---------- 11. Recipes & RecipeIngredients ----------
+  const recipes = [] as Array<typeof schema.recipes.$inferSelect>;
+  const recipeIngredients: any[] = [];
+
+  for (const user of users) {
+    const numRecipes = faker.number.int({ min: 1, max: NUM_RECIPES_PER_USER });
+    for (let i = 0; i < numRecipes; i++) {
+      const recipe = await insertOne(schema.recipes, {
+        id: crypto.randomUUID(),
+        name: `${faker.commerce.productName()} Delight`,
+        description: faker.lorem.paragraphs(2, '\n\n'),
         createdBy: user.id,
         servings: faker.number.int({ min: 1, max: 12 }),
-      };
-      const [insertedRecipe] = await db
-        .insert(schema.recipes)
-        .values(recipe)
-        .returning();
-      recipes.push(insertedRecipe);
+        image: randBool(0.3)
+          ? faker.image.urlLoremFlickr({ category: 'food' })
+          : null,
+        groupId: user.groupId!,
+      });
+      recipes.push(recipe);
 
-      // Add ingredients to this recipe
-      const numRecipeIngredients = faker.number.int({
+      const numIng = faker.number.int({
         min: 2,
         max: Math.min(MAX_INGREDIENTS_PER_RECIPE, ingredients.length),
       });
-      const shuffledIngredients = faker.helpers.shuffle(ingredients);
-      for (let j = 0; j < numRecipeIngredients; j++) {
-        if (shuffledIngredients[j]) {
-          const unitId =
-            units.length > 0 && faker.datatype.boolean(0.9)
-              ? faker.helpers.arrayElement(units).id
-              : null;
-          const recipeIngredient = {
-            id: crypto.randomUUID(),
-            recipeId: insertedRecipe.id,
-            ingredientId: shuffledIngredients[j].id,
-            quantity: faker.number.float({
-              min: 0.1,
-              max: 5,
-              fractionDigits: 2,
-            }),
-            unitId: unitId,
-          };
-          try {
-            const [insertedRI] = await db
-              .insert(schema.recipeIngredients)
-              .values(recipeIngredient)
-              .returning();
-            recipeIngredients.push(insertedRI);
-          } catch (e: any) {
-            if (
-              e.message &&
-              e.message.toLowerCase().includes('unique constraint failed')
-            ) {
-              console.warn(
-                `Skipping duplicate ingredient ${shuffledIngredients[j].id} in recipe ${insertedRecipe.id}`
-              );
-            } else {
-              throw e;
-            }
-          }
+      const shuffledIng = faker.helpers.shuffle(ingredients);
+      for (let j = 0; j < numIng; j++) {
+        const ri = {
+          id: crypto.randomUUID(),
+          recipeId: recipe.id,
+          ingredientId: shuffledIng[j].id,
+          quantity: faker.number.float({ min: 0.1, max: 5, fractionDigits: 2 }),
+          unitId: faker.helpers.arrayElement(units).id,
+        };
+        try {
+          recipeIngredients.push(await insertOne(schema.recipeIngredients, ri));
+        } catch (e: any) {
+          if (e.message?.toLowerCase().includes('unique')) continue;
+          throw e;
         }
       }
     }
   }
-  console.log(
-    `Seeded ${recipes.length} recipes and ${recipeIngredients.length} recipe ingredients.`
-  );
-  if (!recipes.length) {
-    console.log('No recipes, skipping dependent seeds.');
-  }
+  console.log(`✓ Recipes: ${recipes.length}`);
+  console.log(`✓ RecipeIngredients: ${recipeIngredients.length}`);
 
-  // ---- 11. Seed Meal Types ----
-  const mealTypes = [];
-  const mealTypeNamesArr = [
+  // ---------- 12. MealTypes ----------
+  const MEAL_TYPE_NAMES = [
     'Breakfast',
     'Brunch',
     'Lunch',
@@ -549,352 +378,237 @@ async function main() {
     'Main Course',
     'Beverage',
   ];
-  const mealTypeNameSet = new Set<string>();
-  for (const name of mealTypeNamesArr) {
-    if (mealTypeNameSet.has(name)) continue;
-    mealTypeNameSet.add(name);
-    const mealType = {
-      id: crypto.randomUUID(),
-      name: name,
-      description: faker.lorem.sentence(),
-    };
-    const [insertedMealType] = await db
-      .insert(schema.mealTypes)
-      .values(mealType)
-      .returning();
-    mealTypes.push(insertedMealType);
+  const mealTypes = [] as Array<typeof schema.mealTypes.$inferSelect>;
+  for (const n of MEAL_TYPE_NAMES) {
+    mealTypes.push(
+      await insertOne(schema.mealTypes, {
+        id: crypto.randomUUID(),
+        name: n,
+        description: faker.lorem.sentence(),
+      })
+    );
   }
-  console.log(`Seeded ${mealTypes.length} meal types.`);
-  if (!mealTypes.length) {
-    console.log('No meal types, skipping dependent seeds.');
-  }
+  console.log(`✓ MealTypes: ${mealTypes.length}`);
 
-  // ---- 12. Seed RecipeToMealTypes (Many-to-Many) ----
-  const recipeToMealTypes = [];
-  if (recipes.length && mealTypes.length) {
-    for (const recipe of recipes) {
-      const numLinkedMealTypes = faker.number.int({
-        min: 1,
-        max: Math.min(3, mealTypes.length),
-      });
-      const shuffledMealTypes = faker.helpers.shuffle(mealTypes);
-      for (let i = 0; i < numLinkedMealTypes; i++) {
-        if (shuffledMealTypes[i]) {
-          const link = {
+  // ---------- 13. Recipe ↔ MealType links ----------
+  const recipeToMealTypes: any[] = [];
+  for (const recipe of recipes) {
+    const numLinks = faker.number.int({
+      min: 1,
+      max: Math.min(3, mealTypes.length),
+    });
+    const shuffledMealTypes = faker.helpers.shuffle(mealTypes);
+    for (let i = 0; i < numLinks; i++) {
+      try {
+        recipeToMealTypes.push(
+          await insertOne(schema.recipeToMealTypes, {
             id: crypto.randomUUID(),
             recipeId: recipe.id,
             mealTypeId: shuffledMealTypes[i].id,
-          };
+          })
+        );
+      } catch (e: any) {
+        if (e.message?.toLowerCase().includes('unique')) continue;
+        throw e;
+      }
+    }
+  }
+  console.log(`✓ RecipeToMealTypes: ${recipeToMealTypes.length}`);
+
+  // ---------- 14. Meals & Additional Ingredients ----------
+  const meals = [] as Array<typeof schema.meals.$inferSelect>;
+  const mealAdditionalIngredients: any[] = [];
+
+  for (const user of users) {
+    const numMeals = faker.number.int({
+      min: 0,
+      max: Math.min(MAX_MEALS_PER_USER, recipes.length),
+    });
+    const shuffledRecipes = faker.helpers.shuffle(recipes);
+    for (let i = 0; i < numMeals; i++) {
+      const baseRecipe = shuffledRecipes[i];
+      if (!baseRecipe) continue;
+      const links = recipeToMealTypes.filter(
+        (l) => l.recipeId === baseRecipe.id
+      );
+      const mealTypeId = links.length
+        ? faker.helpers.arrayElement(links).mealTypeId
+        : faker.helpers.arrayElement(mealTypes).id;
+      const meal = await insertOne(schema.meals, {
+        id: crypto.randomUUID(),
+        name: `${faker.word.adjective()} ${baseRecipe.name}`,
+        userId: user.id,
+        recipeId: baseRecipe.id,
+        mealTypeId,
+        plannedDate: randBool(0.7) ? faker.date.soon({ days: 30 }) : null,
+        notes: randBool(0.4) ? faker.lorem.sentences(1) : null,
+        image: randBool(0.2)
+          ? faker.image.urlLoremFlickr({ category: 'food' })
+          : null,
+        groupId: user.groupId!,
+      });
+      meals.push(meal);
+
+      if (randBool(0.25)) {
+        const numAdd = faker.number.int({
+          min: 1,
+          max: MAX_ADDITIONAL_INGREDIENTS_PER_MEAL,
+        });
+        const recipeIngIds = new Set(
+          recipeIngredients
+            .filter((ri) => ri.recipeId === baseRecipe.id)
+            .map((ri) => ri.ingredientId)
+        );
+        const potentialAdds = ingredients.filter(
+          (ing) => !recipeIngIds.has(ing.id)
+        );
+        const shuffledAdds = faker.helpers.shuffle(potentialAdds);
+        for (let k = 0; k < Math.min(numAdd, shuffledAdds.length); k++) {
           try {
-            const [insertedLink] = await db
-              .insert(schema.recipeToMealTypes)
-              .values(link)
-              .returning();
-            recipeToMealTypes.push(insertedLink);
+            mealAdditionalIngredients.push(
+              await insertOne(schema.mealAdditionalIngredients, {
+                id: crypto.randomUUID(),
+                mealId: meal.id,
+                ingredientId: shuffledAdds[k].id,
+                quantity: faker.number.float({
+                  min: 0.25,
+                  max: 3,
+                  fractionDigits: 2,
+                }),
+                unitId: faker.helpers.arrayElement(units).id,
+              })
+            );
           } catch (e: any) {
-            if (
-              e.message &&
-              e.message.toLowerCase().includes('unique constraint failed')
-            ) {
-              console.warn(
-                `Skipping duplicate meal type link: Recipe ${recipe.id} to MealType ${shuffledMealTypes[i].id}`
-              );
-            } else {
-              throw e;
-            }
+            if (e.message?.toLowerCase().includes('unique')) continue;
+            throw e;
           }
         }
       }
     }
   }
-  console.log(`Seeded ${recipeToMealTypes.length} recipe-to-mealType links.`);
+  console.log(`✓ Meals: ${meals.length}`);
+  console.log(
+    `✓ MealAdditionalIngredients: ${mealAdditionalIngredients.length}`
+  );
 
-  // ---- 13. Seed Grocery Lists & Grocery List Items ----
-  const groceryLists = [];
-  const groceryListItems = [];
-  if (groups.length) {
-    for (const group of groups) {
-      const numLists = faker.number.int({ min: 0, max: 3 });
-      for (let i = 0; i < numLists; i++) {
-        const creator = faker.helpers.arrayElement(users);
-        const baseRecipe =
-          recipes.length && faker.datatype.boolean(0.6)
-            ? faker.helpers.arrayElement(recipes)
-            : null;
-        const groceryList = {
-          id: crypto.randomUUID(),
-          groupId: group.id,
-          recipeId: baseRecipe?.id || null,
-          name: baseRecipe
-            ? `${baseRecipe.name} Shopping`
-            : `${faker.commerce.productAdjective()} Groceries for ${
-                group.name
-              }`,
-          description: faker.lorem.sentence(),
-          createdBy: creator.id,
-        };
-        const [insertedList] = await db
-          .insert(schema.groceryLists)
-          .values(groceryList)
-          .returning();
-        groceryLists.push(insertedList);
+  // ---------- 15. GroceryLists & Items ----------
+  const groceryLists = [] as Array<typeof schema.groceryLists.$inferSelect>;
+  const groceryListItems: any[] = [];
 
-        // Add items to this grocery list
-        const numItems = faker.number.int({
-          min: 1,
-          max: Math.min(MAX_ITEMS_PER_GROCERY_LIST, ingredients.length),
-        });
-        const shuffledIngredients = faker.helpers.shuffle(ingredients);
-        for (let j = 0; j < numItems; j++) {
-          if (shuffledIngredients[j]) {
-            const unitId =
-              units.length > 0 && faker.datatype.boolean(0.8)
-                ? faker.helpers.arrayElement(units).id
-                : null;
-            const item = {
+  for (const group of groups) {
+    const listCount = faker.number.int({
+      min: 0,
+      max: MAX_GROCERY_LISTS_PER_GROUP,
+    });
+    for (let i = 0; i < listCount; i++) {
+      const creator = faker.helpers.arrayElement(users);
+      const baseRecipe = randBool(0.6)
+        ? faker.helpers.arrayElement(recipes)
+        : null;
+      const list = await insertOne(schema.groceryLists, {
+        id: crypto.randomUUID(),
+        groupId: group.id,
+        name: baseRecipe
+          ? `${baseRecipe.name} Shopping`
+          : `${faker.commerce.productAdjective()} Groceries for ${group.name}`,
+        createdBy: creator.id,
+        fromDate: null,
+        toDate: null,
+      });
+      groceryLists.push(list);
+
+      const numItems = faker.number.int({
+        min: 1,
+        max: Math.min(MAX_ITEMS_PER_GROCERY_LIST, ingredients.length),
+      });
+      const shuffledIng = faker.helpers.shuffle(ingredients);
+      for (let j = 0; j < numItems; j++) {
+        try {
+          groceryListItems.push(
+            await insertOne(schema.groceryListItems, {
               id: crypto.randomUUID(),
-              groceryListId: insertedList.id,
-              ingredientId: shuffledIngredients[j].id,
+              groceryListId: list.id,
+              ingredientId: shuffledIng[j].id,
               quantity: faker.number.float({
                 min: 1,
                 max: 10,
                 fractionDigits: 1,
               }),
-              unitId: unitId,
-              isBought: faker.datatype.boolean(0.3), // 30% chance already bought
-            };
-            try {
-              const [insertedItem] = await db
-                .insert(schema.groceryListItems)
-                .values(item)
-                .returning();
-              groceryListItems.push(insertedItem);
-            } catch (e: any) {
-              if (
-                e.message &&
-                e.message.toLowerCase().includes('unique constraint failed')
-              ) {
-                console.warn(
-                  `Skipping duplicate ingredient ${shuffledIngredients[j].id} in grocery list ${insertedList.id}`
-                );
-              } else {
-                throw e;
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-  console.log(
-    `Seeded ${groceryLists.length} grocery lists and ${groceryListItems.length} grocery list items.`
-  );
-
-  // ---- 14. Seed Meals & Meal Additional Ingredients ----
-  const meals = [];
-  const mealAdditionalIngredients = [];
-  if (recipes.length && mealTypes.length) {
-    for (const user of users) {
-      const numMeals = faker.number.int({
-        min: 0,
-        max: Math.min(MAX_MEALS_PER_USER, recipes.length),
-      });
-      const shuffledRecipes = faker.helpers.shuffle(recipes);
-
-      for (let i = 0; i < numMeals; i++) {
-        if (shuffledRecipes[i]) {
-          const recipe = shuffledRecipes[i];
-          // Find a meal type associated with the recipe, or pick a random one
-          const recipeMealTypeLinks = recipeToMealTypes.filter(
-            (rtl) => rtl.recipeId === recipe.id
+              unitId: faker.helpers.arrayElement(units).id,
+              isBought: randBool(0.3),
+            })
           );
-          let mealTypeIdToUse: string;
-          if (recipeMealTypeLinks.length > 0) {
-            mealTypeIdToUse =
-              faker.helpers.arrayElement(recipeMealTypeLinks).mealTypeId;
-          } else {
-            mealTypeIdToUse = faker.helpers.arrayElement(mealTypes).id;
-          }
-
-          const meal = {
-            id: crypto.randomUUID(),
-            name: `${faker.word.adjective()} ${recipe.name}`,
-            userId: user.id,
-            recipeId: recipe.id,
-            mealTypeId: mealTypeIdToUse,
-            plannedDate: faker.datatype.boolean(0.7)
-              ? faker.date.soon({ days: 30 })
-              : null,
-            notes: faker.datatype.boolean(0.4)
-              ? faker.lorem.sentences(1)
-              : null,
-            image: faker.datatype.boolean(0.2)
-              ? faker.image.urlLoremFlickr({ category: 'food' })
-              : null,
-          };
-          const [insertedMeal] = await db
-            .insert(schema.meals)
-            .values(meal)
-            .returning();
-          meals.push(insertedMeal);
-
-          // Add additional ingredients (not in base recipe)
-          if (faker.datatype.boolean(0.25)) {
-            // 25% chance of additional ingredients
-            const numAdditional = faker.number.int({
-              min: 1,
-              max: Math.min(
-                MAX_ADDITIONAL_INGREDIENTS_PER_MEAL,
-                ingredients.length
-              ),
-            });
-            // Filter out ingredients already in the recipe (simplified: just pick random ones not in recipe's direct list)
-            const recipeIngredientIds = new Set(
-              recipeIngredients
-                .filter((ri) => ri.recipeId === recipe.id)
-                .map((ri) => ri.ingredientId)
-            );
-            const availableAdditionalIngredients = ingredients.filter(
-              (ing) => !recipeIngredientIds.has(ing.id)
-            );
-            const shuffledAdditional = faker.helpers.shuffle(
-              availableAdditionalIngredients
-            );
-
-            for (
-              let k = 0;
-              k < numAdditional && k < shuffledAdditional.length;
-              k++
-            ) {
-              if (shuffledAdditional[k]) {
-                const unitId =
-                  units.length > 0 && faker.datatype.boolean(0.8)
-                    ? faker.helpers.arrayElement(units).id
-                    : null;
-                const additional = {
-                  id: crypto.randomUUID(),
-                  mealId: insertedMeal.id,
-                  ingredientId: shuffledAdditional[k].id,
-                  quantity: faker.number.float({
-                    min: 0.25,
-                    max: 3,
-                    fractionDigits: 2,
-                  }),
-                  unitId: unitId,
-                };
-                try {
-                  const [insertedAdd] = await db
-                    .insert(schema.mealAdditionalIngredients)
-                    .values(additional)
-                    .returning();
-                  mealAdditionalIngredients.push(insertedAdd);
-                } catch (e: any) {
-                  if (
-                    e.message &&
-                    e.message.toLowerCase().includes('unique constraint failed')
-                  ) {
-                    console.warn(
-                      `Skipping duplicate additional ingredient ${shuffledAdditional[k].id} in meal ${insertedMeal.id}`
-                    );
-                  } else {
-                    throw e;
-                  }
-                }
-              }
-            }
-          }
+        } catch (e: any) {
+          if (e.message?.toLowerCase().includes('unique')) continue;
+          throw e;
         }
       }
     }
   }
-  console.log(
-    `Seeded ${meals.length} meals and ${mealAdditionalIngredients.length} meal additional ingredients.`
-  );
+  console.log(`✓ GroceryLists: ${groceryLists.length}`);
+  console.log(`✓ GroceryListItems: ${groceryListItems.length}`);
 
-  // ---- 15. Seed Meal Plans & Meal Plan Meals ----
-  const mealPlans = [];
-  const mealPlanMeals = [];
-  if (groups.length && meals.length) {
-    for (const group of groups) {
-      const numPlans = faker.number.int({
-        min: 0,
-        max: NUM_MEAL_PLANS_PER_GROUP,
+  // ---------- 16. MealPlans & PlanMeals ----------
+  const mealPlans = [] as Array<typeof schema.mealPlans.$inferSelect>;
+  const mealPlanMeals: any[] = [];
+  for (const group of groups) {
+    const planCount = faker.number.int({
+      min: 0,
+      max: NUM_MEAL_PLANS_PER_GROUP,
+    });
+    for (let i = 0; i < planCount; i++) {
+      const creator = faker.helpers.arrayElement(users);
+      const startDate = faker.date.future({ years: 1 });
+      const endDate = new Date(startDate.getTime());
+      endDate.setDate(
+        endDate.getDate() + faker.number.int({ min: 1, max: 14 })
+      );
+
+      const plan = await insertOne(schema.mealPlans, {
+        id: crypto.randomUUID(),
+        name: `${faker.word.adjective()} ${faker.word.noun()} Meal Plan`,
+        createdBy: creator.id,
+        startDate,
+        endDate,
+        description: faker.lorem.paragraph(),
+        image: randBool(0.3)
+          ? faker.image.urlLoremFlickr({ category: 'food' })
+          : null,
+        groupId: group.id,
+        isPublic: randBool(0.3),
       });
-      for (let i = 0; i < numPlans; i++) {
-        const creator = faker.helpers.arrayElement(users);
-        const startDate = faker.date.future({ years: 1 });
-        const endDate = new Date(startDate);
-        endDate.setDate(
-          endDate.getDate() + faker.number.int({ min: 1, max: 14 })
-        ); // 1-14 days plan
+      mealPlans.push(plan);
 
-        const mealPlan = {
-          id: crypto.randomUUID(),
-          name: `${faker.word.adjective()} ${faker.word.noun()} Meal Plan`,
-          createdBy: creator.id,
-          startDate: startDate,
-          endDate: endDate,
-          description: faker.lorem.paragraph(),
-          image: faker.datatype.boolean(0.3)
-            ? faker.image.urlLoremFlickr({ category: 'food' })
-            : null,
-          groupId: group.id,
-          isPublic: faker.datatype.boolean(0.3), // 30% chance of being public
-        };
-        const [insertedPlan] = await db
-          .insert(schema.mealPlans)
-          .values(mealPlan)
-          .returning();
-        mealPlans.push(insertedPlan);
-
-        // Add meals to this meal plan
-        const numMeals = faker.number.int({
-          min: 1,
-          max: Math.min(MAX_MEALS_PER_MEAL_PLAN, meals.length),
-        });
-        const shuffledMeals = faker.helpers.shuffle(meals);
-        for (let j = 0; j < numMeals; j++) {
-          if (shuffledMeals[j]) {
-            const mealPlanMeal = {
+      const numMeals = faker.number.int({
+        min: 1,
+        max: Math.min(MAX_MEALS_PER_MEAL_PLAN, meals.length),
+      });
+      const shuffledMeals = faker.helpers.shuffle(meals);
+      for (let j = 0; j < numMeals; j++) {
+        try {
+          mealPlanMeals.push(
+            await insertOne(schema.mealPlanMeals, {
               id: crypto.randomUUID(),
-              mealPlanId: insertedPlan.id,
+              mealPlanId: plan.id,
               mealId: shuffledMeals[j].id,
-            };
-            try {
-              const [insertedMealPlanMeal] = await db
-                .insert(schema.mealPlanMeals)
-                .values(mealPlanMeal)
-                .returning();
-              mealPlanMeals.push(insertedMealPlanMeal);
-            } catch (e: any) {
-              if (
-                e.message &&
-                e.message.toLowerCase().includes('unique constraint failed')
-              ) {
-                console.warn(
-                  `Skipping duplicate meal ${shuffledMeals[j].id} in meal plan ${insertedPlan.id}`
-                );
-              } else {
-                throw e;
-              }
-            }
-          }
+            })
+          );
+        } catch (e: any) {
+          if (e.message?.toLowerCase().includes('unique')) continue;
+          throw e;
         }
       }
     }
   }
-  console.log(
-    `Seeded ${mealPlans.length} meal plans and ${mealPlanMeals.length} meal plan meals.`
-  );
+  console.log(`✓ MealPlans: ${mealPlans.length}`);
+  console.log(`✓ MealPlanMeals: ${mealPlanMeals.length}`);
 
-  console.log('Database seeding finished successfully!');
+  console.log('🎉  Database seeding finished successfully!');
 }
 
 main()
   .catch((e) => {
-    console.error('Error during seeding:', e);
+    console.error('Seeding error:', e);
     process.exit(1);
   })
-  .finally(() => {
-    sqlite.close(); // Close the database connection
-  });
+  .finally(() => sqlite.close());
