@@ -2,8 +2,8 @@ import { db, Transaction } from '@/db';
 import { users } from '@/db/schema';
 import { IUsersRepository } from '@/server/application/repositories/users.repository.interface';
 import { DatabaseOperationError } from '@/server/entities/errors/common';
-import { CreateUser, EditUser, User } from '@/server/entities/models/user';
-import { and, eq, inArray, isNull, like } from 'drizzle-orm';
+import { CreateUser, User } from '@/server/entities/models/user';
+import { eq, inArray, like } from 'drizzle-orm';
 
 export class UsersRepository implements IUsersRepository {
   async getUsersByIds(ids: string[]): Promise<User[] | undefined> {
@@ -72,5 +72,6 @@ export class UsersRepository implements IUsersRepository {
 
     return updated;
   }
+}
 
 export const usersRepository = new UsersRepository();
