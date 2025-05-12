@@ -1,4 +1,5 @@
 import { mealPlanMeals, mealPlans } from '@/db/schema';
+import { Macros } from '@/utils/macros';
 import { InferInsertModel } from 'drizzle-orm';
 import { TModelWithRelations } from '../utils';
 
@@ -7,3 +8,19 @@ export type CreateMealPlan = InferInsertModel<typeof mealPlans>;
 
 export type MealPlanMeal = TModelWithRelations<'mealPlanMeals'>;
 export type CreateMealPlanMeal = InferInsertModel<typeof mealPlanMeals>;
+
+type MealWithMacros = TModelWithRelations<'meals'> & {
+  macros: Macros;
+};
+
+type MealPlanMealWithMacros = Omit<MealPlanMeal, 'meal'> & {
+  meal: MealWithMacros;
+};
+
+export type MealPlanWithStatus = Omit<MealPlan, 'meals'> & {
+  status: {
+    isCurrent: boolean;
+    isUpcoming: boolean;
+  };
+  meals?: MealPlanMealWithMacros[];
+};

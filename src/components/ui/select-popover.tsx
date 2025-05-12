@@ -29,6 +29,7 @@ interface SelectPopoverProps {
   searchPlaceholder?: string;
   emptyText?: string;
   isLoading?: boolean;
+  modal?: boolean;
   className?: string;
 }
 
@@ -40,10 +41,11 @@ export function SelectPopover({
   searchPlaceholder = 'Search...',
   emptyText = 'No options found.',
   isLoading = false,
+  modal = false,
   className,
 }: SelectPopoverProps) {
   return (
-    <Popover>
+    <Popover modal={modal}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
@@ -70,6 +72,7 @@ export function SelectPopover({
                     key={option.id}
                     value={option.name}
                     onSelect={() => onSelect(option)}
+                    className="cursor-pointer"
                   >
                     <Check
                       className={cn(

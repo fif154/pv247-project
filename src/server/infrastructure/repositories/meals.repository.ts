@@ -59,7 +59,17 @@ export class MealsRepository implements IMealsRepository {
             unit: true,
           },
         },
-        recipe: true,
+        recipe: {
+          with: {
+            ingredients: {
+              with: {
+                ingredient: true,
+                unit: true,
+              },
+            },
+          },
+        },
+        mealType: true,
       },
     });
   }

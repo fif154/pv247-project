@@ -20,6 +20,7 @@ interface SelectFieldProps<T extends Record<string, unknown>> {
   isLoading?: boolean;
   className?: string;
   labelClassName?: string;
+  modal?: boolean;
 }
 
 export function SelectField<T extends Record<string, unknown>>({
@@ -33,6 +34,7 @@ export function SelectField<T extends Record<string, unknown>>({
   isLoading,
   className,
   labelClassName,
+  modal = false,
 }: SelectFieldProps<T>) {
   return (
     <FormField
@@ -54,6 +56,8 @@ export function SelectField<T extends Record<string, unknown>>({
               searchPlaceholder={searchPlaceholder}
               emptyText={emptyText}
               isLoading={isLoading}
+              className="z-10"
+              modal={modal}
             />
           </FormControl>
           <FormMessage />

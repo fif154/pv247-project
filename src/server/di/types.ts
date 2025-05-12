@@ -1,6 +1,11 @@
+import { IAddIngredientToMealController } from '@/server/application/controllers/meal-additional-ingredients/add-ingredient-to-meal.controller';
+import { IRemoveIngredientFromMealController } from '@/server/application/controllers/meal-additional-ingredients/remove-ingredient-from-meal.controller';
 import { IGroceryListItemsRepository } from '@/server/application/repositories/grocery-list-items.repository.interface';
 import { IGroceryListsRepository } from '@/server/application/repositories/grocery-lists.repository.interface';
+import { IMealAdditionalIngredientsRepository } from '@/server/application/repositories/meal-additional-ingredients.repository.interface';
+import { IMealPlanMealsRepository } from '@/server/application/repositories/meal-plan-meals.repository.interface';
 import { IMealPlansRepository } from '@/server/application/repositories/meal-plans.repository.interface';
+import { IMealTypesRepository } from '@/server/application/repositories/meal-types.repository.interface';
 import { IMealsRepository } from '@/server/application/repositories/meals.repository.interface';
 import { IUnitsRepository } from '@/server/application/repositories/units.repository.interface';
 import { IAddGroceryListItemsUseCase } from '@/server/application/use-cases/grocery-lists/add-grocery-list-items.use-case';
@@ -11,6 +16,10 @@ import { IListGroceryListsUseCase } from '@/server/application/use-cases/grocery
 import { IMarkAllItemsBoughtUseCase } from '@/server/application/use-cases/grocery-lists/mark-all-items-bought.use-case';
 import { IUpdateGroceryListItemUseCase } from '@/server/application/use-cases/grocery-lists/update-grocery-list-item.use-case';
 import { IUpdateGroceryListUseCase } from '@/server/application/use-cases/grocery-lists/update-grocery-list.use-case';
+import { IAddIngredientToMealUseCase } from '@/server/application/use-cases/meal-additional-ingredients/add-ingredient-to-meal.use-case';
+import { IRemoveIngredientFromMealUseCase } from '@/server/application/use-cases/meal-additional-ingredients/remove-ingredient-from-meal.use-case';
+import { IAddMealToPlanUseCase } from '@/server/application/use-cases/meal-plan-meals/add-meal-to-plan.use-case';
+import { IRemoveMealFromPlanUseCase } from '@/server/application/use-cases/meal-plan-meals/remove-meal-from-plan.use-case';
 import { ICreateMealPlanUseCase } from '@/server/application/use-cases/meal-plans/create-meal-plan.use-case';
 import { IListMealPlansUseCase } from '@/server/application/use-cases/meal-plans/list-meal-plans.use-case';
 import { ICreateMealUseCase } from '@/server/application/use-cases/meals/create-meal.use-case';
@@ -23,11 +32,18 @@ import { IGetGroceryListController } from '@/server/controllers/grocery-lists/ge
 import { IListGroceryListsController } from '@/server/controllers/grocery-lists/list-grocery-lists.controller';
 import { IMarkAllItemsBoughtController } from '@/server/controllers/grocery-lists/mark-all-items-bought.controller';
 import { IUpdateGroceryListController } from '@/server/controllers/grocery-lists/update-grocery-list.controller';
+import { IAddMealToPlanController } from '@/server/controllers/meal-plan-meals/add-meal-to-plan.controller';
+import { IRemoveMealFromPlanController } from '@/server/controllers/meal-plan-meals/remove-meal-from-plan.controller';
 import { ICreateMealPlanController } from '@/server/controllers/meal-plans/create-meal-plan.controller';
 import { IListMealPlansController } from '@/server/controllers/meal-plans/list-meal-plans.controller';
 import { ICreateMealController } from '@/server/controllers/meals/create-meal.controller';
 import { IListMealsController } from '@/server/controllers/meals/list-meals.controller';
 import { IListUnitsController } from '@/server/controllers/units/list-units.controller';
+import {
+  CreateMealAdditionalIngredient,
+  Meal,
+} from '@/server/entities/models/meal';
+import { MealPlan } from '@/server/entities/models/meal-plan';
 import { IGroupMembersRepository } from '../application/repositories/groupMembers.repository.interface';
 import { IGroupsRepository } from '../application/repositories/groups.repository.interface';
 import { IIngredientCategoriesRepository } from '../application/repositories/ingredient-categories.repository.interface';
@@ -53,6 +69,7 @@ import { IDeleteIngredientUseCase } from '../application/use-cases/ingredients/d
 import { IGetIngredientUseCase } from '../application/use-cases/ingredients/get-ingredient.use-case';
 import { IListIngredientsUseCase } from '../application/use-cases/ingredients/list-ingredients.use-case';
 import { IUpdateIngredientUseCase } from '../application/use-cases/ingredients/update-ingredient.use-case';
+import { IListMealTypesUseCase } from '../application/use-cases/meal-types/list-meal-types.use-case';
 import { ICreateRecipeUseCase } from '../application/use-cases/recipes/create-recipe.use-case';
 import { IDeleteRecipeUseCase } from '../application/use-cases/recipes/delete-recipe.use-case';
 import { IGetRecipeUseCase } from '../application/use-cases/recipes/get-recipe.use-case';
@@ -76,6 +93,7 @@ import { IDeleteIngredientController } from '../controllers/ingredients/delete-i
 import { IGetIngredientController } from '../controllers/ingredients/get-ingredient.controller';
 import { IListIngredientsController } from '../controllers/ingredients/list-ingredients.controller';
 import { IUpdateIngredientController } from '../controllers/ingredients/update-ingredient.controller';
+import { IListMealsTypesController } from '../controllers/meal-types/list-meal-types.controller';
 import { ICreateRecipeController } from '../controllers/recipes/create-recipe.controller';
 import { IDeleteRecipeController } from '../controllers/recipes/delete-recipe.controller';
 import { IGetRecipeController } from '../controllers/recipes/get-recipe.controller';
@@ -201,6 +219,39 @@ export const DI_SYMBOLS = {
   IListMealPlansUseCase: Symbol.for('IListMealPlansUseCase'),
   ICreateMealPlanController: Symbol.for('ICreateMealPlanController'),
   IListMealPlansController: Symbol.for('IListMealPlansController'),
+
+  // Meal Types
+  IMealTypesRepository: Symbol.for('IMealTypesRepository'),
+  IListMealTypesUseCase: Symbol.for('IListMealTypesUseCase'),
+  IListMealTypesController: Symbol.for('IListMealTypesController'),
+
+  // Meal Plan Meals
+  IMealPlanMealsRepository: Symbol.for('IMealPlanMealsRepository'),
+  IAddMealToPlanUseCase: Symbol.for('IAddMealToPlanUseCase'),
+  IRemoveMealFromPlanUseCase: Symbol.for('IRemoveMealFromPlanUseCase'),
+  IAddMealToPlanController: Symbol.for('IAddMealToPlanController'),
+  IRemoveMealFromPlanController: Symbol.for('IRemoveMealFromPlanController'),
+
+  // Meal Additional Ingredients
+  IMealAdditionalIngredientsRepository: Symbol.for(
+    'IMealAdditionalIngredientsRepository'
+  ),
+  IAddIngredientToMealUseCase: Symbol.for('IAddIngredientToMealUseCase'),
+  IRemoveIngredientFromMealUseCase: Symbol.for(
+    'IRemoveIngredientFromMealUseCase'
+  ),
+  IAddIngredientToMealController: Symbol.for('IAddIngredientToMealController'),
+  IRemoveIngredientFromMealController: Symbol.for(
+    'IRemoveIngredientFromMealController'
+  ),
+  IUpdateMealUseCase: Symbol('IUpdateMealUseCase'),
+  IUpdateMealController: Symbol('IUpdateMealController'),
+  IDeleteMealUseCase: Symbol('IDeleteMealUseCase'),
+  IDeleteMealController: Symbol('IDeleteMealController'),
+
+  // New use cases
+  IGetMealPlanUseCase: Symbol('IGetMealPlanUseCase'),
+  IGetMealPlanController: Symbol('IGetMealPlanController'),
 };
 
 export type DI_RETURN_TYPES = {
@@ -306,4 +357,46 @@ export type DI_RETURN_TYPES = {
   IListMealPlansUseCase: IListMealPlansUseCase;
   ICreateMealPlanController: ICreateMealPlanController;
   IListMealPlansController: IListMealPlansController;
+
+  // Meal Types
+  IMealTypesRepository: IMealTypesRepository;
+  IListMealTypesUseCase: IListMealTypesUseCase;
+  IListMealTypesController: IListMealsTypesController;
+
+  // Meal Plan Meals
+  IMealPlanMealsRepository: IMealPlanMealsRepository;
+  IAddMealToPlanUseCase: IAddMealToPlanUseCase;
+  IRemoveMealFromPlanUseCase: IRemoveMealFromPlanUseCase;
+  IAddMealToPlanController: IAddMealToPlanController;
+  IRemoveMealFromPlanController: IRemoveMealFromPlanController;
+
+  // Meal Additional Ingredients
+  IMealAdditionalIngredientsRepository: IMealAdditionalIngredientsRepository;
+  IAddIngredientToMealUseCase: IAddIngredientToMealUseCase;
+  IRemoveIngredientFromMealUseCase: IRemoveIngredientFromMealUseCase;
+  IAddIngredientToMealController: IAddIngredientToMealController;
+  IRemoveIngredientFromMealController: IRemoveIngredientFromMealController;
+
+  // New use cases
+  IUpdateMealUseCase: (
+    id: string,
+    input: Partial<Omit<Meal, 'id' | 'createdBy' | 'createdAt' | 'updatedAt'>>,
+    additionalIngredients?: Omit<CreateMealAdditionalIngredient, 'mealId'>[],
+    tx?: unknown
+  ) => Promise<
+    Meal & { additionalIngredients?: CreateMealAdditionalIngredient[] }
+  >;
+  IUpdateMealController: (
+    id: string,
+    input: Partial<Omit<Meal, 'id' | 'createdBy' | 'createdAt' | 'updatedAt'>>,
+    additionalIngredients?: Omit<CreateMealAdditionalIngredient, 'mealId'>[]
+  ) => Promise<
+    Meal & { additionalIngredients?: CreateMealAdditionalIngredient[] }
+  >;
+  IDeleteMealUseCase: (id: string, tx?: unknown) => Promise<void>;
+  IDeleteMealController: (id: string) => Promise<void>;
+
+  // New use cases
+  IGetMealPlanUseCase: (id: string) => Promise<MealPlan>;
+  IGetMealPlanController: (id: string) => Promise<MealPlan>;
 };

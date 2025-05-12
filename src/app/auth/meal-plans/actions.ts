@@ -18,3 +18,8 @@ export async function listMealPlansAction() {
   const mealPlanController = getInjection('IListMealPlansController');
   return await mealPlanController();
 }
+
+export async function getMealPlanAction(id: string) {
+  const mealPlanController = getInjection('IGetMealPlanController');
+  return await mealPlanController(id);
+}
