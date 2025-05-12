@@ -10,6 +10,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Spinner } from './ui/spinner';
+import { useEffect, useState } from 'react';
 
 interface ThemeToggleProps {
   showIcon?: boolean;
@@ -17,11 +19,25 @@ interface ThemeToggleProps {
 
 export function ThemeToggle({ showIcon }: ThemeToggleProps) {
   const { setTheme, theme } = useTheme();
+  //Prevent hydration error https://nextjs.org/docs/messages/react-hydration-error#solution-1-using-useeffect-to-run-on-the-client-only
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return null;
+  }
+
+  if (!theme) {
+    return <Spinner />;
+  }
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="cursor-pointer">
-        {showIcon || !theme ? (
+        {showIcon ? (
           <Button variant="outline" size="icon">
             <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
             <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
