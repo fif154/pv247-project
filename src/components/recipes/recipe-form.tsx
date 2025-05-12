@@ -157,7 +157,6 @@ export function RecipeForm({
     const newIngredient = form.getValues('newIngredient');
 
     if (newIngredient?.ingredientName && newIngredient.unitId) {
-      const unit = units.find((u) => u.id === newIngredient.unitId);
 
       append({
         id: `temp-${Date.now()}`,

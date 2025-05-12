@@ -1,7 +1,7 @@
 import { getRecipe } from '@/app/auth/recipes/actions';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Edit, Trash } from 'lucide-react';
+import { Edit } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';

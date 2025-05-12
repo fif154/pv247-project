@@ -64,7 +64,7 @@ export const saveRecipeIngredientsUseCase = (
         {
           ingredientId: ing.ingredientId,
           ingredientName: ing.name,
-          categoryId: undefined, // You might want to add this parameter if needed
+          categoryId: undefined,
         },
         user.id,
         user.groupId,
@@ -80,7 +80,6 @@ export const saveRecipeIngredientsUseCase = (
       });
     } catch (error) {
       console.error(`Error processing ingredient:`, error);
-      // Skip this ingredient and continue with others
       continue;
     }
   }
@@ -88,7 +87,6 @@ export const saveRecipeIngredientsUseCase = (
   // Combine ingredients with the same ingredient ID and unit ID
   const combinedIngredients = recipeIngredientsService.combineIngredients(ingredientsToCreate);
 
-  // Create the combined ingredients
   return await recipeIngredientsRepository.createRecipeIngredients(combinedIngredients, tx);
 };
 

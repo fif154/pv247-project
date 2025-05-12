@@ -6,6 +6,8 @@ import { Suspense } from 'react';
 import { RecipeControls } from '@/components/recipes/recipe-controls';
 import { RecipeList } from '@/components/recipes/recipe-list';
 
+type SortType = 'name-asc' | 'name-desc' | 'newest' | 'oldest';
+
 export default async function RecipesPage({
   searchParams
 }: {
@@ -13,7 +15,7 @@ export default async function RecipesPage({
 }) {
   const recipes = await listFilteredRecipes({
     search: searchParams.search,
-    sort: searchParams.sort as any,
+    sort: searchParams.sort as SortType,
   });
   
   return (

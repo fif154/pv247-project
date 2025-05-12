@@ -93,9 +93,11 @@ export async function saveRecipeIngredients(
   });
 }
 
+type SortType = 'name-asc' | 'name-desc' | 'newest' | 'oldest';
+
 type ListRecipesOptions = {
   search?: string;
-  sort?: 'name-asc' | 'name-desc' | 'newest' | 'oldest';
+  sort?: SortType;
 };
 
 export async function listFilteredRecipes(options: ListRecipesOptions = {}): Promise<Recipe[]> {
