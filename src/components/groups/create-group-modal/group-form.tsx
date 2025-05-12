@@ -163,7 +163,7 @@ export const GroupForm = ({
         <Button
           type="button"
           variant="secondary"
-          onClick={() => setEmailQuery('')}
+          onClick={() => setModalOpen(false)}
         >
           Cancel
         </Button>

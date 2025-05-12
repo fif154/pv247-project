@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/sidebar';
 import { navItems } from '@/config/nav';
 import { ChefHat } from 'lucide-react';
+import Link from 'next/link';
 import { MobileNav } from './mobile-nav';
 import {
   DropdownMenu,
@@ -88,14 +89,14 @@ export async function AppSidebar() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem>
-                    <a href="/profile" className="w-full">
+                    <Link href="/auth/profile" className="w-full">
                       Profile
-                    </a>
+                    </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
-                    <a href="/settings" className="w-full">
+                    <Link href="/auth/settings" className="w-full">
                       Settings
-                    </a>
+                    </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>
