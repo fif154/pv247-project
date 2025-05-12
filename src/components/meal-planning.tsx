@@ -158,7 +158,11 @@ export function MealPlanning({ mealPlan }: { mealPlan: MealPlan }) {
           </DragOverlay>
         </DndContext>
       </div>
-      <MealPlanOverview meals={meals} />
+      <MealPlanOverview
+        meals={meals}
+        mealPlanId={mealPlan.id}
+        dateRange={dateRange}
+      />
     </>
   );
 }

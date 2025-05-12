@@ -1,7 +1,14 @@
 import { addDays, isAfter, isBefore, subDays } from 'date-fns';
 import { DateRange } from 'react-day-picker';
 
-export const isDateInRange = (date: Date, dateRange: DateRange) => {
+export const isDateInRange = (
+  date: Date | undefined | null,
+  dateRange: DateRange
+) => {
+  if (!date) {
+    return false;
+  }
+
   const from = dateRange.from;
   const to = dateRange.to;
 

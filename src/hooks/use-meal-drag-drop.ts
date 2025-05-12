@@ -1,4 +1,3 @@
-import { getDateFromDay } from '@/components/meal-planning';
 import type { MealsByDayType } from '@/types/meal-planning';
 import { DAYS } from '@/types/meal-planning';
 import {
@@ -59,14 +58,6 @@ export function useMealDragDrop(
       draft[toDay][toType].push(meal);
 
       return draft;
-    });
-
-    // TODO: Implement actual API call to update meal planned date and type
-    console.log('updateMealPlannedDateAndType', {
-      mealId: active.id,
-      newDay: toDay,
-      newType: toType,
-      newDate: getDateFromDay(dateRange, DAYS.find((d) => d === toDay)!),
     });
 
     onMealUpdate(active.id as string, DAYS.find((d) => d === toDay)!, toType);

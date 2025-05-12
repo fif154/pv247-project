@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { MacroItem } from './macro-item';
 import { Card, CardContent } from './ui/card';
 
@@ -33,7 +34,7 @@ export const macroBgColors = {
   fat: 'bg-macro-fat',
 };
 
-export const Macros = (props: Props) => {
+export const Macros = (props: Props & { className?: string }) => {
   const macroItems: MacroItemType[] = [
     {
       label: 'Calories',
@@ -74,7 +75,7 @@ export const Macros = (props: Props) => {
     },
   ];
   return (
-    <Card className="w-full">
+    <Card className={cn('w-full', props.className)}>
       <CardContent className="px-4 py-2">
         <div className="grid grid-cols-2 gap-6 sm:grid-cols-4">
           {macroItems.map((item) => (
