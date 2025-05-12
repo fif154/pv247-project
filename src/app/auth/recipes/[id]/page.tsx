@@ -2,30 +2,49 @@ import { getRecipe } from '@/app/auth/recipes/actions';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Edit, Trash } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { auth } from '@/auth';
+import { DeleteRecipeButton } from '@/components/recipes/delete-recipe-button';
+import { getInjection } from '@/server/di/container'; 
 
 const RecipeDetailPage = async ({ params }: { params: { id: string } }) => {
-  const recipe = await getRecipe(params.id);
+  const { id } = params;
+  const recipe = await getRecipe(id);
+  const session = await auth();
+
+  // Fetch all units to map unit names
+  const unitsController = getInjection('IListUnitsController');
+  const allUnits = await unitsController();
+
+  // Create a map of unit IDs to names for quick lookup
+  const unitMap = Object.fromEntries(
+    allUnits.map(unit => [unit.id, unit.name])
+  );
 
   if (!recipe) {
     notFound();
   }
 
+  // Check if current user is the creator of this recipe
+  const isCreator = session?.user?.id === recipe.createdBy;
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-row justify-between items-center">
         <h1 className="text-4xl font-bold">{recipe.name}</h1>
-        <div className="flex gap-2">
-          <Link href={`/auth/recipes/${recipe.id}/edit`}>
-            <Button variant="outline" size="icon">
-              <Edit className="h-4 w-4" />
-            </Button>
-          </Link>
-          <Button variant="outline" size="icon" className="text-destructive">
-            <Trash className="h-4 w-4" />
-          </Button>
-        </div>
+        {isCreator && (
+          <div className="flex gap-2">
+            <Link href={`/auth/recipes/${recipe.id}/edit`}>
+              <Button variant="outline">
+                <Edit className="h-4 w-4 mr-2" />
+                Edit
+              </Button>
+            </Link>
+            <DeleteRecipeButton recipeId={recipe.id} recipeName={recipe.name} />
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -47,6 +66,20 @@ const RecipeDetailPage = async ({ params }: { params: { id: string } }) => {
         </div>
 
         <div className="flex flex-col gap-6">
+          {recipe.image && (
+            <Card className="overflow-hidden">
+              <div className="relative w-full h-48">
+                <Image
+                  src={recipe.image}
+                  alt={recipe.name}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                />
+              </div>
+            </Card>
+          )}
+          
           <Card>
             <CardHeader>
               <CardTitle>Ingredients</CardTitle>
@@ -58,7 +91,7 @@ const RecipeDetailPage = async ({ params }: { params: { id: string } }) => {
                     <li key={item.id} className="flex justify-between">
                       <span>{item.ingredient?.name}</span>
                       <span className="text-muted-foreground">
-                        {item.quantity} {item.unit?.name}
+                        {item.quantity} {unitMap[item.unitId] || 'unit'}
                       </span>
                     </li>
                   ))}
