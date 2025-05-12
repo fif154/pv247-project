@@ -1,4 +1,4 @@
-import { listRecipes } from '@/app/auth/recipes/actions';
+import { listFilteredRecipes } from '@/app/auth/recipes/actions';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
@@ -6,9 +6,15 @@ import { Suspense } from 'react';
 import { RecipeControls } from '@/components/recipes/recipe-controls';
 import { RecipeList } from '@/components/recipes/recipe-list';
 
-export default async function RecipesPage() {
-  // Fetch recipes on the server
-  const recipes = await listRecipes();
+export default async function RecipesPage({
+  searchParams
+}: {
+  searchParams: { search?: string; sort?: string; view?: string }
+}) {
+  const recipes = await listFilteredRecipes({
+    search: searchParams.search,
+    sort: searchParams.sort as any,
+  });
   
   return (
     <div className="flex flex-col min-h-0 gap-6">

@@ -85,6 +85,10 @@ import { IEditUserUseCase } from '../application/use-cases/users/edit-user.use-c
 import { IEditUserController } from '../controllers/users/edit-user.controller';
 import { ISearchUsersByEmailController } from '../controllers/users/search-users.controller';
 import { ISetCurrentGroupController } from '../infrastructure/controllers/users/set-current-group.controller';
+import { IRecipeIngredientsRepository } from '@/server/application/repositories/recipe-ingredients.repository.interface';
+import { IRecipeIngredientsService } from '@/server/application/services/recipe-ingredients.service.interface';
+import { ISaveRecipeIngredientsUseCase } from '@/server/application/use-cases/recipes/save-recipe-ingredients.use-case';
+import { ISaveRecipeIngredientsController } from '@/server/controllers/recipes/save-recipe-ingredients.controller';
 
 export const DI_SYMBOLS = {
   // Services
@@ -205,6 +209,14 @@ export const DI_SYMBOLS = {
   IListMealPlansUseCase: Symbol.for('IListMealPlansUseCase'),
   ICreateMealPlanController: Symbol.for('ICreateMealPlanController'),
   IListMealPlansController: Symbol.for('IListMealPlansController'),
+
+  // Recipe Ingredients
+  IRecipeIngredientsRepository: Symbol.for('IRecipeIngredientsRepository'),
+  IRecipeIngredientsService: Symbol.for('IRecipeIngredientsService'),
+  ISaveRecipeIngredientsUseCase: Symbol.for('ISaveRecipeIngredientsUseCase'),
+  ISaveRecipeIngredientsController: Symbol.for(
+    'ISaveRecipeIngredientsController'
+  ),
 };
 
 export type DI_RETURN_TYPES = {
@@ -312,4 +324,10 @@ export type DI_RETURN_TYPES = {
   IListMealPlansUseCase: IListMealPlansUseCase;
   ICreateMealPlanController: ICreateMealPlanController;
   IListMealPlansController: IListMealPlansController;
+
+  // Recipe Ingredients
+  IRecipeIngredientsRepository: IRecipeIngredientsRepository;
+  IRecipeIngredientsService: IRecipeIngredientsService;
+  ISaveRecipeIngredientsUseCase: ISaveRecipeIngredientsUseCase;
+  ISaveRecipeIngredientsController: ISaveRecipeIngredientsController;
 };

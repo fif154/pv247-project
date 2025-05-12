@@ -7,34 +7,40 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { auth } from '@/auth';
 import { DeleteRecipeButton } from '@/components/recipes/delete-recipe-button';
-import { getInjection } from '@/server/di/container'; 
+import { getInjection } from '@/server/di/container';
+import { canEditRecipe } from '@/server/application/policy/recipe';
 
 const RecipeDetailPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
   const recipe = await getRecipe(id);
   const session = await auth();
 
+  // Function for fetchin unit names
+  async function fetchAllUnits() {
+    const unitsController = getInjection('IListUnitsController');
+    return await unitsController();
+  }
+
   // Fetch all units to map unit names
-  const unitsController = getInjection('IListUnitsController');
-  const allUnits = await unitsController();
+  const allUnits = await fetchAllUnits();
 
   // Create a map of unit IDs to names for quick lookup
   const unitMap = Object.fromEntries(
-    allUnits.map(unit => [unit.id, unit.name])
+    allUnits.map((unit) => [unit.id, unit.name])
   );
 
   if (!recipe) {
     notFound();
   }
 
-  // Check if current user is the creator of this recipe
-  const isCreator = session?.user?.id === recipe.createdBy;
+  // Check if current user is the creator of this recipe / can edit this recipe
+  const canEdit = session?.user ? canEditRecipe(recipe, session.user) : false;
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-row justify-between items-center">
         <h1 className="text-4xl font-bold">{recipe.name}</h1>
-        {isCreator && (
+        {canEdit && (
           <div className="flex gap-2">
             <Link href={`/auth/recipes/${recipe.id}/edit`}>
               <Button variant="outline">
@@ -79,7 +85,7 @@ const RecipeDetailPage = async ({ params }: { params: { id: string } }) => {
               </div>
             </Card>
           )}
-          
+
           <Card>
             <CardHeader>
               <CardTitle>Ingredients</CardTitle>

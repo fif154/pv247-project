@@ -1,7 +1,6 @@
 import { IUpdateRecipeUseCase } from '@/server/application/use-cases/recipes/update-recipe.use-case';
 import { z } from 'zod';
 
-// Define the schema for an ingredient
 const ingredientSchema = z.object({
   id: z.string().optional(), // Optional for new ingredients
   ingredientId: z.string(),

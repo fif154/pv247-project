@@ -14,6 +14,7 @@ import { Trash } from 'lucide-react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { showSuccessToast } from '@/utils/toast';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export function DeleteRecipeButton({ 
   recipeId, 
@@ -23,21 +24,28 @@ export function DeleteRecipeButton({
   recipeName: string;
 }) {
   const [open, setOpen] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();
-
-  const handleDelete = async () => {
-    try {
-      setIsDeleting(true);
-      await deleteRecipe({ id: recipeId });
+  const queryClient = useQueryClient();
+  
+  // Replace the manual state management with useMutation
+  const { mutate, isPending } = useMutation({
+    mutationFn: () => deleteRecipe({ id: recipeId }),
+    onSuccess: () => {
+      // Invalidate relevant queries to refresh data
+      queryClient.invalidateQueries({ queryKey: ['recipes'] });
+      
       setOpen(false);
       showSuccessToast('Recipe deleted successfully');
       router.push('/auth/recipes');
-    } catch (error) {
+    },
+    onError: (error) => {
       console.error('Failed to delete recipe:', error);
-    } finally {
-      setIsDeleting(false);
     }
+  });
+
+  // Updated handler to use mutation
+  const handleDelete = () => {
+    mutate();
   };
 
   return (
@@ -63,16 +71,16 @@ export function DeleteRecipeButton({
             <Button
               variant="outline"
               onClick={() => setOpen(false)}
-              disabled={isDeleting}
+              disabled={isPending}
             >
               Cancel
             </Button>
             <Button
               variant="destructive"
               onClick={handleDelete}
-              disabled={isDeleting}
+              disabled={isPending}
             >
-              {isDeleting ? 'Deleting...' : 'Delete'}
+              {isPending ? 'Deleting...' : 'Delete'}
             </Button>
           </DialogFooter>
         </DialogContent>
