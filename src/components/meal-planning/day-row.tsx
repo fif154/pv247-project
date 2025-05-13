@@ -37,7 +37,7 @@ export function DayRow({
 
   return (
     <div className="space-y-2">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-center justify-between">
         <h3 className="text-lg font-medium">{day}</h3>
         <div className="text-sm text-muted-foreground">
           <span className="font-bold">{calories.toFixed()}</span> kcal |{' '}

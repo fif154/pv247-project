@@ -53,7 +53,7 @@ export const MealPlanOverview = ({
   };
 
   return (
-    <div className="flex flex-row gap-6 w-full">
+    <div className="flex flex-col xl:flex-row gap-6 w-full">
       <Card className="flex w-full flex-col gap-2">
         <CardHeader>
           <CardTitle>Meal plan overview</CardTitle>

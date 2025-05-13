@@ -12,7 +12,7 @@ const Page = async () => {
     <div className="space-y-4">
       <div className="flex flex-row justify-between items-center">
         <PageHeader>Meal Plans</PageHeader>
-        <Button asChild>
+        <Button variant="coral" asChild>
           <Link href="/auth/meal-plans/new">Create Meal Plan</Link>
         </Button>
       </div>
@@ -26,8 +26,14 @@ const Page = async () => {
           )
         )}
         {mealPlans.length === 0 && (
-          <div className="text-center text-muted-foreground py-8">
-            No meal plans found. Create your first meal plan to get started.
+          <div className="flex flex-col items-center justify-center h-full text-center gap-4">
+            <h2 className="text-2xl font-bold">No meal plans found</h2>
+            <p className="text-gray-500">
+              No meal plans found. Create your first meal plan to get started.
+            </p>
+            <Button variant="coral" asChild>
+              <Link href="/auth/meal-plans/new">Create Meal Plan</Link>
+            </Button>
           </div>
         )}
       </div>

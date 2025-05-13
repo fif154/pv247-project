@@ -12,8 +12,8 @@ export const createMealPlanController =
       try {
         return await createMealPlanUseCase(input, mealIds, tx);
       } catch (error) {
+        console.error('Error creating meal plan:', error);
         tx.rollback();
-        throw error;
       }
     });
   };

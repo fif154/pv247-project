@@ -97,8 +97,8 @@ export function AddMealModal({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: meal?.name ?? '',
-      recipe: meal?.recipe ?? { id: '', name: '' },
-      mealType: meal?.mealType ?? { id: '', name: '' },
+      recipe: meal?.recipe ?? undefined,
+      mealType: mealType,
       notes: meal?.notes ?? '',
       image: meal?.image ?? '',
       plannedDate: meal?.plannedDate ?? plannedDate,
@@ -107,7 +107,7 @@ export function AddMealModal({
           ingredient: ai.ingredient!,
           quantity: ai.quantity,
           unit: ai.unit!,
-        })) ?? [],
+        })) ?? undefined,
     },
   });
 
@@ -175,6 +175,18 @@ export function AddMealModal({
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <SelectField
+              form={form}
+              name="recipe"
+              label="Recipe"
+              options={recipes}
+              placeholder="Select a recipe"
+              searchPlaceholder="Search recipes..."
+              emptyText="No recipes found"
+              onSelect={(r) => form.setValue('name', r.name)}
+              modal
+            />
+
             <FormField
               control={form.control}
               name="name"
@@ -187,17 +199,6 @@ export function AddMealModal({
                   <FormMessage />
                 </FormItem>
               )}
-            />
-
-            <SelectField
-              form={form}
-              name="recipe"
-              label="Recipe"
-              options={recipes}
-              placeholder="Select a recipe"
-              searchPlaceholder="Search recipes..."
-              emptyText="No recipes found"
-              modal
             />
 
             <SelectField

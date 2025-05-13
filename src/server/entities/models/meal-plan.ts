@@ -4,7 +4,15 @@ import { InferInsertModel } from 'drizzle-orm';
 import { TModelWithRelations } from '../utils';
 
 export type MealPlan = TModelWithRelations<'mealPlans'>;
-export type CreateMealPlan = InferInsertModel<typeof mealPlans>;
+export type CreateMealPlan = Omit<
+  InferInsertModel<typeof mealPlans>,
+  'groupId' | 'createdBy'
+>;
+
+export type ClientCreateMealPlan = Omit<
+  CreateMealPlan,
+  'groupId' | 'createdBy'
+>;
 
 export type MealPlanMeal = TModelWithRelations<'mealPlanMeals'>;
 export type CreateMealPlanMeal = InferInsertModel<typeof mealPlanMeals>;

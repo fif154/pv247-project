@@ -1,12 +1,15 @@
 import { db, Transaction } from '@/db';
 import { mealPlanMeals, mealPlans } from '@/db/schema';
-import { IMealPlansRepository } from '@/server/application/repositories/meal-plans.repository.interface';
-import { CreateMealPlan, MealPlan } from '@/server/entities/models/meal-plan';
+import {
+  IMealPlansRepository,
+  RepositoryCreateMealPlan,
+} from '@/server/application/repositories/meal-plans.repository.interface';
+import { MealPlan } from '@/server/entities/models/meal-plan';
 import { and, eq, inArray, isNull } from 'drizzle-orm';
 
 export class MealPlansRepository implements IMealPlansRepository {
   async createMealPlan(
-    input: CreateMealPlan,
+    input: RepositoryCreateMealPlan,
     mealIds: string[],
     tx?: Transaction
   ): Promise<MealPlan> {
