@@ -11,11 +11,13 @@ type SortType = 'name-asc' | 'name-desc' | 'newest' | 'oldest';
 export default async function RecipesPage({
   searchParams
 }: {
-  searchParams: { search?: string; sort?: string; view?: string }
+  searchParams: Promise<{ search?: string; sort?: string; view?: string }>
 }) {
+  const resolvedSearchParams = await searchParams;
+
   const recipes = await listFilteredRecipes({
-    search: searchParams.search,
-    sort: searchParams.sort as SortType,
+    search: resolvedSearchParams.search,
+    sort: resolvedSearchParams.sort as SortType,
   });
   
   return (

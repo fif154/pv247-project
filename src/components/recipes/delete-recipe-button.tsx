@@ -27,7 +27,6 @@ export function DeleteRecipeButton({
   const router = useRouter();
   const queryClient = useQueryClient();
   
-  // Replace the manual state management with useMutation
   const { mutate, isPending } = useMutation({
     mutationFn: () => deleteRecipe({ id: recipeId }),
     onSuccess: () => {
@@ -43,7 +42,6 @@ export function DeleteRecipeButton({
     }
   });
 
-  // Updated handler to use mutation
   const handleDelete = () => {
     mutate();
   };

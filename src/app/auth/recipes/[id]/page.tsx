@@ -10,8 +10,8 @@ import { DeleteRecipeButton } from '@/components/recipes/delete-recipe-button';
 import { getInjection } from '@/server/di/container';
 import { canEditRecipe } from '@/server/application/policy/recipe';
 
-const RecipeDetailPage = async ({ params }: { params: { id: string } }) => {
-  const { id } = params;
+const RecipeDetailPage = async ({ params }: { params: Promise<{ id: string }> }) => {
+  const { id } = await params;
   const recipe = await getRecipe(id);
   const session = await auth();
 
@@ -33,7 +33,6 @@ const RecipeDetailPage = async ({ params }: { params: { id: string } }) => {
     notFound();
   }
 
-  // Check if current user is the creator of this recipe / can edit this recipe
   const canEdit = session?.user ? canEditRecipe(recipe, session.user) : false;
 
   return (
