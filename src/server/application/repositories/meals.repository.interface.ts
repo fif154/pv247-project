@@ -21,4 +21,5 @@ export interface IMealsRepository {
   ): Promise<Meal>;
   deleteMeal(id: string, tx?: Transaction): Promise<void>;
   listMeals(groupId: string): Promise<Meal[]>;
+  listMealsForDay(groupId: string, plannedDate: Date): Promise<Meal[]>;
 }

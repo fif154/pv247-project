@@ -39,5 +39,16 @@ export function createMealsModule() {
     .bind(DI_SYMBOLS.IListMealsController)
     .toHigherOrderFunction(listMealsController, [DI_SYMBOLS.IListMealsUseCase]);
 
+      mealsModule
+    .bind(DI_SYMBOLS.IListMealsForDayUseCase)
+    .toHigherOrderFunction(listMealsUseCase, [
+      DI_SYMBOLS.IMealsRepository,
+      DI_SYMBOLS.IGroupService,
+    ]);
+
+      mealsModule
+    .bind(DI_SYMBOLS.IListMealsForDayController)
+    .toHigherOrderFunction(listMealsController, [DI_SYMBOLS.IListMealsForDayUseCase]);
+
   return mealsModule;
 }

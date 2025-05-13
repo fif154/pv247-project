@@ -23,7 +23,7 @@ const Page = async () => {
         <AddNewButton />
       </div>
       <Macros calories={1560} carbs={12} fat={44} protein={123} />
-      <Meals />
+      <Meals date={today} />
     </div>
   );
 };

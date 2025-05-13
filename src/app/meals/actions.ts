@@ -20,3 +20,8 @@ export async function listMealsAction() {
   const mealController = getInjection('IListMealsController');
   return await mealController();
 }
+
+export async function listMealsForDayAction(date: Date) {
+  const mealController = getInjection('IListMealsForDayController');
+  return await mealController({ date });
+}

@@ -2,6 +2,7 @@ import { MacroItemType } from './macros';
 import { PercentageBar } from './percentage-bar';
 
 export const MacroItem = (props: MacroItemType) => {
+  const percentage = props.percentage > 1 ? 1 : props.percentage;
   return (
     <div className="flex flex-col gap-2">
       <span className="text-muted-foreground">{props.label}</span>
@@ -9,9 +10,11 @@ export const MacroItem = (props: MacroItemType) => {
         <span className={`text-2xl font-bold ${props.textColor}`}>
           {props.value}
         </span>
-        {props.unit}
+        <div>
+          <span className='text-gray-400'> / {props.userSetting} {props.unit}</span>
+        </div>
       </div>
-      <PercentageBar percentage={props.percentage} bgColor={props.bgColor} />
+      <PercentageBar percentage={percentage} bgColor={props.bgColor} />
     </div>
   );
 };

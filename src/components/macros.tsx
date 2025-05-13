@@ -1,5 +1,7 @@
+import { auth } from '@/auth';
 import { MacroItem } from './macro-item';
 import { Card, CardContent } from './ui/card';
+import { getUserAction } from '@/app/(users)/actions';
 
 type Props = {
   carbs: number;
@@ -11,7 +13,7 @@ type Props = {
 export type MacroItemType = {
   label: string;
   value: number;
-  icon: string;
+  userSetting: number;
   bgColor: string;
   textColor: string;
   unit: 'kcal' | 'g';
@@ -32,44 +34,51 @@ export const macroBgColors = {
   fat: 'bg-macro-fat',
 };
 
-export const Macros = (props: Props) => {
+export const Macros = async (props: Props) => {
+  const session = await auth();
+  const userId = session?.user.id;
+    if (!userId) {
+    throw new Error('User not found, this should not happen');
+  }
+const user = await getUserAction(userId);
+
   const macroItems: MacroItemType[] = [
     {
       label: 'Calories',
       value: props.calories,
-      icon: '🔥',
+      userSetting: user?.calories ?? 2000,
       bgColor: macroBgColors.calories,
       textColor: macroTextColors.calories,
       unit: 'kcal',
-      // TODO: Add a percentage calculation based on the daily recommended intake
-      percentage: props.calories / 2000,
+      // Fallback = daily recommended intake
+      percentage: props.calories / (user?.calories ?? 2000),
     },
     {
       label: 'Carbs',
       value: props.carbs,
-      icon: '🍞',
+      userSetting: user?.carbs ?? 270,
       bgColor: macroBgColors.carbs,
       textColor: macroTextColors.carbs,
       unit: 'g',
-      percentage: props.carbs / 200,
+      percentage: props.carbs / (user?.carbs ?? 270),
     },
     {
       label: 'Protein',
       value: props.protein,
-      icon: '🍗',
+      userSetting: user?.protein ?? 50,
       bgColor: macroBgColors.protein,
       textColor: macroTextColors.protein,
       unit: 'g',
-      percentage: props.protein / 200,
+      percentage: props.protein / (user?.protein ?? 50),
     },
     {
       label: 'Fat',
       value: props.fat,
-      icon: '🥑',
+      userSetting: user?.fats ?? 70,
       bgColor: macroBgColors.fat,
       textColor: macroTextColors.fat,
       unit: 'g',
-      percentage: props.fat / 70,
+      percentage: props.fat / (user?.fats ?? 70),
     },
   ];
   return (

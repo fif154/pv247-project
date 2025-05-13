@@ -1,8 +1,12 @@
-import { listMealsAction } from '@/app/meals/actions';
+import { listMealsForDayAction } from '@/app/meals/actions';
 import { MealCard } from './meal-card';
 
-export const Meals = async () => {
-  const meals = await listMealsAction();
+type MealsProps = {
+  date: Date;
+};
+
+export const Meals = async ({date}: MealsProps) => {
+  const meals = await listMealsForDayAction(date);
 
   return (
     <div className="grid gap-6">
