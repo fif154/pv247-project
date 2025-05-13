@@ -1,7 +1,11 @@
 import { GroceryListComponent } from '@/components/grocery-list-component';
 import { getGroceryListAction } from '../actions';
 
-export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
   const groceryList = await getGroceryListAction(id);
 
