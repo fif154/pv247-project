@@ -5,10 +5,15 @@ import {
   CreateMealAdditionalIngredient,
   Meal,
 } from '@/server/entities/models/meal';
+import { IMealAdditionalIngredientsRepository } from '../../repositories/meal-additional-ingredients.repository.interface';
 import { IGroupService } from '../../services/group.service.interface';
 
 export const updateMealUseCase =
-  (mealsRepository: IMealsRepository, groupService: IGroupService) =>
+  (
+    mealsRepository: IMealsRepository,
+    additionalIngredientsRepository: IMealAdditionalIngredientsRepository,
+    groupService: IGroupService
+  ) =>
   async (
     id: string,
     input: Partial<Omit<Meal, 'id' | 'createdBy' | 'createdAt' | 'updatedAt'>>,
@@ -35,6 +40,8 @@ export const updateMealUseCase =
     if (existingMeal.groupId !== user.groupId) {
       throw new NotFoundError('Meal not in your group');
     }
+
+    // TODO: add additional ingredients to meal properly
 
     const meal = await mealsRepository.updateMeal(
       id,

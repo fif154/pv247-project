@@ -1,5 +1,3 @@
-import { IAddIngredientToMealController } from '@/server/application/controllers/meal-additional-ingredients/add-ingredient-to-meal.controller';
-import { IRemoveIngredientFromMealController } from '@/server/application/controllers/meal-additional-ingredients/remove-ingredient-from-meal.controller';
 import { IGroceryListItemsRepository } from '@/server/application/repositories/grocery-list-items.repository.interface';
 import { IGroceryListsRepository } from '@/server/application/repositories/grocery-lists.repository.interface';
 import { IMealAdditionalIngredientsRepository } from '@/server/application/repositories/meal-additional-ingredients.repository.interface';
@@ -16,7 +14,6 @@ import { IListGroceryListsUseCase } from '@/server/application/use-cases/grocery
 import { IMarkAllItemsBoughtUseCase } from '@/server/application/use-cases/grocery-lists/mark-all-items-bought.use-case';
 import { IUpdateGroceryListItemUseCase } from '@/server/application/use-cases/grocery-lists/update-grocery-list-item.use-case';
 import { IUpdateGroceryListUseCase } from '@/server/application/use-cases/grocery-lists/update-grocery-list.use-case';
-import { IAddIngredientToMealUseCase } from '@/server/application/use-cases/meal-additional-ingredients/add-ingredient-to-meal.use-case';
 import { IRemoveIngredientFromMealUseCase } from '@/server/application/use-cases/meal-additional-ingredients/remove-ingredient-from-meal.use-case';
 import { IAddMealToPlanUseCase } from '@/server/application/use-cases/meal-plan-meals/add-meal-to-plan.use-case';
 import { IRemoveMealFromPlanUseCase } from '@/server/application/use-cases/meal-plan-meals/remove-meal-from-plan.use-case';
@@ -391,10 +388,7 @@ export type DI_RETURN_TYPES = {
 
   // Meal Additional Ingredients
   IMealAdditionalIngredientsRepository: IMealAdditionalIngredientsRepository;
-  IAddIngredientToMealUseCase: IAddIngredientToMealUseCase;
   IRemoveIngredientFromMealUseCase: IRemoveIngredientFromMealUseCase;
-  IAddIngredientToMealController: IAddIngredientToMealController;
-  IRemoveIngredientFromMealController: IRemoveIngredientFromMealController;
 
   IUpdateMealUseCase: IUpdateMealUseCase;
   IUpdateMealController: IUpdateMealController;
