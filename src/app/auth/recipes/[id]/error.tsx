@@ -12,7 +12,7 @@ export default function RecipeDetailError({
   reset: () => void;
 }) {
   const router = useRouter();
-  
+
   useEffect(() => {
     console.error('Recipe detail error:', error);
   }, [error]);
@@ -21,11 +21,12 @@ export default function RecipeDetailError({
     <div className="flex flex-col items-center justify-center h-full p-8 space-y-4">
       <h2 className="text-2xl font-bold text-destructive">Recipe not found!</h2>
       <p className="text-muted-foreground max-w-md text-center">
-        We couldn't find the recipe you're looking for. It may have been deleted or you might not have permission to view it.
+        <p className="text-muted-foreground max-w-md text-center">
+          We couldn&apos;t find the recipe you&apos;re looking for. It may have
+          been deleted or you might not have permission to view it.
+        </p>
       </p>
-      <p className="text-sm text-muted-foreground/60">
-        Error: {error.message}
-      </p>
+      <p className="text-sm text-muted-foreground/60">Error: {error.message}</p>
       <div className="flex gap-4">
         <Button onClick={reset} variant="outline">
           Try again

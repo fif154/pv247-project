@@ -1,9 +1,8 @@
 import { RecipeForm } from '@/components/recipes/recipe-form';
-import { getInjection } from '@/server/di/container';
+import { listUnits } from '../../units/actions';
 
 export default async function CreateRecipePage() {
-  const unitsController = getInjection('IListUnitsController');
-  const units = await unitsController();
+  const units = await listUnits();
   
   return <RecipeForm units={units} />;
 }

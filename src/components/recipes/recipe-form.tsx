@@ -4,18 +4,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-  createRecipe,
-  updateRecipe,
-  saveRecipeIngredients,
-} from '@/app/auth/recipes/actions';
-import { showSuccessToast, showErrorToast } from '@/utils/toast';
+import { useSubmitRecipeMutation } from '@/mutations/recipes';
 import { Recipe } from '@/server/entities/models/recipe';
 import Image from 'next/image';
-import { useDropzone } from 'react-dropzone';
-import { ImageIcon, Globe, Plus, Trash2, X, Edit, Check } from 'lucide-react';
+import { Globe, Plus, Trash2, X, Edit, Check } from 'lucide-react';
 import { useForm, useFieldArray, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -35,6 +29,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { ImageUploader } from './image-uploader';
 
 type RecipeFormProps = {
   recipe?: Recipe; // Optional for edit mode
@@ -76,7 +71,7 @@ export function RecipeForm({
   units = [],
 }: RecipeFormProps) {
   const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { mutate, isPending } = useSubmitRecipeMutation();
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(
     recipe?.image || null
@@ -91,18 +86,18 @@ export function RecipeForm({
   const form = useForm<RecipeFormValues>({
     resolver: zodResolver(recipeFormSchema),
     defaultValues: {
-      name: recipe?.name || '',
-      description: recipe?.description || '',
-      servings: recipe?.servings || 1,
-      image: recipe?.image || '',
+      name: recipe?.name ?? '',
+      description: recipe?.description ?? '',
+      servings: recipe?.servings ?? 1,
+      image: recipe?.image ?? '',
       ingredients:
         recipe?.ingredients?.map((item) => ({
           id: item.id,
           ingredientId: item.ingredientId,
-          ingredientName: item.ingredient?.name || '',
+          ingredientName: item.ingredient?.name ?? '',
           quantity: item.quantity,
           unitId: item.unitId,
-        })) || [],
+        })) ?? [],
       newIngredient: {
         ingredientName: '',
         quantity: 1,
@@ -117,31 +112,6 @@ export function RecipeForm({
     name: 'ingredients',
   });
 
-  // Handle file drop for image upload
-  const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      if (acceptedFiles && acceptedFiles.length > 0) {
-        const file = acceptedFiles[0];
-        setImageFile(file);
-
-        // Create a preview URL for the image
-        const objectUrl = URL.createObjectURL(file);
-        setImagePreview(objectUrl);
-        form.setValue('image', objectUrl);
-        setActiveImageTab('upload');
-      }
-    },
-    [form]
-  );
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    accept: {
-      'image/*': ['.jpeg', '.jpg', '.png', '.webp'],
-    },
-    maxFiles: 1,
-  });
-
   // Handle image URL input
   const handleImageUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setImageUrlInput(e.target.value);
@@ -154,6 +124,8 @@ export function RecipeForm({
       setImageFile(null);
     }
   };
+
+  const unitMap = Object.fromEntries(units.map((unit) => [unit.id, unit.name]));
 
   const startEditingIngredient = (index: number) => {
     const ingredient = form.getValues(`ingredients.${index}`);
@@ -200,81 +172,15 @@ export function RecipeForm({
   };
 
   // Handle form submission
-  const onSubmit: SubmitHandler<RecipeFormValues> = async (data) => {
-
-    setIsSubmitting(true);
-
-    try {
-      let imageUrl = imagePreview || '';
-
-      if (imageFile) {
-        const formData = new FormData();
-        formData.append('file', imageFile);
-
-        const response = await fetch('/api/upload', {
-          method: 'POST',
-          body: formData,
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to upload image');
-        }
-
-        const imageData = await response.json();
-        imageUrl = imageData.url;
-      }
-
-      const recipeData = {
-        name: data.name,
-        description: data.description || '',
-        servings: data.servings,
-        image: imageUrl,
-      };
-
-      let recipeId;
-      if (isEditMode && recipe) {
-        await updateRecipe({
-          id: recipe.id,
-          ...recipeData,
-        });
-        recipeId = recipe.id;
-      } else {
-        const newRecipe = await createRecipe(recipeData);
-        recipeId = newRecipe.id;
-      }
-
-      if (recipeId) {
-        try {
-          const ingredientPayload = fields.map((ing) => ({
-            id: ing.id,
-            ingredientId: ing.ingredientId,
-            name: ing.ingredientName,
-            quantity: ing.quantity,
-            unitId: ing.unitId,
-          }));
-
-          await saveRecipeIngredients(recipeId, ingredientPayload);
-
-          showSuccessToast(
-            `Recipe ${isEditMode ? 'updated' : 'created'} successfully`
-          );
-          router.push('/auth/recipes');
-        } catch (error) {
-          console.error('Error saving ingredients:', error);
-          showErrorToast('Failed to save recipe ingredients');
-        }
-      } else {
-        showSuccessToast(
-          `Recipe ${isEditMode ? 'updated' : 'created'} successfully`
-        );
-        router.push('/auth/recipes');
-      }
-    } catch (error) {
-      console.error('Error saving recipe:', error);
-      showErrorToast(`Failed to ${isEditMode ? 'update' : 'create'} recipe`);
-    } finally {
-      setIsSubmitting(false);
-    }
+  const onSubmit: SubmitHandler<RecipeFormValues> = (data) => {
+    mutate({
+      data,
+      imageFile,
+      imagePreview,
+      isEditMode,
+      recipe,
+      fields,
+    });
   };
 
   return (
@@ -290,12 +196,12 @@ export function RecipeForm({
                 type="button"
                 variant="outline"
                 onClick={() => router.push('/auth/recipes')}
-                disabled={isSubmitting}
+                disabled={isPending}
               >
                 Cancel
               </Button>
-              <Button type="submit" variant="coral" disabled={isSubmitting}>
-                {isSubmitting
+              <Button type="submit" variant="coral" disabled={isPending}>
+                {isPending
                   ? isEditMode
                     ? 'Saving...'
                     : 'Creating...'
@@ -385,12 +291,10 @@ export function RecipeForm({
                       </h3>
                       <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
                         {fields.map((ingredient, index) => {
-                          const unitName =
-                            units.find(
-                              (u) =>
-                                u.id ===
-                                form.getValues(`ingredients.${index}.unitId`)
-                            )?.name || '';
+                          const unitId = form.getValues(
+                            `ingredients.${index}.unitId`
+                          );
+                          const unitName = unitMap[unitId] || '';
                           return (
                             <div
                               key={ingredient.id}
@@ -569,61 +473,16 @@ export function RecipeForm({
                     </TabsList>
 
                     <TabsContent value="upload">
-                      <div
-                        {...getRootProps()}
-                        className={`border-2 border-dashed rounded-lg p-4 text-center hover:bg-accent/5 transition-colors cursor-pointer ${
-                          isDragActive
-                            ? 'border-primary bg-accent/10'
-                            : 'border-border'
-                        }`}
-                      >
-                        <input {...getInputProps()} />
-
-                        {imagePreview && activeImageTab === 'upload' ? (
-                          <div className="space-y-4">
-                            <div className="relative w-full h-48 mb-2 group">
-                              <Image
-                                src={imagePreview}
-                                alt="Recipe preview"
-                                fill
-                                className="object-cover rounded-md"
-                                sizes="(max-width: 768px) 100vw, 33vw"
-                              />
-                              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all rounded-md">
-                                <Button
-                                  type="button"
-                                  variant="destructive"
-                                  size="icon"
-                                  className="absolute top-2 right-2 h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setImagePreview(null);
-                                    setImageFile(null);
-                                    form.setValue('image', '');
-                                  }}
-                                >
-                                  <X className="h-4 w-4" />
-                                </Button>
-                              </div>
-                            </div>
-                            <p className="text-sm">
-                              Click or drag to replace image
-                            </p>
-                          </div>
-                        ) : (
-                          <div className="flex flex-col items-center justify-center py-8">
-                            <ImageIcon className="h-12 w-12 text-muted-foreground mb-2" />
-                            <p className="text-sm text-muted-foreground mb-1">
-                              {isDragActive
-                                ? 'Drop the image here'
-                                : "Drag 'n' drop an image here, or click to select"}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              Supported formats: JPG, PNG, WebP
-                            </p>
-                          </div>
-                        )}
-                      </div>
+                      <ImageUploader
+                        imagePreview={imagePreview}
+                        activeTab={activeImageTab}
+                        onImageChange={(file, preview) => {
+                          setImageFile(file);
+                          setImagePreview(preview);
+                          form.setValue('image', preview || '');
+                        }}
+                        onTabChange={setActiveImageTab}
+                      />
                     </TabsContent>
 
                     <TabsContent value="url">

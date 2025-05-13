@@ -1,12 +1,10 @@
-import { listFilteredRecipes } from '@/app/auth/recipes/actions';
+import { listFilteredRecipes, SortType } from '@/app/auth/recipes/actions';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { RecipeControls } from '@/components/recipes/recipe-controls';
 import { RecipeList } from '@/components/recipes/recipe-list';
-
-type SortType = 'name-asc' | 'name-desc' | 'newest' | 'oldest';
 
 export default async function RecipesPage({
   searchParams

@@ -2,7 +2,6 @@
 
 import { getInjection } from '@/server/di/container';
 import { revalidatePath } from 'next/cache';
-import { Recipe } from '@/server/entities/models/recipe';
 
 export async function listRecipes() {
   const listRecipesController = getInjection('IListRecipesController');
@@ -70,7 +69,7 @@ export async function saveRecipeIngredients(
   });
 }
 
-type SortType = 'name-asc' | 'name-desc' | 'newest' | 'oldest';
+export type SortType = 'name-asc' | 'name-desc' | 'newest' | 'oldest';
 
 type ListRecipesOptions = {
   search?: string;
