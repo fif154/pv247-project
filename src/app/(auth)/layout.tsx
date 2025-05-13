@@ -1,3 +1,5 @@
+import { ThemeToggle } from '@/components/theme-toggle';
+
 export default function Layout({
   children,
 }: Readonly<{
@@ -12,6 +14,9 @@ export default function Layout({
           <div className="animate-blob animation-delay-2000 delay-1000 opacity-80 blur-2xl absolute left-[70%] top-[60%] transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-emerald-300 dark:bg-emerald-500" />
           <div className="animate-blob animation-delay-2000 delay-1000 opacity-80 blur-2xl absolute left-[75%] top-[40%] transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 border-l-indigo-300 dark:bg-indigo-500" />
         </div>
+      </div>
+      <div className="absolute top-0 right-0 p-4">
+        <ThemeToggle showIcon />
       </div>
 
       <div className="relative z-10">{children}</div>

@@ -8,6 +8,10 @@ import { editUserController } from '@/server/controllers/users/edit-user.control
 import { setCurrentGroupController } from '@/server/infrastructure/controllers/users/set-current-group.controller';
 import { UsersRepository } from '@/server/infrastructure/repositories/users.repository';
 import { DI_SYMBOLS } from '../types';
+import { editMacrosUseCase } from '@/server/application/use-cases/users/edit-macros.use-case';
+import { editMacrosController } from '@/server/controllers/users/edit-macros.controller';
+import { getUserUseCase } from '@/server/application/use-cases/users/get-user.use-case';
+import { getUserController } from '@/server/controllers/users/get-user.controller';
 
 export function createUsersModule() {
   const usersModule = createModule();
@@ -42,6 +46,24 @@ export function createUsersModule() {
     .toHigherOrderFunction(setCurrentGroupController, [
       DI_SYMBOLS.ISetCurrentGroupUseCase,
     ]);
+
+  usersModule
+    .bind(DI_SYMBOLS.IEditMacrosUseCase)
+    .toHigherOrderFunction(editMacrosUseCase, [DI_SYMBOLS.IUsersRepository]);
+
+  usersModule
+    .bind(DI_SYMBOLS.IEditMacrosController)
+    .toHigherOrderFunction(editMacrosController, [
+      DI_SYMBOLS.IEditMacrosUseCase,
+    ]);
+
+  usersModule
+    .bind(DI_SYMBOLS.IGetUserUseCase)
+    .toHigherOrderFunction(getUserUseCase, [DI_SYMBOLS.IUsersRepository]);
+
+  usersModule
+    .bind(DI_SYMBOLS.IGetUserController)
+    .toHigherOrderFunction(getUserController, [DI_SYMBOLS.IGetUserUseCase]);
 
   usersModule.bind(DI_SYMBOLS.IUsersRepository).toClass(UsersRepository, []);
 
