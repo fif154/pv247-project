@@ -4,11 +4,23 @@ import { PageHeader } from '@/components/page-header';
 import { format } from 'date-fns';
 import { CalendarDays } from 'lucide-react';
 import { AddNewButton } from './add-new-button';
+import { listMealsForDayAction } from '@/app/meals/actions';
 
 const formatDate = (date: Date) => format(date, 'EEEE, MMMM d, yyyy');
 
 const Page = async () => {
   const today = new Date();
+  const meals = await listMealsForDayAction(today);
+  const totalMacros = meals.reduce(
+    (acc, meal) => {
+      acc.calories += meal?.recipe?.ingredients?.reduce((sum, ingredient) => sum + (ingredient.ingredient?.calories ?? 0), 0) || 0;
+      acc.carbs += meal?.recipe?.ingredients?.reduce((sum, ingredient) => sum + (ingredient.ingredient?.carbs ?? 0), 0) || 0;
+      acc.fat += meal?.recipe?.ingredients?.reduce((sum, ingredient) => sum + (ingredient.ingredient?.fats ?? 0), 0) || 0;
+      acc.protein += meal?.recipe?.ingredients?.reduce((sum, ingredient) => sum + (ingredient.ingredient?.protein ?? 0), 0) || 0;
+      return acc;
+    },
+    { calories: 0, carbs: 0, fat: 0, protein: 0 }
+  );
 
   return (
     <div className="flex flex-col h-screen gap-4">
@@ -22,7 +34,7 @@ const Page = async () => {
         </div>
         <AddNewButton />
       </div>
-      <Macros calories={1560} carbs={12} fat={44} protein={123} />
+      <Macros calories={totalMacros.calories} carbs={totalMacros.carbs} fat={totalMacros.fat} protein={totalMacros.protein} />
       <Meals date={today} />
     </div>
   );
