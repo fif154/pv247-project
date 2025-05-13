@@ -10,6 +10,7 @@ type Props = {
   fat: number;
   calories: number;
   intakeMultiplier?: number;
+  className?: string;
 };
 
 export type MacroItemType = {

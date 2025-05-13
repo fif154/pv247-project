@@ -10,6 +10,8 @@ import { listMealsController } from '@/server/controllers/meals/list-meals.contr
 import { updateMealController } from '@/server/controllers/meals/update-meal.controller';
 import { MealsRepository } from '@/server/infrastructure/repositories/meals.repository';
 import { DI_SYMBOLS } from '../types';
+import { listMealsForDayController } from '@/server/controllers/meals/list-meals-for-day.controller';
+import { listMealsForDayUseCase } from '@/server/application/use-cases/meals/list-meals-for-day.use-case';
 
 export function createMealsModule() {
   const mealsModule = createModule();
@@ -64,14 +66,14 @@ export function createMealsModule() {
 
       mealsModule
     .bind(DI_SYMBOLS.IListMealsForDayUseCase)
-    .toHigherOrderFunction(listMealsUseCase, [
+    .toHigherOrderFunction(listMealsForDayUseCase, [
       DI_SYMBOLS.IMealsRepository,
       DI_SYMBOLS.IGroupService,
     ]);
 
       mealsModule
     .bind(DI_SYMBOLS.IListMealsForDayController)
-    .toHigherOrderFunction(listMealsController, [DI_SYMBOLS.IListMealsForDayUseCase]);
+    .toHigherOrderFunction(listMealsForDayController, [DI_SYMBOLS.IListMealsForDayUseCase]);
   mealsModule
     .bind(DI_SYMBOLS.IUpdateMealController)
     .toHigherOrderFunction(updateMealController, [
