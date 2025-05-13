@@ -4,7 +4,8 @@ import { redirect } from 'next/navigation';
 
 export const metadata = {
   title: 'Login | MealMate',
-  description: 'Sign in to MealMate to access your personalized meal plans, grocery lists, and nutrition tracking tools.',
+  description:
+    'Sign in to MealMate to access your personalized meal plans, grocery lists, and nutrition tracking tools.',
 };
 
 export default async function LoginPage() {

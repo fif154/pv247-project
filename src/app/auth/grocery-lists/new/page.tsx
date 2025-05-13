@@ -9,7 +9,6 @@ export const metadata = {
     'Build a grocery list based on your selected recipes and meal plans.',
 };
 
-
 const Page = async () => {
   const [recipes, mealPlans] = await Promise.all([
     listRecipes(),

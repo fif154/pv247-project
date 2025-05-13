@@ -7,8 +7,7 @@ import { Card } from '@/components/ui/card';
 
 export const metadata = {
   title: 'Settings | MealMate',
-  description:
-    'Customize your MealMate experience.',
+  description: 'Customize your MealMate experience.',
 };
 
 const Page = async () => {

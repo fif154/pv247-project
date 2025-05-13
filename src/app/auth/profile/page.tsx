@@ -11,7 +11,6 @@ export const metadata = {
     'View and edit your profile information including name, email, and avatar.',
 };
 
-
 const Page = async () => {
   const userSession = (await auth())!;
   const userInfo = {

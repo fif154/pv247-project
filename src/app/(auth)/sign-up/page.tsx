@@ -4,9 +4,9 @@ import { redirect } from 'next/navigation';
 
 export const metadata = {
   title: 'Sign Up | MealMate',
-  description: 'Create your MealMate account to start planning meals, building grocery lists, and tracking your nutrition effortlessly.',
+  description:
+    'Create your MealMate account to start planning meals, building grocery lists, and tracking your nutrition effortlessly.',
 };
-
 
 const Page = async () => {
   const userSession = await auth();
