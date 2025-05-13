@@ -75,7 +75,7 @@ type AddMealModalProps = {
   modal?: boolean;
 };
 
-export function AddMealModal({
+export const AddMealModal = ({
   modalOpen,
   setModalOpen,
   plannedDate,
@@ -83,7 +83,7 @@ export function AddMealModal({
   mealPlanId,
   meal,
   modal = true,
-}: AddMealModalProps) {
+}: AddMealModalProps) => {
   const isEditMode = Boolean(meal);
 
   const { data: recipes = [] } = useRecipes();
@@ -356,4 +356,4 @@ export function AddMealModal({
       </DialogContent>
     </Dialog>
   );
-}
+};

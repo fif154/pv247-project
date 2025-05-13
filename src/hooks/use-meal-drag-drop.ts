@@ -8,13 +8,11 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import { useState } from 'react';
-import { DateRange } from 'react-day-picker';
 
 export function useMealDragDrop(
   board: MealsByDayType,
   setBoard: React.Dispatch<React.SetStateAction<MealsByDayType>>,
-  onMealUpdate: (mealId: string, day: string, newType: string) => void,
-  dateRange: DateRange
+  onMealUpdate: (mealId: string, day: string, newType: string) => void
 ) {
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
@@ -45,19 +43,22 @@ export function useMealDragDrop(
     if (fromDay === toDay && fromType === toType) return setActiveId(null);
 
     setBoard((prev) => {
-      const draft: MealsByDayType = structuredClone(prev);
+      const movedMeal = prev[fromDay][fromType].find(
+        (m) => m.id === active.id
+      )!;
 
-      const meal = draft[fromDay][fromType].find((m) => m.id === active.id)!;
-      draft[fromDay][fromType] = draft[fromDay][fromType].filter(
+      const next = {
+        ...prev,
+        [fromDay]: { ...prev[fromDay] },
+        [toDay]: { ...prev[toDay] },
+      };
+
+      next[fromDay][fromType] = prev[fromDay][fromType].filter(
         (m) => m.id !== active.id
       );
+      next[toDay][toType] = [...prev[toDay][toType], movedMeal];
 
-      if (!draft[toDay][toType]) {
-        draft[toDay][toType] = [];
-      }
-      draft[toDay][toType].push(meal);
-
-      return draft;
+      return next;
     });
 
     onMealUpdate(active.id as string, DAYS.find((d) => d === toDay)!, toType);

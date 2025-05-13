@@ -109,8 +109,7 @@ export function MealPlanning({ mealPlan }: { mealPlan: MealPlan }) {
   const { sensors, activeId, handleDragStart, handleDragEnd } = useMealDragDrop(
     board,
     setBoard,
-    onMealUpdate,
-    dateRange
+    onMealUpdate
   );
 
   const handleDateChange = useCallback(

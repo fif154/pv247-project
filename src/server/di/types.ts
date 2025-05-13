@@ -75,6 +75,7 @@ import { IDeleteRecipeUseCase } from '../application/use-cases/recipes/delete-re
 import { IGetRecipeUseCase } from '../application/use-cases/recipes/get-recipe.use-case';
 import { IListRecipesUseCase } from '../application/use-cases/recipes/list-recipes.use-case';
 import { IUpdateRecipeUseCase } from '../application/use-cases/recipes/update-recipe.use-case';
+import { IEditUserUseCase } from '../application/use-cases/users/edit-user.use-case';
 import { ISearchUsersByEmailUseCase } from '../application/use-cases/users/search-users.use-case';
 import { ISetCurrentGroupUseCase } from '../application/use-cases/users/set-current-group.use-case';
 import { IRegisterController } from '../controllers/auth/register.controller';
@@ -86,6 +87,8 @@ import { IGetGroupWithMembersController } from '../controllers/groups/get-group-
 import { IGetUserGroupsWithMembersController } from '../controllers/groups/get-user-groups-with-members.controller';
 import { IRemoveGroupController } from '../controllers/groups/remove-group.controller';
 import { IRemoveMemberFromGroupController } from '../controllers/groups/remove-member-from-group.controller';
+import { ICreateCategoryController } from '../controllers/ingredient-categories/create-category.controller';
+import { IListCategoriesController } from '../controllers/ingredient-categories/list-categories.controller';
 import { ICreateIngredientController } from '../controllers/ingredients/create-ingredient.controller';
 import { IDeleteIngredientController } from '../controllers/ingredients/delete-ingredient.controller';
 import { IGetIngredientController } from '../controllers/ingredients/get-ingredient.controller';
@@ -97,9 +100,6 @@ import { IDeleteRecipeController } from '../controllers/recipes/delete-recipe.co
 import { IGetRecipeController } from '../controllers/recipes/get-recipe.controller';
 import { IListRecipesController } from '../controllers/recipes/list-recipes.controller';
 import { IUpdateRecipeController } from '../controllers/recipes/update-recipe.controller';
-import { ICreateCategoryController } from '../controllers/ingredient-categories/create-category.controller';
-import { IListCategoriesController } from '../controllers/ingredient-categories/list-categories.controller';
-import { IEditUserUseCase } from '../application/use-cases/users/edit-user.use-case';
 import { IEditUserController } from '../controllers/users/edit-user.controller';
 import { ISearchUsersByEmailController } from '../controllers/users/search-users.controller';
 import { ISetCurrentGroupController } from '../infrastructure/controllers/users/set-current-group.controller';
@@ -256,6 +256,10 @@ export const DI_SYMBOLS = {
   // New use cases
   IGetMealPlanUseCase: Symbol('IGetMealPlanUseCase'),
   IGetMealPlanController: Symbol('IGetMealPlanController'),
+  IUpdateMealPlanUseCase: Symbol('IUpdateMealPlanUseCase'),
+  IUpdateMealPlanController: Symbol('IUpdateMealPlanController'),
+  IDeleteMealPlanUseCase: Symbol('IDeleteMealPlanUseCase'),
+  IDeleteMealPlanController: Symbol('IDeleteMealPlanController'),
 };
 
 export type DI_RETURN_TYPES = {
@@ -405,4 +409,19 @@ export type DI_RETURN_TYPES = {
   // New use cases
   IGetMealPlanUseCase: (id: string) => Promise<MealPlan>;
   IGetMealPlanController: (id: string) => Promise<MealPlan>;
+  IUpdateMealPlanUseCase: (
+    id: string,
+    input: Partial<
+      Omit<MealPlan, 'id' | 'createdBy' | 'createdAt' | 'updatedAt'>
+    >,
+    tx?: unknown
+  ) => Promise<MealPlan>;
+  IUpdateMealPlanController: (
+    id: string,
+    input: Partial<
+      Omit<MealPlan, 'id' | 'createdBy' | 'createdAt' | 'updatedAt'>
+    >
+  ) => Promise<MealPlan>;
+  IDeleteMealPlanUseCase: (id: string, tx?: unknown) => Promise<void>;
+  IDeleteMealPlanController: (id: string) => Promise<void>;
 };

@@ -1,4 +1,8 @@
-import { createMealPlanAction } from '@/app/auth/meal-plans/actions';
+import {
+  createMealPlanAction,
+  deleteMealPlanAction,
+  updateMealPlanAction,
+} from '@/app/auth/meal-plans/actions';
 import { MealPlanFormValues } from '@/components/forms/meal-plan/meal-plan-form';
 import { showErrorToast, showSuccessToast } from '@/utils/toast';
 import { useMutation } from '@tanstack/react-query';
@@ -18,6 +22,42 @@ export const useCreateMealPlanMutation = () => {
     },
     onSuccess: () => {
       showSuccessToast('Meal plan created successfully');
+      router.push('/auth/meal-plans');
+    },
+  });
+};
+
+export const useEditMealPlanMutation = () => {
+  const router = useRouter();
+  return useMutation({
+    mutationFn: async ({ data }: { data: MealPlanFormValues }) => {
+      updateMealPlanAction(data.id!, {
+        ...data,
+        startDate: data.dateRange.from,
+        endDate: data.dateRange.to,
+      });
+    },
+    onError: () => {
+      showErrorToast('Failed to edit meal plan');
+    },
+    onSuccess: () => {
+      showSuccessToast('Meal plan edited successfully');
+      router.push('/auth/meal-plans');
+    },
+  });
+};
+
+export const useDeleteMealPlanMutation = () => {
+  const router = useRouter();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      await deleteMealPlanAction(id);
+    },
+    onError: () => {
+      showErrorToast('Failed to delete meal plan');
+    },
+    onSuccess: () => {
+      showSuccessToast('Meal plan deleted successfully');
       router.push('/auth/meal-plans');
     },
   });

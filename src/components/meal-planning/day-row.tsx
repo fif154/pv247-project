@@ -1,5 +1,6 @@
 import type { MealWithMacros } from '@/server/entities/models/meal';
 import { MealType } from '@/server/entities/models/meal-type';
+import { memo } from 'react';
 import { getDayFromDate } from '../meal-planning';
 import { MealTypeColumn } from './meal-type-column';
 
@@ -10,7 +11,15 @@ interface DayRowProps {
   mealPlanId?: string;
 }
 
-export function DayRow({
+export const DayRow = memo(_DayRow, (prevProps, nextProps) => {
+  return (
+    prevProps.plannedDate.getTime() === nextProps.plannedDate.getTime() &&
+    prevProps.mealPlanId === nextProps.mealPlanId &&
+    prevProps.mealsByType === nextProps.mealsByType
+  );
+});
+
+function _DayRow({
   plannedDate,
   mealsByType,
   mealTypes,

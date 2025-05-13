@@ -58,5 +58,10 @@ export const calculateMacrosForMeal = (meal: Meal): Macros => {
       );
     }
   });
-  return res;
+  return {
+    calories: Math.round(res.calories),
+    protein: Math.round(res.protein),
+    carbs: Math.round(res.carbs),
+    fats: Math.round(res.fats),
+  };
 };

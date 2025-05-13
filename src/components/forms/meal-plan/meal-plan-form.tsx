@@ -3,7 +3,10 @@
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { Spinner } from '@/components/ui/spinner';
-import { useCreateMealPlanMutation } from '@/mutations/meal-plans';
+import {
+  useCreateMealPlanMutation,
+  useEditMealPlanMutation,
+} from '@/mutations/meal-plans';
 import { MealPlan } from '@/server/entities/models/meal-plan';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -42,10 +45,24 @@ export const MealPlanForm = ({ mealPlan }: { mealPlan?: MealPlan }) => {
     },
   });
   const createMealPlanMutation = useCreateMealPlanMutation();
+  const editMealPlanMutation = useEditMealPlanMutation();
+
+  const isPending =
+    createMealPlanMutation.isPending || editMealPlanMutation.isPending;
 
   const { handleSubmit } = form;
 
   const onSubmit = async (data: MealPlanFormValues) => {
+    if (mealPlan) {
+      await editMealPlanMutation.mutateAsync({
+        data: {
+          ...data,
+          id: mealPlan.id,
+        },
+      });
+      return;
+    }
+
     await createMealPlanMutation.mutateAsync({ data });
   };
 
@@ -56,9 +73,13 @@ export const MealPlanForm = ({ mealPlan }: { mealPlan?: MealPlan }) => {
         <Button
           type="submit"
           className="bg-coral text-white py-2 px-4 rounded-md"
-          disabled={createMealPlanMutation.isPending}
+          disabled={isPending}
         >
-          {createMealPlanMutation.isPending ? <Spinner /> : 'Create meal plan'}
+          {isPending ? (
+            <Spinner />
+          ) : (
+            `${mealPlan ? 'Update' : 'Create'} Meal Plan`
+          )}
         </Button>
       </form>
     </Form>
