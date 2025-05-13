@@ -4,13 +4,13 @@ import { PageHeader } from '@/components/page-header';
 import { format } from 'date-fns';
 import { CalendarDays } from 'lucide-react';
 import { AddNewButton } from './add-new-button';
-import { listMealsForDayAction } from '@/app/meals/actions';
+import { listMealsAction } from '@/app/meals/actions';
 
 const formatDate = (date: Date) => format(date, 'EEEE, MMMM d, yyyy');
 
 const Page = async () => {
   const today = new Date();
-  const meals = await listMealsForDayAction(today);
+  const meals = await listMealsAction(undefined, { from: today, to: today });
   const totalMacros = meals.reduce(
     (acc, meal) => {
       acc.calories +=

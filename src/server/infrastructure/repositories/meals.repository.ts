@@ -136,33 +136,4 @@ export class MealsRepository implements IMealsRepository {
       },
     });
   }
-
-  async listMealsForDay(groupId: string, plannedDate: Date): Promise<Meal[]> {
-    return db.query.meals.findMany({
-      where: and(
-        eq(meals.groupId, groupId),
-        isNull(meals.deletedAt),
-        eq(meals.plannedDate, plannedDate)
-      ),
-      with: {
-        additionalIngredients: {
-          with: {
-            ingredient: true,
-            unit: true,
-          },
-        },
-        recipe: {
-          with: {
-            ingredients: {
-              with: {
-                ingredient: true,
-                unit: true,
-              },
-            },
-          },
-        },
-        mealType: true,
-      },
-    });
-  }
 }

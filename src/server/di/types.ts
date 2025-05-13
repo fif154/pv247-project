@@ -107,8 +107,6 @@ import { IEditMacrosUseCase } from '../application/use-cases/users/edit-macros.u
 import { IEditMacrosController } from '../controllers/users/edit-macros.controller';
 import { IGetUserUseCase } from '../application/use-cases/users/get-user.use-case';
 import { IGetUserController } from '../controllers/users/get-user.controller';
-import { IListMealsForDayUseCase } from '../application/use-cases/meals/list-meals-for-day.use-case';
-import { IListMealsForDayController } from '../controllers/meals/list-meals-for-day.controller';
 
 export const DI_SYMBOLS = {
   // Services
@@ -226,8 +224,6 @@ export const DI_SYMBOLS = {
   IListMealsUseCase: Symbol.for('IListMealsUseCase'),
   ICreateMealController: Symbol.for('ICreateMealController'),
   IListMealsController: Symbol.for('IListMealsController'),
-  IListMealsForDayController: Symbol.for('IListMealsForDayController'),
-  IListMealsForDayUseCase: Symbol.for('IListMealsForDayUseCase'),
 
   // Meal Plans
   IMealPlansRepository: Symbol.for('IMealPlansRepository'),
@@ -372,8 +368,6 @@ export type DI_RETURN_TYPES = {
   IListMealsUseCase: IListMealsUseCase;
   ICreateMealController: ICreateMealController;
   IListMealsController: IListMealsController;
-  IListMealsForDayController: IListMealsForDayController;
-  IListMealsForDayUseCase: IListMealsForDayUseCase;
 
   // Meal Plans
   IMealPlansRepository: IMealPlansRepository;

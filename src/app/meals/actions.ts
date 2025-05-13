@@ -31,11 +31,6 @@ export async function listMealsAction(
   return await mealController(mealPlanId, dateRange);
 }
 
-export async function listMealsForDayAction(date: Date) {
-  const mealController = getInjection('IListMealsForDayController');
-  return await mealController({ date });
-}
-
 export const updateMealAction = async (
   id: string,
   input: Partial<Omit<Meal, 'id' | 'createdBy' | 'createdAt' | 'updatedAt'>>,

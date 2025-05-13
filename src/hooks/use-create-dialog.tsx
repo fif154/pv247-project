@@ -8,10 +8,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export const useCreateDialog = () => {
   const [open, setOpen] = useState(false);
+  const router = useRouter();
 
   const CreateDialog = () => (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -25,7 +27,7 @@ export const useCreateDialog = () => {
             variant="outline"
             onClick={() => {
               setOpen(false);
-              window.location.href = '/auth/recipes/new';
+              router.push('/auth/recipes/new');
             }}
           >
             New Recipe
@@ -34,7 +36,7 @@ export const useCreateDialog = () => {
             variant="outline"
             onClick={() => {
               setOpen(false);
-              window.location.href = '/auth/meal-plans/new';
+              router.push('/auth/meal-plans/new');
             }}
           >
             New Meal Plan
@@ -43,7 +45,7 @@ export const useCreateDialog = () => {
             variant="outline"
             onClick={() => {
               setOpen(false);
-              window.location.href = '/auth/grocery-lists/new';
+              router.push('/auth/grocery-lists/new');
             }}
           >
             New Grocery Item
