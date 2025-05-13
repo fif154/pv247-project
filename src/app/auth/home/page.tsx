@@ -56,7 +56,7 @@ const Page = async () => {
         fat={totalMacros.fat}
         protein={totalMacros.protein}
       />
-      <Meals date={today} />
+      <Meals meals={meals} />
     </div>
   );
 };

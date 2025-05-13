@@ -1,13 +1,11 @@
-import { listMealsForDayAction } from '@/app/meals/actions';
+import { Meal } from '@/server/entities/models/meal';
 import { MealCard } from './meal-card';
 
 type MealsProps = {
-  date: Date;
+  meals: Meal[];
 };
 
-export const Meals = async ({ date }: MealsProps) => {
-  const meals = await listMealsForDayAction(date);
-
+export const Meals = async ({ meals }: MealsProps) => {
   return (
     <div className="grid gap-6">
       {meals.map((meal) => (
