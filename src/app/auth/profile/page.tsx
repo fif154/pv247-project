@@ -5,6 +5,13 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
 import { SessionProvider } from 'next-auth/react';
 
+export const metadata = {
+  title: 'Profile | MealMate',
+  description:
+    'View and edit your profile information including name, email, and avatar.',
+};
+
+
 const Page = async () => {
   const userSession = (await auth())!;
   const userInfo = {

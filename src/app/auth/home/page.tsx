@@ -5,6 +5,11 @@ import { format } from 'date-fns';
 import { CalendarDays } from 'lucide-react';
 import { AddNewButton } from './add-new-button';
 
+export const metadata = {
+  title: 'Home | MealMate',
+  description: 'Manage your meals and nutrition easily.',
+};
+
 const formatDate = (date: Date) => format(date, 'EEEE, MMMM d, yyyy');
 
 const Page = async () => {

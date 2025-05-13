@@ -1,3 +1,8 @@
+export const metadata = {
+  title: 'Ingredients | MealMate',
+  description: 'Browse, manage, and organize ingredients used in your meals.',
+};
+
 const Page = async () => {
   return (
     <div className="flex flex-col h-screen gap-4">

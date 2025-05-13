@@ -4,6 +4,11 @@ import { CreateGroupButton } from '@/components/groups/create-group-modal/create
 import { GroupCard } from '@/components/groups/group-card';
 import { GroupHeader } from '@/components/groups/group-header';
 
+export const metadata = {
+  title: 'Groups | MealMate',
+  description: 'Manage your groups.',
+};
+
 const Page = async () => {
   const userSession = await auth();
   const currentUser = userSession?.user;

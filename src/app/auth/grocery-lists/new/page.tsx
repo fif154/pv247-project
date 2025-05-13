@@ -3,6 +3,13 @@ import { GroceryListCreateForm } from '@/components/forms/grocery-list/grocery-l
 import { PageHeader } from '@/components/page-header';
 import { listRecipes } from '../../recipes/actions';
 
+export const metadata = {
+  title: 'Create Grocery List | MealMate',
+  description:
+    'Build a grocery list based on your selected recipes and meal plans.',
+};
+
+
 const Page = async () => {
   const [recipes, mealPlans] = await Promise.all([
     listRecipes(),
