@@ -89,6 +89,8 @@ import { IRecipeIngredientsRepository } from '@/server/application/repositories/
 import { IRecipeIngredientsService } from '@/server/application/services/recipe-ingredients.service.interface';
 import { ISaveRecipeIngredientsUseCase } from '@/server/application/use-cases/recipes/save-recipe-ingredients.use-case';
 import { ISaveRecipeIngredientsController } from '@/server/controllers/recipes/save-recipe-ingredients.controller';
+import { IListFilteredRecipesUseCase } from '../application/use-cases/recipes/list-filtered-recipes.use-case';
+import { IListFilteredRecipesController } from '../controllers/recipes/list-filtered-recipes.controller';
 
 export const DI_SYMBOLS = {
   // Services
@@ -217,6 +219,10 @@ export const DI_SYMBOLS = {
   ISaveRecipeIngredientsController: Symbol.for(
     'ISaveRecipeIngredientsController'
   ),
+
+  // Filtered recipes
+  IListFilteredRecipesUseCase: Symbol.for('IListFilteredRecipesUseCase'),
+  IListFilteredRecipesController: Symbol.for('IListFilteredRecipesController'),
 };
 
 export type DI_RETURN_TYPES = {
@@ -330,4 +336,8 @@ export type DI_RETURN_TYPES = {
   IRecipeIngredientsService: IRecipeIngredientsService;
   ISaveRecipeIngredientsUseCase: ISaveRecipeIngredientsUseCase;
   ISaveRecipeIngredientsController: ISaveRecipeIngredientsController;
+
+  // Filtered recipes
+  IListFilteredRecipesUseCase: IListFilteredRecipesUseCase;
+  IListFilteredRecipesController: IListFilteredRecipesController;
 };

@@ -5,23 +5,13 @@ import { revalidatePath } from 'next/cache';
 import { Recipe } from '@/server/entities/models/recipe';
 
 export async function listRecipes() {
-  try {
-    const listRecipesController = getInjection('IListRecipesController');
-    return await listRecipesController();
-  } catch (error) {
-    console.error('Error listing recipes:', error);
-    return [];
-  }
+  const listRecipesController = getInjection('IListRecipesController');
+  return await listRecipesController();
 }
 
 export async function getRecipe(id: string) {
-  try {
-    const getRecipeController = getInjection('IGetRecipeController');
-    return await getRecipeController({ id });
-  } catch (error) {
-    console.error('Error getting recipe:', error);
-    return null;
-  }
+  const getRecipeController = getInjection('IGetRecipeController');
+  return await getRecipeController({ id });
 }
 
 export async function createRecipe(input: {
@@ -30,15 +20,10 @@ export async function createRecipe(input: {
   servings: number;
   image: string | null;
 }) {
-  try {
-    const createRecipeController = getInjection('ICreateRecipeController');
-    const result = await createRecipeController(input);
-    revalidatePath('/auth/recipes');
-    return result;
-  } catch (error) {
-    console.error('Error creating recipe:', error);
-    throw error;
-  }
+  const createRecipeController = getInjection('ICreateRecipeController');
+  const result = await createRecipeController(input);
+  revalidatePath('/auth/recipes');
+  return result;
 }
 
 export async function updateRecipe(input: {
@@ -54,26 +39,16 @@ export async function updateRecipe(input: {
     unitId: string;
   }>;
 }) {
-  try {
-    const updateRecipeController = getInjection('IUpdateRecipeController');
-    const result = await updateRecipeController(input);
-    revalidatePath('/auth/recipes');
-    return result;
-  } catch (error) {
-    console.error('Error updating recipe:', error);
-    throw error;
-  }
+  const updateRecipeController = getInjection('IUpdateRecipeController');
+  const result = await updateRecipeController(input);
+  revalidatePath('/auth/recipes');
+  return result;
 }
 
 export async function deleteRecipe(input: { id: string }) {
-  try {
-    const deleteRecipeController = getInjection('IDeleteRecipeController');
-    await deleteRecipeController(input);
-    revalidatePath('/auth/recipes');
-  } catch (error) {
-    console.error('Error deleting recipe:', error);
-    throw error;
-  }
+  const deleteRecipeController = getInjection('IDeleteRecipeController');
+  await deleteRecipeController(input);
+  revalidatePath('/auth/recipes');
 }
 
 export async function saveRecipeIngredients(
@@ -86,10 +61,12 @@ export async function saveRecipeIngredients(
     unitId: string;
   }>
 ) {
-  const saveRecipeIngredientsController = getInjection('ISaveRecipeIngredientsController');
+  const saveRecipeIngredientsController = getInjection(
+    'ISaveRecipeIngredientsController'
+  );
   return await saveRecipeIngredientsController({
     recipeId,
-    ingredients
+    ingredients,
   });
 }
 
@@ -100,37 +77,7 @@ type ListRecipesOptions = {
   sort?: SortType;
 };
 
-export async function listFilteredRecipes(options: ListRecipesOptions = {}): Promise<Recipe[]> {
-  const listRecipesController = getInjection('IListRecipesController');
-  
-  const recipes = await listRecipesController();
-  
-  let filtered = recipes;
-  
-  if (options.search) {
-    const searchLower = options.search.toLowerCase();
-    filtered = filtered.filter(recipe => 
-      recipe.name.toLowerCase().includes(searchLower) || 
-      (recipe.description && recipe.description.toLowerCase().includes(searchLower))
-    );
-  }
-  
-  if (options.sort) {
-    filtered.sort((a, b) => {
-      switch (options.sort) {
-        case 'name-asc':
-          return a.name.localeCompare(b.name);
-        case 'name-desc':
-          return b.name.localeCompare(a.name);
-        case 'newest':
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-        case 'oldest':
-          return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-        default:
-          return a.name.localeCompare(b.name);
-      }
-    });
-  }
-  
-  return filtered;
+export async function listFilteredRecipes(options: ListRecipesOptions = {}) {
+  const listFilteredRecipesController = getInjection('IListFilteredRecipesController');
+  return await listFilteredRecipesController(options);
 }

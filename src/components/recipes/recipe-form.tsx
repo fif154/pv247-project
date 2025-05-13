@@ -15,7 +15,7 @@ import { showSuccessToast, showErrorToast } from '@/utils/toast';
 import { Recipe } from '@/server/entities/models/recipe';
 import Image from 'next/image';
 import { useDropzone } from 'react-dropzone';
-import { ImageIcon, Globe, Plus, Trash2, X } from 'lucide-react';
+import { ImageIcon, Globe, Plus, Trash2, X, Edit, Check } from 'lucide-react';
 import { useForm, useFieldArray, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -83,6 +83,9 @@ export function RecipeForm({
   );
   const [imageUrlInput, setImageUrlInput] = useState<string>('');
   const [activeImageTab, setActiveImageTab] = useState<string>('upload');
+  const [editingIngredientIndex, setEditingIngredientIndex] = useState<
+    number | null
+  >(null);
 
   // Setup React Hook Form with all form fields
   const form = useForm<RecipeFormValues>({
@@ -152,21 +155,42 @@ export function RecipeForm({
     }
   };
 
-  // Add new ingredient
+  const startEditingIngredient = (index: number) => {
+    const ingredient = form.getValues(`ingredients.${index}`);
+    form.setValue('newIngredient', {
+      ingredientName: ingredient.ingredientName,
+      quantity: ingredient.quantity,
+      unitId: ingredient.unitId,
+    });
+    setEditingIngredientIndex(index);
+  };
+
   const addIngredient = () => {
     const newIngredient = form.getValues('newIngredient');
 
     if (newIngredient?.ingredientName && newIngredient.unitId) {
+      if (editingIngredientIndex !== null) {
+        const updatedIngredients = [...(form.getValues('ingredients') || [])];
+        updatedIngredients[editingIngredientIndex] = {
+          ...updatedIngredients[editingIngredientIndex],
+          ingredientName: newIngredient.ingredientName.trim(),
+          quantity: newIngredient.quantity,
+          unitId: newIngredient.unitId,
+        };
 
-      append({
-        id: `temp-${Date.now()}`,
-        ingredientId: `temp-${Date.now()}`,
-        ingredientName: newIngredient.ingredientName.trim(),
-        quantity: newIngredient.quantity,
-        unitId: newIngredient.unitId,
-      });
+        form.setValue('ingredients', updatedIngredients);
+        setEditingIngredientIndex(null);
+      } else {
+        const newId = `temp-${Date.now()}`;
+        append({
+          id: newId,
+          ingredientId: newId,
+          ingredientName: newIngredient.ingredientName.trim(),
+          quantity: newIngredient.quantity,
+          unitId: newIngredient.unitId,
+        });
+      }
 
-      // Reset new ingredient form
       form.setValue('newIngredient', {
         ingredientName: '',
         quantity: 1,
@@ -177,6 +201,7 @@ export function RecipeForm({
 
   // Handle form submission
   const onSubmit: SubmitHandler<RecipeFormValues> = async (data) => {
+
     setIsSubmitting(true);
 
     try {
@@ -218,29 +243,15 @@ export function RecipeForm({
         recipeId = newRecipe.id;
       }
 
-      if (recipeId && data.ingredients && data.ingredients.length > 0) {
+      if (recipeId) {
         try {
-          const ingredientPayload = data.ingredients.map((ing) => {
-            // Check if it's a new or existing ingredient
-            const isNewIngredient = ing.ingredientId?.startsWith('temp-');
-
-            if (isNewIngredient) {
-              // For new ingredients, send the name but no IDs
-              return {
-                name: ing.ingredientName,
-                quantity: ing.quantity,
-                unitId: ing.unitId,
-              };
-            } else {
-              // For existing ingredients, send the IDs
-              return {
-                id: ing.id,
-                ingredientId: ing.ingredientId,
-                quantity: ing.quantity,
-                unitId: ing.unitId,
-              };
-            }
-          });
+          const ingredientPayload = fields.map((ing) => ({
+            id: ing.id,
+            ingredientId: ing.ingredientId,
+            name: ing.ingredientName,
+            quantity: ing.quantity,
+            unitId: ing.unitId,
+          }));
 
           await saveRecipeIngredients(recipeId, ingredientPayload);
 
@@ -398,15 +409,26 @@ export function RecipeForm({
                                   {unitName}
                                 </span>
                               </div>
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => remove(index)}
-                                className="h-8 w-8 p-0"
-                              >
-                                <Trash2 className="h-4 w-4 text-destructive" />
-                              </Button>
+                              <div className="flex items-center gap-1">
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => startEditingIngredient(index)}
+                                  className="h-8 w-8 p-0"
+                                >
+                                  <Edit className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => remove(index)}
+                                  className="h-8 w-8 p-0"
+                                >
+                                  <Trash2 className="h-4 w-4 text-destructive" />
+                                </Button>
+                              </div>
                             </div>
                           );
                         })}
@@ -507,8 +529,17 @@ export function RecipeForm({
                           onClick={addIngredient}
                           disabled={!form.watch('newIngredient.ingredientName')}
                           className="h-10 w-10"
+                          title={
+                            editingIngredientIndex !== null
+                              ? 'Update Ingredient'
+                              : 'Add Ingredient'
+                          }
                         >
-                          <Plus className="h-4 w-4" />
+                          {editingIngredientIndex !== null ? (
+                            <Check className="h-4 w-4" />
+                          ) : (
+                            <Plus className="h-4 w-4" />
+                          )}
                         </Button>
                       </div>
                     </div>

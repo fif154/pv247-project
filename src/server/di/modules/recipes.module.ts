@@ -9,6 +9,7 @@ import { getRecipeUseCase } from '@/server/application/use-cases/recipes/get-rec
 import { listRecipesUseCase } from '@/server/application/use-cases/recipes/list-recipes.use-case';
 import { updateRecipeUseCase } from '@/server/application/use-cases/recipes/update-recipe.use-case';
 import { saveRecipeIngredientsUseCase } from '@/server/application/use-cases/recipes/save-recipe-ingredients.use-case';
+import { listFilteredRecipesUseCase } from '@/server/application/use-cases/recipes/list-filtered-recipes.use-case';
 
 import { createRecipeController } from '@/server/controllers/recipes/create-recipe.controller';
 import { deleteRecipeController } from '@/server/controllers/recipes/delete-recipe.controller';
@@ -16,6 +17,7 @@ import { getRecipeController } from '@/server/controllers/recipes/get-recipe.con
 import { listRecipesController } from '@/server/controllers/recipes/list-recipes.controller';
 import { updateRecipeController } from '@/server/controllers/recipes/update-recipe.controller';
 import { saveRecipeIngredientsController } from '@/server/controllers/recipes/save-recipe-ingredients.controller';
+import { listFilteredRecipesController } from '@/server/controllers/recipes/list-filtered-recipes.controller';
 
 import { RecipeIngredientsService } from '@/server/infrastructure/services/recipe-ingredients.service';
 
@@ -115,6 +117,19 @@ export function createRecipesModule() {
     .bind(DI_SYMBOLS.ISaveRecipeIngredientsController)
     .toHigherOrderFunction(saveRecipeIngredientsController, [
       DI_SYMBOLS.ISaveRecipeIngredientsUseCase,
+    ]);
+
+  recipesModule
+    .bind(DI_SYMBOLS.IListFilteredRecipesUseCase)
+    .toHigherOrderFunction(listFilteredRecipesUseCase, [
+      DI_SYMBOLS.IRecipesRepository,
+      DI_SYMBOLS.IGroupService,
+    ]);
+
+  recipesModule
+    .bind(DI_SYMBOLS.IListFilteredRecipesController)
+    .toHigherOrderFunction(listFilteredRecipesController, [
+      DI_SYMBOLS.IListFilteredRecipesUseCase,
     ]);
 
   return recipesModule;

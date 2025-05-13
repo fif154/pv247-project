@@ -20,6 +20,7 @@ export class RecipesRepository implements IRecipesRepository {
         ingredients: {
           with: {
             ingredient: true,
+            unit: true,
           },
         },
       },

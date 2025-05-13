@@ -2,8 +2,8 @@ import { getRecipe } from '@/app/auth/recipes/actions';
 import { RecipeForm } from '@/components/recipes/recipe-form';
 import { auth } from '@/auth';
 import { notFound, redirect } from 'next/navigation';
-import { getInjection } from '@/server/di/container';
 import { canEditRecipe } from '@/server/application/policy/recipe';
+import { listUnits } from '@/app/auth/units/actions';
 
 export default async function EditRecipePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -11,7 +11,7 @@ export default async function EditRecipePage({ params }: { params: Promise<{ id:
   const [recipe, session, units] = await Promise.all([
     getRecipe(id),
     auth(),
-    getInjection('IListUnitsController')(),
+    listUnits(),
   ]);
 
   if (!recipe) {

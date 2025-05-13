@@ -7,22 +7,16 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { auth } from '@/auth';
 import { DeleteRecipeButton } from '@/components/recipes/delete-recipe-button';
-import { getInjection } from '@/server/di/container';
 import { canEditRecipe } from '@/server/application/policy/recipe';
+import { listUnits } from '@/app/auth/units/actions';
 
 const RecipeDetailPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
   const recipe = await getRecipe(id);
   const session = await auth();
 
-  // Function for fetchin unit names
-  async function fetchAllUnits() {
-    const unitsController = getInjection('IListUnitsController');
-    return await unitsController();
-  }
-
   // Fetch all units to map unit names
-  const allUnits = await fetchAllUnits();
+  const allUnits = await listUnits();
 
   // Create a map of unit IDs to names for quick lookup
   const unitMap = Object.fromEntries(
