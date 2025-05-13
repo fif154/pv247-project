@@ -1,8 +1,9 @@
 import { GroceryListComponent } from '@/components/grocery-list-component';
 import { getGroceryListAction } from '../actions';
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
-  const groceryList = await getGroceryListAction(params.id);
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const groceryList = await getGroceryListAction(id);
 
   const fromDate = groceryList.fromDate
     ? new Date(groceryList.fromDate).toLocaleDateString()
@@ -12,8 +13,8 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
     : 'Unknown end';
 
   return {
-    title: `Grocery List (${fromDate} – ${toDate}) | MealMate`,
-    description: `View your grocery list for the week of ${fromDate} to ${toDate}. Stay on track with your meal planning.`,
+    title: `Grocery List (${fromDate} - ${toDate}) | MealMate`,
+    description: `View your grocery list for the week of ${fromDate} to ${toDate}.`,
   };
 }
 
