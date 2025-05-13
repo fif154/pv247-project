@@ -8,7 +8,7 @@ export const MacroItem = (props: MacroItemType) => {
       <span className="text-muted-foreground">{props.label}</span>
       <div className="flex flex-row gap-2 items-baseline">
         <span className={`text-2xl font-bold ${props.textColor}`}>
-          {props.value}
+          {props.value.toFixed()}
         </span>
         <div>
           <span className='text-gray-400'> / {props.userSetting} {props.unit}</span>

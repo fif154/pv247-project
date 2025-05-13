@@ -55,6 +55,7 @@ export class MealPlansRepository implements IMealPlansRepository {
                     },
                   },
                 },
+                mealType: true,
               },
             },
           },

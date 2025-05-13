@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { DayPicker, type DayPickerProps } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';

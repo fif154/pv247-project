@@ -1,4 +1,5 @@
 import { auth } from '@/auth';
+import { cn } from '@/lib/utils';
 import { MacroItem } from './macro-item';
 import { Card, CardContent } from './ui/card';
 import { getUserAction } from '@/app/(users)/actions';
@@ -8,6 +9,7 @@ type Props = {
   protein: number;
   fat: number;
   calories: number;
+  intakeMultiplier?: number;
 };
 
 export type MacroItemType = {
@@ -82,7 +84,7 @@ const user = await getUserAction(userId);
     },
   ];
   return (
-    <Card className="w-full">
+    <Card className={cn('w-full', props.className)}>
       <CardContent className="px-4 py-2">
         <div className="grid grid-cols-2 gap-6 sm:grid-cols-4">
           {macroItems.map((item) => (

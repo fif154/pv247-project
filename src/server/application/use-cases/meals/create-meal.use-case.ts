@@ -5,13 +5,21 @@ import {
   CreateMeal,
   CreateMealAdditionalIngredient,
 } from '@/server/entities/models/meal';
+import { IMealAdditionalIngredientsRepository } from '../../repositories/meal-additional-ingredients.repository.interface';
+import { IMealPlanMealsRepository } from '../../repositories/meal-plan-meals.repository.interface';
 import { IGroupService } from '../../services/group.service.interface';
 
 export const createMealUseCase =
-  (mealsRepository: IMealsRepository, groupService: IGroupService) =>
+  (
+    mealsRepository: IMealsRepository,
+    groupService: IGroupService,
+    mealPlanMealsRepository: IMealPlanMealsRepository,
+    additionalIngredientsRepository: IMealAdditionalIngredientsRepository
+  ) =>
   async (
-    input: CreateMeal,
-    additionalIngredients?: CreateMealAdditionalIngredient[],
+    input: Omit<CreateMeal, 'userId' | 'groupId'>,
+    additionalIngredients?: Omit<CreateMealAdditionalIngredient, 'mealId'>[],
+    mealPlanId?: string,
     // TODO: remove any
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     tx?: any
@@ -27,15 +35,30 @@ export const createMealUseCase =
 
     await groupService.verifyUserInGroup(user.id, user.groupId);
 
-    return mealsRepository.createMeal(
+    const meal = await mealsRepository.createMeal(
       {
         ...input,
         userId: user.id,
         groupId: user.groupId,
       },
-      additionalIngredients,
       tx
     );
+
+    if (mealPlanId) {
+      await mealPlanMealsRepository.addMealToPlan(mealPlanId, meal.id, tx);
+    }
+
+    if (additionalIngredients?.length) {
+      await additionalIngredientsRepository.addIngredientsToMeal(
+        additionalIngredients.map((ingredient) => ({
+          ...ingredient,
+          mealId: meal.id,
+        })),
+        tx
+      );
+    }
+
+    return { ...meal, additionalIngredients, mealPlanId };
   };
 
 export type ICreateMealUseCase = ReturnType<typeof createMealUseCase>;
