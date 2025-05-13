@@ -129,6 +129,10 @@ async function main() {
       image: faker.image.avatar(),
       passwordHash: faker.internet.password(),
       groupId: faker.helpers.arrayElement(groups).id,
+      calories: faker.number.int({ min: 1000, max: 3000 }),
+      protein: faker.number.int({ min: 50, max: 150 }),
+      carbs: faker.number.int({ min: 100, max: 300 }),
+      fats: faker.number.int({ min: 20, max: 100 }),
     };
     users.push(await insertOne(schema.users, row));
   }

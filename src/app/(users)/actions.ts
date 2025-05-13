@@ -18,3 +18,20 @@ export const editUserAction = async (data: {
 
   return await controller(data);
 };
+
+export const getUserAction = async (userId: string) => {
+  const controller = getInjection('IGetUserController');
+  return await controller({ userId });
+};
+
+export const editMacrosAction = async (data: {
+  userId: string;
+  fats: number;
+  protein: number;
+  carbs: number;
+  calories: number;
+}) => {
+  const controller = getInjection('IEditMacrosController');
+
+  return await controller(data);
+};

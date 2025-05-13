@@ -5,3 +5,7 @@ export type User = InferSelectModel<typeof users>;
 export type CreateUser = InferInsertModel<typeof users>;
 export type UserInfo = Pick<User, 'id' | 'email'>;
 export type EditUser = Pick<User, 'id' | 'email' | 'name'>;
+export type EditMacros = Pick<
+  User,
+  'id' | 'calories' | 'carbs' | 'protein' | 'fats'
+>;
