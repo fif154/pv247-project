@@ -7,12 +7,14 @@ import {
 } from '@/server/entities/models/meal';
 import { IMealAdditionalIngredientsRepository } from '../../repositories/meal-additional-ingredients.repository.interface';
 import { IGroupService } from '../../services/group.service.interface';
+import { IIngredientService } from '../../services/ingredient.service.interface';
 
 export const updateMealUseCase =
   (
     mealsRepository: IMealsRepository,
     additionalIngredientsRepository: IMealAdditionalIngredientsRepository,
-    groupService: IGroupService
+    groupService: IGroupService,
+    ingredientService: IIngredientService
   ) =>
   async (
     id: string,
@@ -41,17 +43,9 @@ export const updateMealUseCase =
       throw new NotFoundError('Meal not in your group');
     }
 
-    // TODO: add additional ingredients to meal properly
+    const combined = ingredientService.combine(additionalIngredients ?? []);
 
-    const meal = await mealsRepository.updateMeal(
-      id,
-      input,
-      additionalIngredients?.map((ingredient) => ({
-        ...ingredient,
-        mealId: id,
-      })),
-      tx
-    );
+    const meal = await mealsRepository.updateMeal(id, input, combined, tx);
 
     return { ...meal, additionalIngredients };
   };

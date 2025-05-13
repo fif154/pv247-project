@@ -12,6 +12,7 @@ import { DateRange } from 'react-day-picker';
 import { IMealPlansRepository } from '../../repositories/meal-plans.repository.interface';
 import { IGroceryListService } from '../../services/grocery-list.service.interface';
 import { IGroupService } from '../../services/group.service.interface';
+import { IIngredientService } from '../../services/ingredient.service.interface';
 
 export const createGroceryListUseCase =
   (
@@ -21,6 +22,7 @@ export const createGroceryListUseCase =
     ingredientsRepository: IIngredientsRepository,
     mealPlansRepository: IMealPlansRepository,
     groceryListService: IGroceryListService,
+    ingredientService: IIngredientService,
     groupService: IGroupService
   ) =>
   async (
@@ -128,8 +130,7 @@ export const createGroceryListUseCase =
       allIngredients.push(...items);
     }
 
-    const combinedIngredients =
-      groceryListService.combineIngredients(allIngredients);
+    const combinedIngredients = ingredientService.combine(allIngredients);
 
     try {
       await groceryListItemsRepository.createGroceryListItems(

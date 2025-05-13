@@ -45,6 +45,7 @@ import { IUsersRepository } from '../application/repositories/users.repository.i
 import { IAuthenticationService } from '../application/services/authentication.service.interface';
 import { IGroceryListService } from '../application/services/grocery-list.service.interface';
 import { IGroupService } from '../application/services/group.service.interface';
+import { IIngredientService } from '../application/services/ingredient.service.interface';
 import { ITransactionManagerService } from '../application/services/transaction-manager.service.interface';
 import { IRegisterUseCase } from '../application/use-cases/auth/register.use-case';
 import { ISignInUseCase } from '../application/use-cases/auth/sign-in.use-case';
@@ -114,6 +115,7 @@ export const DI_SYMBOLS = {
   ITransactionManagerService: Symbol.for('ITransactionManagerService'),
   IGroceryListService: Symbol.for('IGroceryListService'),
   IGroupService: Symbol.for('IGroupService'),
+  IIngredientService: Symbol.for('IIngredientService'),
 
   // Repositories
   IUsersRepository: Symbol.for('IUsersRepository'),
@@ -407,4 +409,6 @@ export type DI_RETURN_TYPES = {
   // New use cases
   ICopyMealsToDateRangeUseCase: ICopyMealsToDateRangeUseCase;
   ICopyMealsToDateRangeController: ICopyMealsToDateRangeController;
+
+  IIngredientService: IIngredientService;
 };

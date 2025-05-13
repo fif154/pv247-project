@@ -31,6 +31,7 @@ interface SelectPopoverProps {
   isLoading?: boolean;
   modal?: boolean;
   className?: string;
+  disabled?: boolean;
 }
 
 export function SelectPopover({
@@ -43,6 +44,7 @@ export function SelectPopover({
   isLoading = false,
   modal = false,
   className,
+  disabled,
 }: SelectPopoverProps) {
   return (
     <Popover modal={modal}>
@@ -51,6 +53,7 @@ export function SelectPopover({
           variant="outline"
           role="combobox"
           className={cn('w-full justify-between', className)}
+          disabled={disabled}
         >
           {value ? value.name : placeholder}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />

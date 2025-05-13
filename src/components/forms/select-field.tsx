@@ -22,6 +22,7 @@ interface SelectFieldProps<T extends Record<string, unknown>> {
   labelClassName?: string;
   modal?: boolean;
   onSelect?: (value: SelectOption) => void;
+  disabled?: boolean;
 }
 
 export function SelectField<T extends Record<string, unknown>>({
@@ -36,6 +37,7 @@ export function SelectField<T extends Record<string, unknown>>({
   className,
   labelClassName,
   modal = false,
+  disabled,
   onSelect,
 }: SelectFieldProps<T>) {
   return (
@@ -63,6 +65,7 @@ export function SelectField<T extends Record<string, unknown>>({
               isLoading={isLoading}
               className="z-10"
               modal={modal}
+              disabled={disabled}
             />
           </FormControl>
           <FormMessage />

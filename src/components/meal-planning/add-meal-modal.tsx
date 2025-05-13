@@ -151,6 +151,7 @@ export const AddMealModal = ({
       });
     }
 
+    form.reset();
     setModalOpen(false);
   };
 

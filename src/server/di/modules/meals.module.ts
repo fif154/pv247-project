@@ -41,6 +41,7 @@ export function createMealsModule() {
       DI_SYMBOLS.IMealsRepository,
       DI_SYMBOLS.IMealAdditionalIngredientsRepository,
       DI_SYMBOLS.IGroupService,
+      DI_SYMBOLS.IIngredientService,
     ]);
 
   mealsModule
