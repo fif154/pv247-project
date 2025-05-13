@@ -32,3 +32,5 @@ export const updateMealController =
       }
     });
   };
+
+export type IUpdateMealController = ReturnType<typeof updateMealController>;

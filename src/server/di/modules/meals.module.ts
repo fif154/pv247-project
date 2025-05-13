@@ -40,7 +40,6 @@ export function createMealsModule() {
     .toHigherOrderFunction(updateMealUseCase, [
       DI_SYMBOLS.IMealsRepository,
       DI_SYMBOLS.IGroupService,
-      DI_SYMBOLS.IMealAdditionalIngredientsRepository,
     ]);
 
   mealsModule

@@ -25,10 +25,16 @@ type MealPlanMealWithMacros = Omit<MealPlanMeal, 'meal'> & {
   meal: MealWithMacros;
 };
 
-export type MealPlanWithStatus = Omit<MealPlan, 'meals'> & {
-  status: {
-    isCurrent: boolean;
-    isUpcoming: boolean;
-  };
+export type MealPlanStatus = {
+  isCurrent: boolean;
+  isUpcoming: boolean;
+};
+
+export type MealPlanWithStatus = MealPlan & { status: MealPlanStatus };
+
+export type MealPlanWithStatusAndMealMacros = Omit<
+  MealPlanWithStatus,
+  'meals'
+> & {
   meals?: MealPlanMealWithMacros[];
 };

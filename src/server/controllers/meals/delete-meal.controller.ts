@@ -15,3 +15,5 @@ export const deleteMealController =
       }
     });
   };
+
+export type IDeleteMealController = ReturnType<typeof deleteMealController>;

@@ -1,6 +1,7 @@
 import { useCreateGroceryListMutation } from '@/mutations/grocery-lists';
+import { useCopyMealsToDateRangeMutation } from '@/mutations/meal-plans';
 import { MealWithMacros } from '@/server/entities/models/meal';
-import { format } from 'date-fns';
+import { addWeeks, format } from 'date-fns';
 import { DateRange } from 'react-day-picker';
 import { Macros } from '../macros';
 import { Button } from '../ui/button';
@@ -33,6 +34,10 @@ export const MealPlanOverview = ({
   );
 
   const createGroceryListMutation = useCreateGroceryListMutation();
+  const copyMealsToDateRangeMutation = useCopyMealsToDateRangeMutation();
+  // Its the same mutation, using it just to distuingish the loading state
+  const copyMealsToDateRangeMutationRandomize =
+    useCopyMealsToDateRangeMutation();
 
   const handleCreateGroceryList = () => {
     if (meals.length === 0) {
@@ -49,6 +54,29 @@ export const MealPlanOverview = ({
         },
       },
       mealDateRange: dateRange,
+    });
+  };
+
+  const handleCopyMeals = async () => {
+    await copyMealsToDateRangeMutation.mutateAsync({
+      mealPlanId,
+      sourceDateRange: dateRange,
+      targetDateRange: {
+        from: addWeeks(dateRange.from!, 1),
+        to: addWeeks(dateRange.to!, 1),
+      },
+    });
+  };
+
+  const handleCopyMealsRandomize = async () => {
+    await copyMealsToDateRangeMutationRandomize.mutateAsync({
+      mealPlanId,
+      sourceDateRange: dateRange,
+      targetDateRange: {
+        from: addWeeks(dateRange.from!, 1),
+        to: addWeeks(dateRange.to!, 1),
+      },
+      randomize: true,
     });
   };
 
@@ -71,18 +99,35 @@ export const MealPlanOverview = ({
       </Card>
       <Card className="flex w-full flex-col gap-2">
         <CardHeader>
-          <CardTitle>Create a grocery list for this week</CardTitle>
+          <CardTitle>Handy actions</CardTitle>
         </CardHeader>
-        <CardContent className="flex">
+        <CardContent className="flex gap-2 flex-col">
           <Button
             variant="outline"
             className="w-full"
             onClick={handleCreateGroceryList}
-            disabled={createGroceryListMutation.isPending || meals.length === 0}
           >
             {createGroceryListMutation.isPending
               ? 'Creating grocery list...'
-              : 'Create grocery list'}
+              : 'Create grocery list for this week'}
+          </Button>
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={handleCopyMeals}
+          >
+            {copyMealsToDateRangeMutation.isPending
+              ? 'Copying meals...'
+              : 'Copy meals to next week'}
+          </Button>
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={handleCopyMealsRandomize}
+          >
+            {copyMealsToDateRangeMutation.isPending
+              ? 'Copying meals...'
+              : 'Copy meals to next week and randomize'}
           </Button>
         </CardContent>
       </Card>

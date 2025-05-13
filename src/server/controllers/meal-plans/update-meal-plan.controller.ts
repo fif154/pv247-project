@@ -26,3 +26,7 @@ export const updateMealPlanController =
       }
     });
   };
+
+export type IUpdateMealPlanController = ReturnType<
+  typeof updateMealPlanController
+>;

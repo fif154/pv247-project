@@ -5,19 +5,15 @@ import {
   CreateMealAdditionalIngredient,
   Meal,
 } from '@/server/entities/models/meal';
-import { IMealAdditionalIngredientsRepository } from '../../repositories/meal-additional-ingredients.repository.interface';
 import { IGroupService } from '../../services/group.service.interface';
 
 export const updateMealUseCase =
-  (
-    mealsRepository: IMealsRepository,
-    groupService: IGroupService,
-    additionalIngredientsRepository: IMealAdditionalIngredientsRepository
-  ) =>
+  (mealsRepository: IMealsRepository, groupService: IGroupService) =>
   async (
     id: string,
     input: Partial<Omit<Meal, 'id' | 'createdBy' | 'createdAt' | 'updatedAt'>>,
     additionalIngredients?: Omit<CreateMealAdditionalIngredient, 'mealId'>[],
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     tx?: any
   ) => {
     const user = (await auth())?.user;
@@ -52,3 +48,5 @@ export const updateMealUseCase =
 
     return { ...meal, additionalIngredients };
   };
+
+export type IUpdateMealUseCase = ReturnType<typeof updateMealUseCase>;

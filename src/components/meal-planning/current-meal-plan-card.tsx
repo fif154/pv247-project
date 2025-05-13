@@ -1,13 +1,13 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import type { MealPlanWithStatus } from '@/server/entities/models/meal-plan';
+import type { MealPlanWithStatusAndMealMacros } from '@/server/entities/models/meal-plan';
 import { format } from 'date-fns';
 import { CalendarDays, EyeIcon, PenIcon } from 'lucide-react';
 import Link from 'next/link';
 import { DeleteMealPlanButton } from './delete-meal-plan-button';
 
 interface CurrentMealPlanCardProps {
-  plan: MealPlanWithStatus;
+  plan: MealPlanWithStatusAndMealMacros;
 }
 
 export function CurrentMealPlanCard({ plan }: CurrentMealPlanCardProps) {

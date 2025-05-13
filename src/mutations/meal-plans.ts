@@ -1,4 +1,5 @@
 import {
+  copyMealsToDateRangeAction,
   createMealPlanAction,
   deleteMealPlanAction,
   updateMealPlanAction,
@@ -7,6 +8,7 @@ import { MealPlanFormValues } from '@/components/forms/meal-plan/meal-plan-form'
 import { showErrorToast, showSuccessToast } from '@/utils/toast';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
+import { DateRange } from 'react-day-picker';
 
 export const useCreateMealPlanMutation = () => {
   const router = useRouter();
@@ -59,6 +61,35 @@ export const useDeleteMealPlanMutation = () => {
     onSuccess: () => {
       showSuccessToast('Meal plan deleted successfully');
       router.push('/auth/meal-plans');
+    },
+  });
+};
+
+export const useCopyMealsToDateRangeMutation = () => {
+  return useMutation({
+    mutationFn: async ({
+      mealPlanId,
+      sourceDateRange,
+      targetDateRange,
+      randomize = false,
+    }: {
+      mealPlanId: string;
+      sourceDateRange: DateRange;
+      targetDateRange: DateRange;
+      randomize?: boolean;
+    }) => {
+      await copyMealsToDateRangeAction(
+        mealPlanId,
+        sourceDateRange,
+        targetDateRange,
+        randomize
+      );
+    },
+    onError: () => {
+      showErrorToast('Failed to copy meals');
+    },
+    onSuccess: () => {
+      showSuccessToast('Meals copied successfully');
     },
   });
 };

@@ -39,11 +39,6 @@ import { IListMealPlansController } from '@/server/controllers/meal-plans/list-m
 import { ICreateMealController } from '@/server/controllers/meals/create-meal.controller';
 import { IListMealsController } from '@/server/controllers/meals/list-meals.controller';
 import { IListUnitsController } from '@/server/controllers/units/list-units.controller';
-import {
-  CreateMealAdditionalIngredient,
-  Meal,
-} from '@/server/entities/models/meal';
-import { MealPlan } from '@/server/entities/models/meal-plan';
 import { IGroupMembersRepository } from '../application/repositories/groupMembers.repository.interface';
 import { IGroupsRepository } from '../application/repositories/groups.repository.interface';
 import { IIngredientCategoriesRepository } from '../application/repositories/ingredient-categories.repository.interface';
@@ -69,7 +64,13 @@ import { IDeleteIngredientUseCase } from '../application/use-cases/ingredients/d
 import { IGetIngredientUseCase } from '../application/use-cases/ingredients/get-ingredient.use-case';
 import { IListIngredientsUseCase } from '../application/use-cases/ingredients/list-ingredients.use-case';
 import { IUpdateIngredientUseCase } from '../application/use-cases/ingredients/update-ingredient.use-case';
+import { ICopyMealsToDateRangeUseCase } from '../application/use-cases/meal-plans/copy-meals-to-date-range.use-case';
+import { IDeleteMealPlanUseCase } from '../application/use-cases/meal-plans/delete-meal-plan.use-case';
+import { IGetMealPlanUseCase } from '../application/use-cases/meal-plans/get-meal-plan.use-case';
+import { IUpdateMealPlanUseCase } from '../application/use-cases/meal-plans/update-meal-plan.use-case';
 import { IListMealTypesUseCase } from '../application/use-cases/meal-types/list-meal-types.use-case';
+import { IDeleteMealUseCase } from '../application/use-cases/meals/delete-meal.use-case';
+import { IUpdateMealUseCase } from '../application/use-cases/meals/update-meal.use-case';
 import { ICreateRecipeUseCase } from '../application/use-cases/recipes/create-recipe.use-case';
 import { IDeleteRecipeUseCase } from '../application/use-cases/recipes/delete-recipe.use-case';
 import { IGetRecipeUseCase } from '../application/use-cases/recipes/get-recipe.use-case';
@@ -94,7 +95,13 @@ import { IDeleteIngredientController } from '../controllers/ingredients/delete-i
 import { IGetIngredientController } from '../controllers/ingredients/get-ingredient.controller';
 import { IListIngredientsController } from '../controllers/ingredients/list-ingredients.controller';
 import { IUpdateIngredientController } from '../controllers/ingredients/update-ingredient.controller';
+import { ICopyMealsToDateRangeController } from '../controllers/meal-plans/copy-meals-to-date-range.controller';
+import { IDeleteMealPlanController } from '../controllers/meal-plans/delete-meal-plan.controller';
+import { IGetMealPlanController } from '../controllers/meal-plans/get-meal-plan.controller';
+import { IUpdateMealPlanController } from '../controllers/meal-plans/update-meal-plan.controller';
 import { IListMealsTypesController } from '../controllers/meal-types/list-meal-types.controller';
+import { IDeleteMealController } from '../controllers/meals/delete-meal.controller';
+import { IUpdateMealController } from '../controllers/meals/update-meal.controller';
 import { ICreateRecipeController } from '../controllers/recipes/create-recipe.controller';
 import { IDeleteRecipeController } from '../controllers/recipes/delete-recipe.controller';
 import { IGetRecipeController } from '../controllers/recipes/get-recipe.controller';
@@ -260,6 +267,8 @@ export const DI_SYMBOLS = {
   IUpdateMealPlanController: Symbol('IUpdateMealPlanController'),
   IDeleteMealPlanUseCase: Symbol('IDeleteMealPlanUseCase'),
   IDeleteMealPlanController: Symbol('IDeleteMealPlanController'),
+  ICopyMealsToDateRangeUseCase: Symbol('ICopyMealsToDateRangeUseCase'),
+  ICopyMealsToDateRangeController: Symbol('ICopyMealsToDateRangeController'),
 };
 
 export type DI_RETURN_TYPES = {
@@ -387,41 +396,21 @@ export type DI_RETURN_TYPES = {
   IAddIngredientToMealController: IAddIngredientToMealController;
   IRemoveIngredientFromMealController: IRemoveIngredientFromMealController;
 
-  // New use cases
-  IUpdateMealUseCase: (
-    id: string,
-    input: Partial<Omit<Meal, 'id' | 'createdBy' | 'createdAt' | 'updatedAt'>>,
-    additionalIngredients?: Omit<CreateMealAdditionalIngredient, 'mealId'>[],
-    tx?: unknown
-  ) => Promise<
-    Meal & { additionalIngredients?: CreateMealAdditionalIngredient[] }
-  >;
-  IUpdateMealController: (
-    id: string,
-    input: Partial<Omit<Meal, 'id' | 'createdBy' | 'createdAt' | 'updatedAt'>>,
-    additionalIngredients?: Omit<CreateMealAdditionalIngredient, 'mealId'>[]
-  ) => Promise<
-    Meal & { additionalIngredients?: CreateMealAdditionalIngredient[] }
-  >;
-  IDeleteMealUseCase: (id: string, tx?: unknown) => Promise<void>;
-  IDeleteMealController: (id: string) => Promise<void>;
+  IUpdateMealUseCase: IUpdateMealUseCase;
+  IUpdateMealController: IUpdateMealController;
+
+  IDeleteMealUseCase: IDeleteMealUseCase;
+  IDeleteMealController: IDeleteMealController;
+
+  IGetMealPlanUseCase: IGetMealPlanUseCase;
+  IGetMealPlanController: IGetMealPlanController;
+  IUpdateMealPlanUseCase: IUpdateMealPlanUseCase;
+  IUpdateMealPlanController: IUpdateMealPlanController;
+
+  IDeleteMealPlanUseCase: IDeleteMealPlanUseCase;
+  IDeleteMealPlanController: IDeleteMealPlanController;
 
   // New use cases
-  IGetMealPlanUseCase: (id: string) => Promise<MealPlan>;
-  IGetMealPlanController: (id: string) => Promise<MealPlan>;
-  IUpdateMealPlanUseCase: (
-    id: string,
-    input: Partial<
-      Omit<MealPlan, 'id' | 'createdBy' | 'createdAt' | 'updatedAt'>
-    >,
-    tx?: unknown
-  ) => Promise<MealPlan>;
-  IUpdateMealPlanController: (
-    id: string,
-    input: Partial<
-      Omit<MealPlan, 'id' | 'createdBy' | 'createdAt' | 'updatedAt'>
-    >
-  ) => Promise<MealPlan>;
-  IDeleteMealPlanUseCase: (id: string, tx?: unknown) => Promise<void>;
-  IDeleteMealPlanController: (id: string) => Promise<void>;
+  ICopyMealsToDateRangeUseCase: ICopyMealsToDateRangeUseCase;
+  ICopyMealsToDateRangeController: ICopyMealsToDateRangeController;
 };
