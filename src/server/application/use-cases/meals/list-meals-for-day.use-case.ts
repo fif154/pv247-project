@@ -5,9 +5,7 @@ import { IGroupService } from '../../services/group.service.interface';
 
 export const listMealsForDayUseCase =
   (mealsRepository: IMealsRepository, groupService: IGroupService) =>
-  async (
-    data: { date: Date },
-  ) => {
+  async (data: { date: Date }) => {
     const user = (await auth())?.user;
     if (!user) {
       throw new NotFoundError('User not found');

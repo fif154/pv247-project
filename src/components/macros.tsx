@@ -40,10 +40,10 @@ export const macroBgColors = {
 export const Macros = async (props: Props) => {
   const session = await auth();
   const userId = session?.user.id;
-    if (!userId) {
+  if (!userId) {
     throw new Error('User not found, this should not happen');
   }
-const user = await getUserAction(userId);
+  const user = await getUserAction(userId);
 
   const macroItems: MacroItemType[] = [
     {

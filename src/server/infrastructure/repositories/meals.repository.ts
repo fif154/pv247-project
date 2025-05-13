@@ -139,7 +139,11 @@ export class MealsRepository implements IMealsRepository {
 
   async listMealsForDay(groupId: string, plannedDate: Date): Promise<Meal[]> {
     return db.query.meals.findMany({
-      where: and(eq(meals.groupId, groupId), isNull(meals.deletedAt), eq(meals.plannedDate, plannedDate)),
+      where: and(
+        eq(meals.groupId, groupId),
+        isNull(meals.deletedAt),
+        eq(meals.plannedDate, plannedDate)
+      ),
       with: {
         additionalIngredients: {
           with: {
@@ -161,5 +165,4 @@ export class MealsRepository implements IMealsRepository {
       },
     });
   }
-
 }

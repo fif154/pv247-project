@@ -64,16 +64,18 @@ export function createMealsModule() {
     .bind(DI_SYMBOLS.IListMealsController)
     .toHigherOrderFunction(listMealsController, [DI_SYMBOLS.IListMealsUseCase]);
 
-      mealsModule
+  mealsModule
     .bind(DI_SYMBOLS.IListMealsForDayUseCase)
     .toHigherOrderFunction(listMealsForDayUseCase, [
       DI_SYMBOLS.IMealsRepository,
       DI_SYMBOLS.IGroupService,
     ]);
 
-      mealsModule
+  mealsModule
     .bind(DI_SYMBOLS.IListMealsForDayController)
-    .toHigherOrderFunction(listMealsForDayController, [DI_SYMBOLS.IListMealsForDayUseCase]);
+    .toHigherOrderFunction(listMealsForDayController, [
+      DI_SYMBOLS.IListMealsForDayUseCase,
+    ]);
   mealsModule
     .bind(DI_SYMBOLS.IUpdateMealController)
     .toHigherOrderFunction(updateMealController, [

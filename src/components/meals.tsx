@@ -5,7 +5,7 @@ type MealsProps = {
   date: Date;
 };
 
-export const Meals = async ({date}: MealsProps) => {
+export const Meals = async ({ date }: MealsProps) => {
   const meals = await listMealsForDayAction(date);
 
   return (

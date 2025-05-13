@@ -21,15 +21,15 @@ export const useCreateDialog = () => {
           <DialogDescription>What would you like to create?</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-            <Button
+          <Button
             variant="outline"
             onClick={() => {
               setOpen(false);
               window.location.href = '/auth/recipes/new';
             }}
-            >
+          >
             New Recipe
-            </Button>
+          </Button>
           <Button
             variant="outline"
             onClick={() => {

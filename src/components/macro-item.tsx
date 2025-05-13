@@ -11,7 +11,10 @@ export const MacroItem = (props: MacroItemType) => {
           {props.value.toFixed()}
         </span>
         <div>
-          <span className='text-gray-400'> / {props.userSetting} {props.unit}</span>
+          <span className="text-gray-400">
+            {' '}
+            / {props.userSetting} {props.unit}
+          </span>
         </div>
       </div>
       <PercentageBar percentage={percentage} bgColor={props.bgColor} />

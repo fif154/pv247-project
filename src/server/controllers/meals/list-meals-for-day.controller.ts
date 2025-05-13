@@ -6,9 +6,12 @@ const listMealsForDayInputSchema = z.object({
 });
 
 export const listMealsForDayController =
-  (listMealsForDayUseCase: IListMealsForDayUseCase) => async (input: unknown) => {
+  (listMealsForDayUseCase: IListMealsForDayUseCase) =>
+  async (input: unknown) => {
     const data = listMealsForDayInputSchema.parse(input);
     return listMealsForDayUseCase(data);
   };
 
-export type IListMealsForDayController = ReturnType<typeof listMealsForDayController>;
+export type IListMealsForDayController = ReturnType<
+  typeof listMealsForDayController
+>;
