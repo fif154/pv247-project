@@ -24,8 +24,10 @@ export function RecipeCard({ recipe }: { recipe: Recipe }) {
             </h3>
           </div>
         )}
-        <CardHeader className={recipe.image ? "pt-3 pb-2" : "pb-2"}>
-          {!recipe.image && <CardTitle className="text-lg">{recipe.name}</CardTitle>}
+        <CardHeader className={recipe.image ? 'pt-3 pb-2' : 'pb-2'}>
+          {!recipe.image && (
+            <CardTitle className="text-lg">{recipe.name}</CardTitle>
+          )}
           <div className="flex items-center text-xs text-muted-foreground">
             <span>Servings: {recipe.servings}</span>
           </div>

@@ -10,7 +10,11 @@ import { DeleteRecipeButton } from '@/components/recipes/delete-recipe-button';
 import { canEditRecipe } from '@/server/application/policy/recipe';
 import { listUnits } from '@/app/auth/units/actions';
 
-const RecipeDetailPage = async ({ params }: { params: Promise<{ id: string }> }) => {
+const RecipeDetailPage = async ({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) => {
   const { id } = await params;
   const recipe = await getRecipe(id);
   const session = await auth();

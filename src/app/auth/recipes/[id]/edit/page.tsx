@@ -5,9 +5,13 @@ import { notFound, redirect } from 'next/navigation';
 import { canEditRecipe } from '@/server/application/policy/recipe';
 import { listUnits } from '@/app/auth/units/actions';
 
-export default async function EditRecipePage({ params }: { params: Promise<{ id: string }> }) {
+export default async function EditRecipePage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
-  
+
   const [recipe, session, units] = await Promise.all([
     getRecipe(id),
     auth(),

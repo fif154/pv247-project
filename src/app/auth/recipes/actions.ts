@@ -77,6 +77,8 @@ type ListRecipesOptions = {
 };
 
 export async function listFilteredRecipes(options: ListRecipesOptions = {}) {
-  const listFilteredRecipesController = getInjection('IListFilteredRecipesController');
+  const listFilteredRecipesController = getInjection(
+    'IListFilteredRecipesController'
+  );
   return await listFilteredRecipesController(options);
 }

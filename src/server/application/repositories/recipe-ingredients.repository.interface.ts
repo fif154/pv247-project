@@ -1,7 +1,7 @@
 import { Transaction } from '@/db';
-import { 
-  CreateRecipeIngredient, 
-  RecipeIngredient 
+import {
+  CreateRecipeIngredient,
+  RecipeIngredient,
 } from '@/server/entities/models/recipe-ingredient';
 
 export interface IRecipeIngredientsRepository {
@@ -9,12 +9,12 @@ export interface IRecipeIngredientsRepository {
     recipeIngredients: CreateRecipeIngredient[],
     tx?: Transaction
   ): Promise<RecipeIngredient[]>;
-  
+
   getRecipeIngredientsByRecipeId(
     recipeId: string,
     tx?: Transaction
   ): Promise<RecipeIngredient[]>;
-  
+
   deleteRecipeIngredientsByRecipeId(
     recipeId: string,
     tx?: Transaction

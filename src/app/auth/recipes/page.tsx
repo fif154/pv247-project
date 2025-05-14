@@ -7,9 +7,9 @@ import { RecipeControls } from '@/components/recipes/recipe-controls';
 import { RecipeList } from '@/components/recipes/recipe-list';
 
 export default async function RecipesPage({
-  searchParams
+  searchParams,
 }: {
-  searchParams: Promise<{ search?: string; sort?: string; view?: string }>
+  searchParams: Promise<{ search?: string; sort?: string; view?: string }>;
 }) {
   const resolvedSearchParams = await searchParams;
 
@@ -17,7 +17,7 @@ export default async function RecipesPage({
     search: resolvedSearchParams.search,
     sort: resolvedSearchParams.sort as SortType,
   });
-  
+
   return (
     <div className="flex flex-col min-h-0 gap-6">
       <div className="flex flex-row justify-between items-center">
