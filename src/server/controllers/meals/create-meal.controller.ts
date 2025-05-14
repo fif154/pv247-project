@@ -11,15 +11,21 @@ export const createMealController =
     transactionManagerService: ITransactionManagerService
   ) =>
   async (
-    input: CreateMeal,
-    additionalIngredients?: CreateMealAdditionalIngredient[]
+    input: Omit<CreateMeal, 'userId' | 'groupId'>,
+    additionalIngredients?: Omit<CreateMealAdditionalIngredient, 'mealId'>[],
+    mealPlanId?: string
   ) => {
     return transactionManagerService.startTransaction(async (tx) => {
       try {
-        return await createMealUseCase(input, additionalIngredients, tx);
+        return await createMealUseCase(
+          input,
+          additionalIngredients,
+          mealPlanId,
+          tx
+        );
       } catch (error) {
+        console.error('Error creating meal:', error);
         tx.rollback();
-        throw error;
       }
     });
   };

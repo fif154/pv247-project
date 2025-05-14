@@ -1,6 +1,9 @@
 import { IGroceryListItemsRepository } from '@/server/application/repositories/grocery-list-items.repository.interface';
 import { IGroceryListsRepository } from '@/server/application/repositories/grocery-lists.repository.interface';
+import { IMealAdditionalIngredientsRepository } from '@/server/application/repositories/meal-additional-ingredients.repository.interface';
+import { IMealPlanMealsRepository } from '@/server/application/repositories/meal-plan-meals.repository.interface';
 import { IMealPlansRepository } from '@/server/application/repositories/meal-plans.repository.interface';
+import { IMealTypesRepository } from '@/server/application/repositories/meal-types.repository.interface';
 import { IMealsRepository } from '@/server/application/repositories/meals.repository.interface';
 import { IUnitsRepository } from '@/server/application/repositories/units.repository.interface';
 import { IAddGroceryListItemsUseCase } from '@/server/application/use-cases/grocery-lists/add-grocery-list-items.use-case';
@@ -11,6 +14,9 @@ import { IListGroceryListsUseCase } from '@/server/application/use-cases/grocery
 import { IMarkAllItemsBoughtUseCase } from '@/server/application/use-cases/grocery-lists/mark-all-items-bought.use-case';
 import { IUpdateGroceryListItemUseCase } from '@/server/application/use-cases/grocery-lists/update-grocery-list-item.use-case';
 import { IUpdateGroceryListUseCase } from '@/server/application/use-cases/grocery-lists/update-grocery-list.use-case';
+import { IRemoveIngredientFromMealUseCase } from '@/server/application/use-cases/meal-additional-ingredients/remove-ingredient-from-meal.use-case';
+import { IAddMealToPlanUseCase } from '@/server/application/use-cases/meal-plan-meals/add-meal-to-plan.use-case';
+import { IRemoveMealFromPlanUseCase } from '@/server/application/use-cases/meal-plan-meals/remove-meal-from-plan.use-case';
 import { ICreateMealPlanUseCase } from '@/server/application/use-cases/meal-plans/create-meal-plan.use-case';
 import { IListMealPlansUseCase } from '@/server/application/use-cases/meal-plans/list-meal-plans.use-case';
 import { ICreateMealUseCase } from '@/server/application/use-cases/meals/create-meal.use-case';
@@ -23,6 +29,8 @@ import { IGetGroceryListController } from '@/server/controllers/grocery-lists/ge
 import { IListGroceryListsController } from '@/server/controllers/grocery-lists/list-grocery-lists.controller';
 import { IMarkAllItemsBoughtController } from '@/server/controllers/grocery-lists/mark-all-items-bought.controller';
 import { IUpdateGroceryListController } from '@/server/controllers/grocery-lists/update-grocery-list.controller';
+import { IAddMealToPlanController } from '@/server/controllers/meal-plan-meals/add-meal-to-plan.controller';
+import { IRemoveMealFromPlanController } from '@/server/controllers/meal-plan-meals/remove-meal-from-plan.controller';
 import { ICreateMealPlanController } from '@/server/controllers/meal-plans/create-meal-plan.controller';
 import { IListMealPlansController } from '@/server/controllers/meal-plans/list-meal-plans.controller';
 import { ICreateMealController } from '@/server/controllers/meals/create-meal.controller';
@@ -37,6 +45,7 @@ import { IUsersRepository } from '../application/repositories/users.repository.i
 import { IAuthenticationService } from '../application/services/authentication.service.interface';
 import { IGroceryListService } from '../application/services/grocery-list.service.interface';
 import { IGroupService } from '../application/services/group.service.interface';
+import { IIngredientService } from '../application/services/ingredient.service.interface';
 import { ITransactionManagerService } from '../application/services/transaction-manager.service.interface';
 import { IRegisterUseCase } from '../application/use-cases/auth/register.use-case';
 import { ISignInUseCase } from '../application/use-cases/auth/sign-in.use-case';
@@ -53,11 +62,19 @@ import { IDeleteIngredientUseCase } from '../application/use-cases/ingredients/d
 import { IGetIngredientUseCase } from '../application/use-cases/ingredients/get-ingredient.use-case';
 import { IListIngredientsUseCase } from '../application/use-cases/ingredients/list-ingredients.use-case';
 import { IUpdateIngredientUseCase } from '../application/use-cases/ingredients/update-ingredient.use-case';
+import { ICopyMealsToDateRangeUseCase } from '../application/use-cases/meal-plans/copy-meals-to-date-range.use-case';
+import { IDeleteMealPlanUseCase } from '../application/use-cases/meal-plans/delete-meal-plan.use-case';
+import { IGetMealPlanUseCase } from '../application/use-cases/meal-plans/get-meal-plan.use-case';
+import { IUpdateMealPlanUseCase } from '../application/use-cases/meal-plans/update-meal-plan.use-case';
+import { IListMealTypesUseCase } from '../application/use-cases/meal-types/list-meal-types.use-case';
+import { IDeleteMealUseCase } from '../application/use-cases/meals/delete-meal.use-case';
+import { IUpdateMealUseCase } from '../application/use-cases/meals/update-meal.use-case';
 import { ICreateRecipeUseCase } from '../application/use-cases/recipes/create-recipe.use-case';
 import { IDeleteRecipeUseCase } from '../application/use-cases/recipes/delete-recipe.use-case';
 import { IGetRecipeUseCase } from '../application/use-cases/recipes/get-recipe.use-case';
 import { IListRecipesUseCase } from '../application/use-cases/recipes/list-recipes.use-case';
 import { IUpdateRecipeUseCase } from '../application/use-cases/recipes/update-recipe.use-case';
+import { IEditUserUseCase } from '../application/use-cases/users/edit-user.use-case';
 import { ISearchUsersByEmailUseCase } from '../application/use-cases/users/search-users.use-case';
 import { ISetCurrentGroupUseCase } from '../application/use-cases/users/set-current-group.use-case';
 import { IRegisterController } from '../controllers/auth/register.controller';
@@ -69,19 +86,25 @@ import { IGetGroupWithMembersController } from '../controllers/groups/get-group-
 import { IGetUserGroupsWithMembersController } from '../controllers/groups/get-user-groups-with-members.controller';
 import { IRemoveGroupController } from '../controllers/groups/remove-group.controller';
 import { IRemoveMemberFromGroupController } from '../controllers/groups/remove-member-from-group.controller';
+import { ICreateCategoryController } from '../controllers/ingredient-categories/create-category.controller';
+import { IListCategoriesController } from '../controllers/ingredient-categories/list-categories.controller';
 import { ICreateIngredientController } from '../controllers/ingredients/create-ingredient.controller';
 import { IDeleteIngredientController } from '../controllers/ingredients/delete-ingredient.controller';
 import { IGetIngredientController } from '../controllers/ingredients/get-ingredient.controller';
 import { IListIngredientsController } from '../controllers/ingredients/list-ingredients.controller';
 import { IUpdateIngredientController } from '../controllers/ingredients/update-ingredient.controller';
+import { ICopyMealsToDateRangeController } from '../controllers/meal-plans/copy-meals-to-date-range.controller';
+import { IDeleteMealPlanController } from '../controllers/meal-plans/delete-meal-plan.controller';
+import { IGetMealPlanController } from '../controllers/meal-plans/get-meal-plan.controller';
+import { IUpdateMealPlanController } from '../controllers/meal-plans/update-meal-plan.controller';
+import { IListMealsTypesController } from '../controllers/meal-types/list-meal-types.controller';
+import { IDeleteMealController } from '../controllers/meals/delete-meal.controller';
+import { IUpdateMealController } from '../controllers/meals/update-meal.controller';
 import { ICreateRecipeController } from '../controllers/recipes/create-recipe.controller';
 import { IDeleteRecipeController } from '../controllers/recipes/delete-recipe.controller';
 import { IGetRecipeController } from '../controllers/recipes/get-recipe.controller';
 import { IListRecipesController } from '../controllers/recipes/list-recipes.controller';
 import { IUpdateRecipeController } from '../controllers/recipes/update-recipe.controller';
-import { ICreateCategoryController } from '../controllers/ingredient-categories/create-category.controller';
-import { IListCategoriesController } from '../controllers/ingredient-categories/list-categories.controller';
-import { IEditUserUseCase } from '../application/use-cases/users/edit-user.use-case';
 import { IEditUserController } from '../controllers/users/edit-user.controller';
 import { ISearchUsersByEmailController } from '../controllers/users/search-users.controller';
 import { ISetCurrentGroupController } from '../infrastructure/controllers/users/set-current-group.controller';
@@ -96,6 +119,7 @@ export const DI_SYMBOLS = {
   ITransactionManagerService: Symbol.for('ITransactionManagerService'),
   IGroceryListService: Symbol.for('IGroceryListService'),
   IGroupService: Symbol.for('IGroupService'),
+  IIngredientService: Symbol.for('IIngredientService'),
 
   // Repositories
   IUsersRepository: Symbol.for('IUsersRepository'),
@@ -213,6 +237,45 @@ export const DI_SYMBOLS = {
   IListMealPlansUseCase: Symbol.for('IListMealPlansUseCase'),
   ICreateMealPlanController: Symbol.for('ICreateMealPlanController'),
   IListMealPlansController: Symbol.for('IListMealPlansController'),
+
+  // Meal Types
+  IMealTypesRepository: Symbol.for('IMealTypesRepository'),
+  IListMealTypesUseCase: Symbol.for('IListMealTypesUseCase'),
+  IListMealTypesController: Symbol.for('IListMealTypesController'),
+
+  // Meal Plan Meals
+  IMealPlanMealsRepository: Symbol.for('IMealPlanMealsRepository'),
+  IAddMealToPlanUseCase: Symbol.for('IAddMealToPlanUseCase'),
+  IRemoveMealFromPlanUseCase: Symbol.for('IRemoveMealFromPlanUseCase'),
+  IAddMealToPlanController: Symbol.for('IAddMealToPlanController'),
+  IRemoveMealFromPlanController: Symbol.for('IRemoveMealFromPlanController'),
+
+  // Meal Additional Ingredients
+  IMealAdditionalIngredientsRepository: Symbol.for(
+    'IMealAdditionalIngredientsRepository'
+  ),
+  IAddIngredientToMealUseCase: Symbol.for('IAddIngredientToMealUseCase'),
+  IRemoveIngredientFromMealUseCase: Symbol.for(
+    'IRemoveIngredientFromMealUseCase'
+  ),
+  IAddIngredientToMealController: Symbol.for('IAddIngredientToMealController'),
+  IRemoveIngredientFromMealController: Symbol.for(
+    'IRemoveIngredientFromMealController'
+  ),
+  IUpdateMealUseCase: Symbol('IUpdateMealUseCase'),
+  IUpdateMealController: Symbol('IUpdateMealController'),
+  IDeleteMealUseCase: Symbol('IDeleteMealUseCase'),
+  IDeleteMealController: Symbol('IDeleteMealController'),
+
+  // New use cases
+  IGetMealPlanUseCase: Symbol('IGetMealPlanUseCase'),
+  IGetMealPlanController: Symbol('IGetMealPlanController'),
+  IUpdateMealPlanUseCase: Symbol('IUpdateMealPlanUseCase'),
+  IUpdateMealPlanController: Symbol('IUpdateMealPlanController'),
+  IDeleteMealPlanUseCase: Symbol('IDeleteMealPlanUseCase'),
+  IDeleteMealPlanController: Symbol('IDeleteMealPlanController'),
+  ICopyMealsToDateRangeUseCase: Symbol('ICopyMealsToDateRangeUseCase'),
+  ICopyMealsToDateRangeController: Symbol('ICopyMealsToDateRangeController'),
 };
 
 export type DI_RETURN_TYPES = {
@@ -324,4 +387,40 @@ export type DI_RETURN_TYPES = {
   IListMealPlansUseCase: IListMealPlansUseCase;
   ICreateMealPlanController: ICreateMealPlanController;
   IListMealPlansController: IListMealPlansController;
+
+  // Meal Types
+  IMealTypesRepository: IMealTypesRepository;
+  IListMealTypesUseCase: IListMealTypesUseCase;
+  IListMealTypesController: IListMealsTypesController;
+
+  // Meal Plan Meals
+  IMealPlanMealsRepository: IMealPlanMealsRepository;
+  IAddMealToPlanUseCase: IAddMealToPlanUseCase;
+  IRemoveMealFromPlanUseCase: IRemoveMealFromPlanUseCase;
+  IAddMealToPlanController: IAddMealToPlanController;
+  IRemoveMealFromPlanController: IRemoveMealFromPlanController;
+
+  // Meal Additional Ingredients
+  IMealAdditionalIngredientsRepository: IMealAdditionalIngredientsRepository;
+  IRemoveIngredientFromMealUseCase: IRemoveIngredientFromMealUseCase;
+
+  IUpdateMealUseCase: IUpdateMealUseCase;
+  IUpdateMealController: IUpdateMealController;
+
+  IDeleteMealUseCase: IDeleteMealUseCase;
+  IDeleteMealController: IDeleteMealController;
+
+  IGetMealPlanUseCase: IGetMealPlanUseCase;
+  IGetMealPlanController: IGetMealPlanController;
+  IUpdateMealPlanUseCase: IUpdateMealPlanUseCase;
+  IUpdateMealPlanController: IUpdateMealPlanController;
+
+  IDeleteMealPlanUseCase: IDeleteMealPlanUseCase;
+  IDeleteMealPlanController: IDeleteMealPlanController;
+
+  // New use cases
+  ICopyMealsToDateRangeUseCase: ICopyMealsToDateRangeUseCase;
+  ICopyMealsToDateRangeController: ICopyMealsToDateRangeController;
+
+  IIngredientService: IIngredientService;
 };

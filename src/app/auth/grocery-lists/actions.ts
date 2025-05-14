@@ -9,10 +9,14 @@ import { NotFoundError } from '@/server/entities/errors/common';
 import { GroceryListItem } from '@/server/entities/models/grocery-list-item';
 import { revalidatePath } from 'next/cache';
 import { notFound } from 'next/navigation';
+import { DateRange } from 'react-day-picker';
 
-export async function createGroceryListAction(data: GroceryListFormValues) {
+export async function createGroceryListAction(
+  data: GroceryListFormValues,
+  mealDateRange?: DateRange
+) {
   const groceryListController = getInjection('ICreateGroceryListController');
-  const res = await groceryListController(data);
+  const res = await groceryListController(data, mealDateRange);
   revalidatePath('/grocery-lists');
   return res;
 }

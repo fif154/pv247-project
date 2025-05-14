@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { MacroItem } from './macro-item';
 import { Card, CardContent } from './ui/card';
 
@@ -6,6 +7,7 @@ type Props = {
   protein: number;
   fat: number;
   calories: number;
+  intakeMultiplier?: number;
 };
 
 export type MacroItemType = {
@@ -32,7 +34,7 @@ export const macroBgColors = {
   fat: 'bg-macro-fat',
 };
 
-export const Macros = (props: Props) => {
+export const Macros = (props: Props & { className?: string }) => {
   const macroItems: MacroItemType[] = [
     {
       label: 'Calories',
@@ -42,7 +44,7 @@ export const Macros = (props: Props) => {
       textColor: macroTextColors.calories,
       unit: 'kcal',
       // TODO: Add a percentage calculation based on the daily recommended intake
-      percentage: props.calories / 2000,
+      percentage: props.calories / (2000 * (props.intakeMultiplier ?? 1)),
     },
     {
       label: 'Carbs',
@@ -51,7 +53,7 @@ export const Macros = (props: Props) => {
       bgColor: macroBgColors.carbs,
       textColor: macroTextColors.carbs,
       unit: 'g',
-      percentage: props.carbs / 200,
+      percentage: props.carbs / (200 * (props.intakeMultiplier ?? 1)),
     },
     {
       label: 'Protein',
@@ -60,7 +62,7 @@ export const Macros = (props: Props) => {
       bgColor: macroBgColors.protein,
       textColor: macroTextColors.protein,
       unit: 'g',
-      percentage: props.protein / 200,
+      percentage: props.protein / (200 * (props.intakeMultiplier ?? 1)),
     },
     {
       label: 'Fat',
@@ -69,11 +71,11 @@ export const Macros = (props: Props) => {
       bgColor: macroBgColors.fat,
       textColor: macroTextColors.fat,
       unit: 'g',
-      percentage: props.fat / 70,
+      percentage: props.fat / (70 * (props.intakeMultiplier ?? 1)),
     },
   ];
   return (
-    <Card className="w-full">
+    <Card className={cn('w-full', props.className)}>
       <CardContent className="px-4 py-2">
         <div className="grid grid-cols-2 gap-6 sm:grid-cols-4">
           {macroItems.map((item) => (

@@ -7,9 +7,12 @@ import { IRecipesRepository } from '@/server/application/repositories/recipes.re
 import { NotFoundError } from '@/server/entities/errors/common';
 import { CreateGroceryListItem } from '@/server/entities/models/grocery-list-item';
 import { Recipe } from '@/server/entities/models/recipe';
+import { isDateInRange } from '@/utils/date';
+import { DateRange } from 'react-day-picker';
 import { IMealPlansRepository } from '../../repositories/meal-plans.repository.interface';
 import { IGroceryListService } from '../../services/grocery-list.service.interface';
 import { IGroupService } from '../../services/group.service.interface';
+import { IIngredientService } from '../../services/ingredient.service.interface';
 
 export const createGroceryListUseCase =
   (
@@ -19,13 +22,18 @@ export const createGroceryListUseCase =
     ingredientsRepository: IIngredientsRepository,
     mealPlansRepository: IMealPlansRepository,
     groceryListService: IGroceryListService,
+    ingredientService: IIngredientService,
     groupService: IGroupService
   ) =>
-  // TODO: typing the transaction as any is not great. However, in the
-  // clean architecture template, they are doing it just like this.
-  // If we have more time, we should try to type it properly.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async (input: GroceryListFormValues, tx?: any) => {
+  async (
+    input: GroceryListFormValues,
+    mealDateRange?: DateRange,
+    // TODO: typing the transaction as any is not great. However, in the
+    // clean architecture template, they are doing it just like this.
+    // If we have more time, we should try to type it properly.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    tx?: any
+  ) => {
     const user = (await auth())?.user;
     if (!user) {
       throw new NotFoundError('User not found');
@@ -63,10 +71,18 @@ export const createGroceryListUseCase =
         tx
       );
 
-      const allRecipesFromMealPlans = mealPlans.flatMap(
-        (mealPlan) =>
-          mealPlan.meals?.map((m) => m.meal?.recipe).filter(Boolean) || []
+      const allMeals = mealPlans.flatMap(
+        (mealPlan) => mealPlan.meals?.map((m) => m.meal).filter(Boolean) || []
       );
+
+      const filteredMeals = mealDateRange
+        ? allMeals.filter((meal) =>
+            isDateInRange(meal?.plannedDate, mealDateRange)
+          )
+        : allMeals;
+
+      const allRecipesFromMealPlans =
+        filteredMeals.map((m) => m!.recipe).filter(Boolean) || [];
 
       // This can't be null or undefined because we are filtering these values out
       allRecipes.push(...(allRecipesFromMealPlans as Recipe[]));
@@ -114,8 +130,7 @@ export const createGroceryListUseCase =
       allIngredients.push(...items);
     }
 
-    const combinedIngredients =
-      groceryListService.combineIngredients(allIngredients);
+    const combinedIngredients = ingredientService.combine(allIngredients);
 
     try {
       await groceryListItemsRepository.createGroceryListItems(

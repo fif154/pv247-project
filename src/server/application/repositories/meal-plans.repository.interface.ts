@@ -1,9 +1,14 @@
 import { Transaction } from '@/db';
 import { CreateMealPlan, MealPlan } from '@/server/entities/models/meal-plan';
 
+export type RepositoryCreateMealPlan = CreateMealPlan & {
+  createdBy: string;
+  groupId: string;
+};
+
 export interface IMealPlansRepository {
   createMealPlan(
-    input: CreateMealPlan,
+    input: RepositoryCreateMealPlan,
     mealIds: string[],
     tx?: Transaction
   ): Promise<MealPlan>;

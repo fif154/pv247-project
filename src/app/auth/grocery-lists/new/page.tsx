@@ -1,4 +1,4 @@
-import { listMealPlansAction } from '@/app/meal-plans/actions';
+import { listMealPlansAction } from '@/app/auth/meal-plans/actions';
 import { GroceryListCreateForm } from '@/components/forms/grocery-list/grocery-list-create';
 import { PageHeader } from '@/components/page-header';
 import { listRecipes } from '../../recipes/actions';
