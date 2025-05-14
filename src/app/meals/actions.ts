@@ -34,10 +34,16 @@ export async function listMealsAction(
 export const updateMealAction = async (
   id: string,
   input: Partial<Omit<Meal, 'id' | 'createdBy' | 'createdAt' | 'updatedAt'>>,
-  additionalIngredients?: Omit<CreateMealAdditionalIngredient, 'mealId'>[]
+  additionalIngredients?: Omit<CreateMealAdditionalIngredient, 'mealId'>[],
+  mealPlanId?: string,
+  dnd = false
 ) => {
   const controller = getInjection('IUpdateMealController');
-  return controller(id, input, additionalIngredients);
+  const res = await controller(id, input, additionalIngredients, dnd);
+  revalidatePath('/auth/meals');
+  revalidatePath(`/auth/meal-plans/${mealPlanId}`);
+
+  return res;
 };
 
 export const deleteMealAction = async (id: string): Promise<void> => {
