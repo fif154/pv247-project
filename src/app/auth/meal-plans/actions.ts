@@ -11,7 +11,7 @@ export async function createMealPlanAction(
 ) {
   const mealPlanController = getInjection('ICreateMealPlanController');
   await mealPlanController(data, mealIds);
-  revalidatePath('/meal-plans');
+  revalidatePath('/auth/meal-plans');
   return { success: true };
 }
 
