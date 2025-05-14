@@ -1,14 +1,14 @@
 import { ITransactionManagerService } from '@/server/application/services/transaction-manager.service.interface';
 
-export const deleteMealController =
+export const deleteMealPlanController =
   (
-    deleteMealUseCase: (id: string, tx?: unknown) => Promise<void>,
+    deleteMealPlanUseCase: (id: string) => Promise<void>,
     transactionManager: ITransactionManagerService
   ) =>
   async (id: string) => {
     return transactionManager.startTransaction(async (tx) => {
       try {
-        await deleteMealUseCase(id, tx);
+        await deleteMealPlanUseCase(id);
       } catch (error) {
         tx.rollback();
         throw error;
@@ -16,4 +16,6 @@ export const deleteMealController =
     });
   };
 
-export type IDeleteMealController = ReturnType<typeof deleteMealController>;
+export type IDeleteMealPlanController = ReturnType<
+  typeof deleteMealPlanController
+>;

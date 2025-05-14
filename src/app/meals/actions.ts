@@ -35,9 +35,7 @@ export const updateMealAction = async (
   id: string,
   input: Partial<Omit<Meal, 'id' | 'createdBy' | 'createdAt' | 'updatedAt'>>,
   additionalIngredients?: Omit<CreateMealAdditionalIngredient, 'mealId'>[]
-): Promise<
-  Meal & { additionalIngredients?: CreateMealAdditionalIngredient[] }
-> => {
+) => {
   const controller = getInjection('IUpdateMealController');
   return controller(id, input, additionalIngredients);
 };

@@ -21,6 +21,8 @@ interface SelectFieldProps<T extends Record<string, unknown>> {
   className?: string;
   labelClassName?: string;
   modal?: boolean;
+  onSelect?: (value: SelectOption) => void;
+  disabled?: boolean;
 }
 
 export function SelectField<T extends Record<string, unknown>>({
@@ -35,6 +37,8 @@ export function SelectField<T extends Record<string, unknown>>({
   className,
   labelClassName,
   modal = false,
+  disabled,
+  onSelect,
 }: SelectFieldProps<T>) {
   return (
     <FormField
@@ -51,13 +55,17 @@ export function SelectField<T extends Record<string, unknown>>({
             <SelectPopover
               options={options}
               value={field.value as SelectOption | undefined}
-              onSelect={field.onChange}
+              onSelect={(v) => {
+                field.onChange(v);
+                onSelect?.(v);
+              }}
               placeholder={placeholder}
               searchPlaceholder={searchPlaceholder}
               emptyText={emptyText}
               isLoading={isLoading}
               className="z-10"
               modal={modal}
+              disabled={disabled}
             />
           </FormControl>
           <FormMessage />

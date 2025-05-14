@@ -1,14 +1,34 @@
 import { auth } from '@/auth';
 import { IMealPlansRepository } from '@/server/application/repositories/meal-plans.repository.interface';
 import { NotFoundError } from '@/server/entities/errors/common';
-import { MealPlanWithStatus } from '@/server/entities/models/meal-plan';
+import {
+  MealPlan,
+  MealPlanWithStatusAndMealMacros,
+} from '@/server/entities/models/meal-plan';
 import { calculateMacrosForMeal } from '@/utils/macros';
 import { isWithinInterval, startOfDay } from 'date-fns';
 import { IGroupService } from '../../services/group.service.interface';
 
+export const getStatusForMealPlan = (
+  mealPlan: MealPlan,
+  today: Date
+): { isCurrent: boolean; isUpcoming: boolean } => {
+  const startDate = new Date(mealPlan.startDate);
+  const endDate = new Date(mealPlan.endDate);
+  const isCurrent = isWithinInterval(today, {
+    start: startDate,
+    end: endDate,
+  });
+  const isUpcoming = startDate > today;
+  return {
+    isCurrent,
+    isUpcoming,
+  };
+};
+
 export const listMealPlansUseCase =
   (mealPlansRepository: IMealPlansRepository, groupService: IGroupService) =>
-  async (): Promise<MealPlanWithStatus[]> => {
+  async (): Promise<MealPlanWithStatusAndMealMacros[]> => {
     const user = (await auth())?.user;
     if (!user) {
       throw new NotFoundError('User not found');
@@ -45,20 +65,11 @@ export const listMealPlansUseCase =
     });
 
     return sortedMealPlans.map((mealPlan) => {
-      const startDate = new Date(mealPlan.startDate);
-      const endDate = new Date(mealPlan.endDate);
-      const isCurrent = isWithinInterval(today, {
-        start: startDate,
-        end: endDate,
-      });
-      const isUpcoming = startDate > today;
+      const status = getStatusForMealPlan(mealPlan, today);
 
       return {
         ...mealPlan,
-        status: {
-          isCurrent,
-          isUpcoming,
-        },
+        status,
         meals: mealPlan.meals?.map((mealPlanMeal) => ({
           ...mealPlanMeal,
           meal: {

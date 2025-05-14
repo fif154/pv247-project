@@ -1,12 +1,13 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import type { MealPlanWithStatus } from '@/server/entities/models/meal-plan';
+import type { MealPlanWithStatusAndMealMacros } from '@/server/entities/models/meal-plan';
 import { format } from 'date-fns';
-import { CalendarDays } from 'lucide-react';
+import { CalendarDays, EyeIcon, PenIcon } from 'lucide-react';
 import Link from 'next/link';
+import { DeleteMealPlanButton } from './delete-meal-plan-button';
 
 interface CurrentMealPlanCardProps {
-  plan: MealPlanWithStatus;
+  plan: MealPlanWithStatusAndMealMacros;
 }
 
 export function CurrentMealPlanCard({ plan }: CurrentMealPlanCardProps) {
@@ -28,9 +29,24 @@ export function CurrentMealPlanCard({ plan }: CurrentMealPlanCardProps) {
           <Badge className="bg-primary text-primary-foreground">
             Active Meal Plan
           </Badge>
-          <Button asChild size="lg">
-            <Link href={`/auth/meal-plans/${plan.id}`}>View Details</Link>
-          </Button>
+          <div className="flex flex-col md:flex-row items-center gap-2">
+            <DeleteMealPlanButton id={plan.id} />
+            <Button
+              asChild
+              variant="outline"
+              className="w-full md:w-auto"
+              size="sm"
+            >
+              <Link href={`/auth/meal-plans/${plan.id}/edit`}>
+                <PenIcon className="h-4 w-4" />
+              </Link>
+            </Button>
+            <Button asChild size="sm">
+              <Link href={`/auth/meal-plans/${plan.id}`}>
+                <EyeIcon />
+              </Link>
+            </Button>
+          </div>
         </div>
       </div>
     </div>

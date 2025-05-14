@@ -39,8 +39,9 @@ export function createMealsModule() {
     .bind(DI_SYMBOLS.IUpdateMealUseCase)
     .toHigherOrderFunction(updateMealUseCase, [
       DI_SYMBOLS.IMealsRepository,
-      DI_SYMBOLS.IGroupService,
       DI_SYMBOLS.IMealAdditionalIngredientsRepository,
+      DI_SYMBOLS.IGroupService,
+      DI_SYMBOLS.IIngredientService,
     ]);
 
   mealsModule

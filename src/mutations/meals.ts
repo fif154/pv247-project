@@ -48,7 +48,11 @@ export function useUpdateMealMutation() {
       data: Partial<Omit<CreateMeal, 'userId' | 'groupId'>>;
       additionalIngredients?: Omit<CreateMealAdditionalIngredient, 'mealId'>[];
     }) => {
-      return updateMealAction(data.mealId, data.data);
+      return updateMealAction(
+        data.mealId,
+        data.data,
+        data.additionalIngredients
+      );
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['meals'] });

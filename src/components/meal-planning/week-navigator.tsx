@@ -41,24 +41,14 @@ export function WeekNavigator({ currentRange, setRange }: WeekNavigatorProps) {
   };
 
   return (
-    <div className="flex items-center justify-between">
-      <div className="flex items-center gap-2">
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() => onWeekChange(false)}
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </Button>
-        <span className="font-medium">{weekLabel}</span>
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() => onWeekChange(true)}
-        >
-          <ChevronRight className="h-4 w-4" />
-        </Button>
-      </div>
+    <div className="flex items-center gap-2 justify-between">
+      <Button variant="outline" size="icon" onClick={() => onWeekChange(false)}>
+        <ChevronLeft className="h-4 w-4" />
+      </Button>
+      <span className="font-medium">{weekLabel}</span>
+      <Button variant="outline" size="icon" onClick={() => onWeekChange(true)}>
+        <ChevronRight className="h-4 w-4" />
+      </Button>
     </div>
   );
 }

@@ -7,12 +7,12 @@ import { useUpdateMealMutation } from '@/mutations/meals';
 import { useMealTypes } from '@/queries/meal-types';
 import { useMeals } from '@/queries/meals';
 import type { MealWithMacros } from '@/server/entities/models/meal';
-import { MealPlan } from '@/server/entities/models/meal-plan';
+import { MealPlanWithStatus } from '@/server/entities/models/meal-plan';
 import type { MealsByDayType } from '@/types/meal-planning';
 import { DAYS } from '@/types/meal-planning';
 import { isDateInRange } from '@/utils/date';
 import { DndContext, DragOverlay, closestCenter } from '@dnd-kit/core';
-import { addWeeks, getDay } from 'date-fns';
+import { addWeeks, getDay, startOfWeek } from 'date-fns';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { DateRange } from 'react-day-picker';
 import { MealPlanOverview } from './meal-planning/meal-plan-overview';
@@ -37,10 +37,18 @@ export const getDayFromDate = (date: Date) => {
   return DAYS[dayIndex];
 };
 
-export function MealPlanning({ mealPlan }: { mealPlan: MealPlan }) {
+export function MealPlanning({ mealPlan }: { mealPlan: MealPlanWithStatus }) {
+  const startDate = mealPlan.status.isCurrent
+    ? startOfWeek(new Date())
+    : mealPlan.startDate;
+  const endDate = addWeeks(
+    mealPlan.status.isCurrent ? startOfWeek(new Date()) : mealPlan.endDate,
+    1
+  );
+
   const [dateRange, setDateRange] = useState<DateRange>({
-    from: mealPlan.startDate,
-    to: addWeeks(mealPlan.startDate, 1),
+    from: startDate,
+    to: endDate,
   });
 
   const mealsQuery = useMeals(mealPlan.id);
@@ -109,8 +117,7 @@ export function MealPlanning({ mealPlan }: { mealPlan: MealPlan }) {
   const { sensors, activeId, handleDragStart, handleDragEnd } = useMealDragDrop(
     board,
     setBoard,
-    onMealUpdate,
-    dateRange
+    onMealUpdate
   );
 
   const handleDateChange = useCallback(

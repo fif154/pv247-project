@@ -45,3 +45,5 @@ export const deleteMealUseCase =
     }
     await mealsRepository.deleteMeal(id, tx);
   };
+
+export type IDeleteMealUseCase = ReturnType<typeof deleteMealUseCase>;

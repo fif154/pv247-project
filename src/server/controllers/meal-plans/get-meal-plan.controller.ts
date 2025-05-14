@@ -4,3 +4,5 @@ export const getMealPlanController =
   (getMealPlanUseCase: IGetMealPlanUseCase) => async (id: string) => {
     return getMealPlanUseCase(id);
   };
+
+export type IGetMealPlanController = ReturnType<typeof getMealPlanController>;

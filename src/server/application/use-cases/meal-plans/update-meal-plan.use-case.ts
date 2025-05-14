@@ -1,12 +1,17 @@
 import { auth } from '@/auth';
 import { IMealPlansRepository } from '@/server/application/repositories/meal-plans.repository.interface';
 import { NotFoundError } from '@/server/entities/errors/common';
+import { MealPlan } from '@/server/entities/models/meal-plan';
 import { IGroupService } from '../../services/group.service.interface';
-import { getStatusForMealPlan } from './list-meal-plans.use-case';
 
-export const getMealPlanUseCase =
+export const updateMealPlanUseCase =
   (mealPlansRepository: IMealPlansRepository, groupService: IGroupService) =>
-  async (id: string) => {
+  async (
+    id: string,
+    input: Partial<
+      Omit<MealPlan, 'id' | 'createdBy' | 'createdAt' | 'updatedAt'>
+    >
+  ) => {
     const user = (await auth())?.user;
     if (!user) {
       throw new NotFoundError('User not found');
@@ -27,12 +32,7 @@ export const getMealPlanUseCase =
       throw new NotFoundError('Meal plan not in your group');
     }
 
-    const status = getStatusForMealPlan(mealPlan, new Date());
-
-    return {
-      ...mealPlan,
-      status,
-    };
+    return await mealPlansRepository.updateMealPlan(id, input);
   };
 
-export type IGetMealPlanUseCase = ReturnType<typeof getMealPlanUseCase>;
+export type IUpdateMealPlanUseCase = ReturnType<typeof updateMealPlanUseCase>;

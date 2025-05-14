@@ -7,17 +7,20 @@ import {
 } from '@/server/entities/models/meal';
 import { IMealAdditionalIngredientsRepository } from '../../repositories/meal-additional-ingredients.repository.interface';
 import { IGroupService } from '../../services/group.service.interface';
+import { IIngredientService } from '../../services/ingredient.service.interface';
 
 export const updateMealUseCase =
   (
     mealsRepository: IMealsRepository,
+    additionalIngredientsRepository: IMealAdditionalIngredientsRepository,
     groupService: IGroupService,
-    additionalIngredientsRepository: IMealAdditionalIngredientsRepository
+    ingredientService: IIngredientService
   ) =>
   async (
     id: string,
     input: Partial<Omit<Meal, 'id' | 'createdBy' | 'createdAt' | 'updatedAt'>>,
     additionalIngredients?: Omit<CreateMealAdditionalIngredient, 'mealId'>[],
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     tx?: any
   ) => {
     const user = (await auth())?.user;
@@ -40,15 +43,11 @@ export const updateMealUseCase =
       throw new NotFoundError('Meal not in your group');
     }
 
-    const meal = await mealsRepository.updateMeal(
-      id,
-      input,
-      additionalIngredients?.map((ingredient) => ({
-        ...ingredient,
-        mealId: id,
-      })),
-      tx
-    );
+    const combined = ingredientService.combine(additionalIngredients ?? []);
+
+    const meal = await mealsRepository.updateMeal(id, input, combined, tx);
 
     return { ...meal, additionalIngredients };
   };
+
+export type IUpdateMealUseCase = ReturnType<typeof updateMealUseCase>;

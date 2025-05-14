@@ -27,6 +27,10 @@ export class MealAdditionalIngredientsRepository
     ingredients: Omit<MealAdditionalIngredient, 'id'>[],
     tx?: Transaction
   ): Promise<MealAdditionalIngredient[]> {
+    if (ingredients.length === 0) {
+      return [];
+    }
+
     const invoker = tx ?? db;
     const mealAdditionalIngredientsList = await invoker
       .insert(mealAdditionalIngredients)
