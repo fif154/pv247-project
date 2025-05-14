@@ -24,6 +24,7 @@ ApplicationContainer.load(
   Symbol('TransactionManagerModule'),
   createTransactionManagerModule()
 );
+
 ApplicationContainer.load(
   Symbol('AuthenticationModule'),
   createAuthenticationModule()
