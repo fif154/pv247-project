@@ -53,8 +53,10 @@ export const Macros = async (props: Props) => {
       bgColor: macroBgColors.calories,
       textColor: macroTextColors.calories,
       unit: 'kcal',
-      // Fallback = daily recommended intake
-      percentage: props.calories / (user?.calories ?? 2000),
+      // Fallback = adjusted daily recommended intake
+      percentage:
+        props.calories /
+        (user?.calories ?? 2000 * (props.intakeMultiplier ?? 1)),
     },
     {
       label: 'Carbs',
@@ -63,7 +65,8 @@ export const Macros = async (props: Props) => {
       bgColor: macroBgColors.carbs,
       textColor: macroTextColors.carbs,
       unit: 'g',
-      percentage: props.carbs / (user?.carbs ?? 270),
+      percentage:
+        props.carbs / (user?.carbs ?? 270 * (props.intakeMultiplier ?? 1)),
     },
     {
       label: 'Protein',
@@ -72,7 +75,8 @@ export const Macros = async (props: Props) => {
       bgColor: macroBgColors.protein,
       textColor: macroTextColors.protein,
       unit: 'g',
-      percentage: props.protein / (user?.protein ?? 50),
+      percentage:
+        props.protein / (user?.protein ?? 50 * (props.intakeMultiplier ?? 1)),
     },
     {
       label: 'Fat',
@@ -81,7 +85,8 @@ export const Macros = async (props: Props) => {
       bgColor: macroBgColors.fat,
       textColor: macroTextColors.fat,
       unit: 'g',
-      percentage: props.fat / (user?.fats ?? 70),
+      percentage:
+        props.fat / (user?.fats ?? 70 * (props.intakeMultiplier ?? 1)),
     },
   ];
   return (

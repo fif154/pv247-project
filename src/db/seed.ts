@@ -8,7 +8,6 @@ import { faker } from '@faker-js/faker';
 import { createClient } from '@libsql/client';
 import { drizzle } from 'drizzle-orm/libsql';
 import * as schema from './schema';
-import { hash } from 'bcrypt-ts';
 
 // ---------------------------
 // Configuration & Constants
@@ -121,7 +120,6 @@ async function main() {
 
   // ---------- 1. Users ----------
   const users = [] as Array<typeof schema.users.$inferSelect>;
-  const pwd = await hash('abcdefgh', 10);
   for (let i = 0; i < NUM_USERS; i++) {
     const row = {
       id: crypto.randomUUID(),
@@ -129,7 +127,7 @@ async function main() {
       email: faker.internet.email().toLowerCase(),
       emailVerified: randBool(0.4) ? new Date() : null,
       image: faker.image.avatar(),
-      passwordHash: pwd,
+      passwordHash: faker.internet.password(),
       groupId: faker.helpers.arrayElement(groups).id,
       calories: faker.number.int({ min: 1000, max: 3000 }),
       protein: faker.number.int({ min: 50, max: 150 }),
