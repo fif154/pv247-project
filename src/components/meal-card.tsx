@@ -26,11 +26,11 @@ export function MealCard({ meal }: Props) {
       </CardHeader>
       <CardContent>
         <div className="flex items-center gap-4">
-          {meal.image ? (
+          {meal.recipe?.image ? (
             <div className="relative h-20 w-20 overflow-hidden rounded-md">
               <Image
-                src={meal.image}
-                alt={meal.name}
+                src={meal.recipe.image}
+                alt={meal.recipe.name}
                 fill
                 className="object-cover"
               />
