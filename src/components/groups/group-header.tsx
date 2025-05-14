@@ -1,6 +1,6 @@
 import { User } from 'next-auth';
-import { CreateGroupButton } from './create-group-modal/create-group-button';
 import { PageHeader } from '../page-header';
+import { CreateGroupButton } from './create-group-modal/create-group-button';
 
 type GroupHeaderProps = {
   currentUser: User;
