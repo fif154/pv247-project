@@ -2,7 +2,7 @@ import {
   createIngredientAction,
   deleteIngredientAction,
   updateIngredientAction,
-} from '@/app/ingredients/actions';
+} from '@/app/auth/ingredients/actions';
 import { CreateIngredient } from '@/server/entities/models/ingredient';
 import { showErrorToast, showSuccessToast } from '@/utils/toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';

@@ -19,7 +19,8 @@ export default function ErrorPage({
     <div className="flex flex-col items-center justify-center min-h-[50vh] gap-6">
       <h2 className="text-2xl font-bold">Something went wrong</h2>
       <p className="text-muted-foreground text-center max-w-md">
-        We couldn't load your ingredients. Please try again later or contact support if the issue persists.
+        We could not load your ingredients. Please try again later or contact
+        support if the issue persists.
       </p>
       <Button onClick={() => reset()} variant="default">
         <RefreshCw className="mr-2 h-4 w-4" /> Try again

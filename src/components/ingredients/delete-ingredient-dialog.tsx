@@ -1,7 +1,7 @@
 'use client';
 
 import { useDeleteIngredientMutation } from '@/mutations/ingredients';
-import { 
+import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -22,16 +22,16 @@ type DeleteIngredientDialogProps = {
   onDeleted?: () => void;
 };
 
-export function DeleteIngredientDialog({ 
-  isOpen, 
-  onClose, 
-  ingredientId, 
+export function DeleteIngredientDialog({
+  isOpen,
+  onClose,
+  ingredientId,
   ingredientName,
   onDeleted,
 }: DeleteIngredientDialogProps) {
   const deleteMutation = useDeleteIngredientMutation();
   const [isDeleting, setIsDeleting] = useState(false);
-  
+
   const handleDelete = async () => {
     setIsDeleting(true);
     try {
@@ -44,20 +44,20 @@ export function DeleteIngredientDialog({
       onClose();
     }
   };
-  
+
   return (
     <AlertDialog open={isOpen} onOpenChange={onClose}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This will permanently delete the ingredient &quot;{ingredientName}&quot;. 
-            This action cannot be undone.
+            This will permanently delete the ingredient &quot;{ingredientName}
+            &quot;. This action cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
-          <AlertDialogAction 
+          <AlertDialogAction
             onClick={(e) => {
               e.preventDefault();
               handleDelete();

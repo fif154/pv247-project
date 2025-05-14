@@ -2,14 +2,19 @@
 
 import { auth } from '@/auth';
 import { getInjection } from '@/server/di/container';
-import { NotFoundError, InputParseError } from '@/server/entities/errors/common';
+import {
+  NotFoundError,
+  InputParseError,
+} from '@/server/entities/errors/common';
 import { revalidatePath } from 'next/cache';
 import { notFound } from 'next/navigation';
 
 // List all ingredients
 export async function listIngredientsAction() {
   try {
-    const listIngredientsController = getInjection('IListIngredientsController');
+    const listIngredientsController = getInjection(
+      'IListIngredientsController'
+    );
     return await listIngredientsController();
   } catch (error: unknown) {
     console.error('Error listing ingredients:', error);
@@ -30,14 +35,14 @@ export async function getIngredientAction(id: string) {
   }
 }
 
-// Create a new ingredient
+// Create an ingredient
 export async function createIngredientAction(data: {
   name: string;
   description?: string | null;
   imageUrl?: string | null;
   protein: number;
   carbs: number;
-  fat: number; 
+  fat: number;
   calories: number;
   baseMacroQuantity: number;
   categoryId?: string | null;
@@ -49,8 +54,21 @@ export async function createIngredientAction(data: {
       throw new Error('Not authenticated');
     }
 
-    const createIngredientController = getInjection('ICreateIngredientController');
-    
+    const getUserController = getInjection('IGetUserController');
+    const user = await getUserController(session.user.id);
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    if (!user.groupId) {
+      throw new Error('User has no assigned group');
+    }
+
+    const createIngredientController = getInjection(
+      'ICreateIngredientController'
+    );
+
     // Format data according to controller requirements
     const ingredientData = {
       name: data.name,
@@ -64,8 +82,9 @@ export async function createIngredientAction(data: {
       baseMacroQuantity: data.baseMacroQuantity,
       categoryId: data.categoryId || null,
       deletedAt: null,
+      groupId: user.groupId,
     };
-    
+
     const result = await createIngredientController(ingredientData);
     revalidatePath('/auth/ingredients');
     return result;
@@ -87,21 +106,21 @@ export async function updateIngredientAction(
     imageUrl?: string | null;
     protein: number;
     carbs: number;
-    fats: number; 
+    fats: number;
     calories: number;
     baseMacroQuantity: number;
     categoryId?: string | null;
   }>
 ) {
   try {
-    const updateIngredientController = getInjection('IUpdateIngredientController');
-    
-    // Ensure we're passing the right data format
+    const updateIngredientController = getInjection(
+      'IUpdateIngredientController'
+    );
+
     const updateData = {
       ...data,
-      // Handle any field mappings here if needed
     };
-    
+
     await updateIngredientController(id, updateData);
     revalidatePath('/auth/ingredients');
     return { success: true };
@@ -117,7 +136,9 @@ export async function updateIngredientAction(
 // Delete an ingredient
 export async function deleteIngredientAction(id: string) {
   try {
-    const deleteIngredientController = getInjection('IDeleteIngredientController');
+    const deleteIngredientController = getInjection(
+      'IDeleteIngredientController'
+    );
     await deleteIngredientController(id);
     revalidatePath('/auth/ingredients');
     return { success: true };

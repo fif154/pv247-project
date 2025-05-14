@@ -52,8 +52,6 @@ const formSchema = z.object({
   baseMacroQuantity: z.coerce.number().min(1, 'Must be at least 1'),
 });
 
-type FormValues = z.infer<typeof formSchema>;
-
 export function EditIngredientForm({
   ingredient,
   onSuccess,

@@ -9,12 +9,12 @@ import { CreateIngredientModal } from './create-ingredient-modal';
 import { Button } from '../ui/button';
 import { Plus } from 'lucide-react';
 import { useCategoriesForFilter } from './hooks/use-categories-for-filter';
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
+  SelectValue,
 } from '../ui/select';
 import { Input } from '../ui/input';
 
@@ -23,18 +23,26 @@ type IngredientsGridProps = {
   currentUser: User & { id: string };
 };
 
-export function IngredientsGrid({ ingredients, currentUser }: IngredientsGridProps) {
-  const [selectedIngredient, setSelectedIngredient] = useState<Ingredient | null>(null);
+export function IngredientsGrid({
+  ingredients,
+  currentUser,
+}: IngredientsGridProps) {
+  const [selectedIngredient, setSelectedIngredient] =
+    useState<Ingredient | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  
+
   const { categories } = useCategoriesForFilter(ingredients);
-  
-  const filteredIngredients = ingredients.filter(ingredient => {
-    const matchesSearch = ingredient.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || ingredient.category?.id === selectedCategory;
+
+  const filteredIngredients = ingredients.filter((ingredient) => {
+    const matchesSearch = ingredient.name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      selectedCategory === 'all' ||
+      ingredient.category?.id === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
@@ -61,7 +69,7 @@ export function IngredientsGrid({ ingredients, currentUser }: IngredientsGridPro
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Categories</SelectItem>
-              {categories.map(category => (
+              {categories.map((category) => (
                 <SelectItem key={category.id} value={category.id}>
                   {category.name}
                 </SelectItem>
@@ -69,7 +77,11 @@ export function IngredientsGrid({ ingredients, currentUser }: IngredientsGridPro
             </SelectContent>
           </Select>
         </div>
-        <Button variant="coral" onClick={() => setCreateModalOpen(true)} className="md:w-auto">
+        <Button
+          variant="coral"
+          onClick={() => setCreateModalOpen(true)}
+          className="md:w-auto"
+        >
           <Plus className="mr-2" /> Add Ingredient
         </Button>
       </div>
@@ -84,9 +96,9 @@ export function IngredientsGrid({ ingredients, currentUser }: IngredientsGridPro
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredIngredients.map((ingredient) => (
-            <IngredientCard 
-              key={ingredient.id} 
-              ingredient={ingredient} 
+            <IngredientCard
+              key={ingredient.id}
+              ingredient={ingredient}
               onClick={() => handleOpenModal(ingredient)}
             />
           ))}

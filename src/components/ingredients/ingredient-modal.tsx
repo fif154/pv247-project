@@ -21,7 +21,6 @@ export function IngredientModal({
   ingredient,
   isOpen,
   onClose,
-  currentUser,
 }: IngredientModalProps) {
   const [isEditMode, setIsEditMode] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);

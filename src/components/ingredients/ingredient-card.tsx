@@ -10,8 +10,8 @@ type IngredientCardProps = {
 
 export function IngredientCard({ ingredient, onClick }: IngredientCardProps) {
   return (
-    <Card 
-      className="overflow-hidden transition-all hover:shadow-md hover:translate-y-[-4px] cursor-pointer" 
+    <Card
+      className="overflow-hidden transition-all hover:shadow-md hover:translate-y-[-4px] cursor-pointer"
       onClick={onClick}
     >
       <div className="relative h-48 bg-muted">
@@ -37,27 +37,27 @@ export function IngredientCard({ ingredient, onClick }: IngredientCardProps) {
         <p className="text-sm text-muted-foreground mb-3 truncate">
           {ingredient.category?.name || 'Uncategorized'}
         </p>
-        
+
         <div className="grid grid-cols-2 gap-2">
-          <MacroStat 
-            value={ingredient.calories} 
-            label="kcal" 
-            colorClass={macroTextColors.calories} 
+          <MacroStat
+            value={ingredient.calories}
+            label="kcal"
+            colorClass={macroTextColors.calories}
           />
-          <MacroStat 
-            value={ingredient.protein} 
-            label="protein" 
-            colorClass={macroTextColors.protein} 
+          <MacroStat
+            value={ingredient.protein}
+            label="protein"
+            colorClass={macroTextColors.protein}
           />
-          <MacroStat 
-            value={ingredient.carbs} 
-            label="carbs" 
-            colorClass={macroTextColors.carbs} 
+          <MacroStat
+            value={ingredient.carbs}
+            label="carbs"
+            colorClass={macroTextColors.carbs}
           />
-          <MacroStat 
-            value={ingredient.fats} 
-            label="fats" 
-            colorClass={macroTextColors.fat} 
+          <MacroStat
+            value={ingredient.fats}
+            label="fats"
+            colorClass={macroTextColors.fat}
           />
         </div>
       </CardContent>
@@ -65,19 +65,19 @@ export function IngredientCard({ ingredient, onClick }: IngredientCardProps) {
   );
 }
 
-function MacroStat({ 
-  value, 
-  label, 
-  colorClass 
-}: { 
-  value?: number | null, 
-  label: string, 
-  colorClass: string 
+function MacroStat({
+  value,
+  label,
+  colorClass,
+}: {
+  value?: number | null;
+  label: string;
+  colorClass: string;
 }) {
   if (value === undefined || value === null) return null;
-  
+
   const formattedValue = Number(value.toFixed(2));
-  
+
   return (
     <div className="flex items-baseline gap-1">
       <span className={`font-medium ${colorClass}`}>{formattedValue}</span>

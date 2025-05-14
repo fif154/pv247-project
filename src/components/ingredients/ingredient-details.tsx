@@ -20,11 +20,11 @@ function NutrientBar({
   textColorClass: string;
 }) {
   if (value === undefined || value === null) return null;
-  
+
   const percentage = Math.min(value / max, 1);
   // Format to 2 decimal places
   const formattedValue = Number(value.toFixed(2));
-  
+
   return (
     <div className="space-y-1.5">
       <div className="flex justify-between text-sm">
@@ -51,22 +51,26 @@ export function IngredientDetails({ ingredient }: { ingredient: Ingredient }) {
           />
         </div>
       )}
-      
+
       <div>
         <h3 className="text-lg font-semibold">Basic Information</h3>
         <Separator className="my-2" />
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <p className="text-sm font-medium text-muted-foreground">Category</p>
+            <p className="text-sm font-medium text-muted-foreground">
+              Category
+            </p>
             <p>{ingredient.category?.name || 'Not categorized'}</p>
           </div>
           <div>
-            <p className="text-sm font-medium text-muted-foreground">Base quantity</p>
+            <p className="text-sm font-medium text-muted-foreground">
+              Base quantity
+            </p>
             <p>{ingredient.baseMacroQuantity || 100}g</p>
           </div>
         </div>
       </div>
-      
+
       {ingredient.description && (
         <div>
           <h3 className="text-lg font-semibold">Description</h3>
@@ -74,7 +78,7 @@ export function IngredientDetails({ ingredient }: { ingredient: Ingredient }) {
           <p className="text-sm">{ingredient.description}</p>
         </div>
       )}
-      
+
       <div>
         <h3 className="text-lg font-semibold">Nutritional Information</h3>
         <Separator className="my-2" />
