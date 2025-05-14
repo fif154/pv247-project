@@ -1,11 +1,12 @@
 'use client';
 
+import { useCreateIngredientMutation } from '@/mutations/ingredients';
+import { useCategories } from '@/queries/categories';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Textarea } from '../ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import {
   Form,
@@ -15,10 +16,7 @@ import {
   FormLabel,
   FormMessage,
 } from '../ui/form';
-import { useCreateIngredientMutation } from '@/mutations/ingredients';
-import { Spinner } from '../ui/spinner';
-import { useCategories } from '@/queries/categories';
-import { useEffect } from 'react';
+import { Input } from '../ui/input';
 import {
   Select,
   SelectContent,
@@ -26,6 +24,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
+import { Spinner } from '../ui/spinner';
+import { Textarea } from '../ui/textarea';
 
 // Define the form schema matching the required fields
 const formSchema = z.object({
@@ -35,7 +35,7 @@ const formSchema = z.object({
   categoryId: z.string().optional().nullable(),
   protein: z.coerce.number().min(0, 'Must be non-negative'),
   carbs: z.coerce.number().min(0, 'Must be non-negative'),
-  fat: z.coerce.number().min(0, 'Must be non-negative'),
+  fats: z.coerce.number().min(0, 'Must be non-negative'),
   calories: z.coerce.number().min(0, 'Must be non-negative'),
   unit: z.string(),
   baseMacroQuantity: z.coerce.number().min(1, 'Must be at least 1'),
@@ -63,7 +63,7 @@ export function CreateIngredientModal({
       categoryId: null,
       protein: 0,
       carbs: 0,
-      fat: 0,
+      fats: 0,
       calories: 0,
       unit: 'gram',
       baseMacroQuantity: 100,
@@ -76,19 +76,19 @@ export function CreateIngredientModal({
     }
   }, [isOpen, form]);
 
-    const onSubmit = async (values: FormValues) => {
+  const onSubmit = async (values: FormValues) => {
     try {
       await createMutation.mutateAsync({
         ...values,
         description: values.description || undefined,
-        category: values.categoryId || '',
+        categoryId: values.categoryId,
         imageUrl: values.imageUrl || null,
       });
       onClose();
     } catch (error) {
       console.error('Error creating ingredient:', error);
     }
-  }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -246,7 +246,7 @@ export function CreateIngredientModal({
 
               <FormField
                 control={form.control}
-                name="fat"
+                name="fats"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Fat (g)</FormLabel>

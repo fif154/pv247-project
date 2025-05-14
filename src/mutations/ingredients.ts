@@ -3,32 +3,18 @@ import {
   deleteIngredientAction,
   updateIngredientAction,
 } from '@/app/ingredients/actions';
+import { CreateIngredient } from '@/server/entities/models/ingredient';
 import { showErrorToast, showSuccessToast } from '@/utils/toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-
-// Type definition matching schema.ts and form
-type CreateIngredientInput = {
-  name: string;
-  description?: string | undefined;
-  imageUrl?: string | null;
-  protein: number;
-  carbs: number;
-  fat: number;
-  calories: number;
-  baseMacroQuantity: number;
-  categoryId?: string | null;
-  unit: string;
-  category: string;
-};
 
 export const useCreateIngredientMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: CreateIngredientInput) => {
+    mutationFn: async (data: Omit<CreateIngredient, 'groupId'>) => {
       const formatted = {
         ...data,
-        category: data.category || '',
+        categoryId: data.categoryId,
         description: data.description === null ? undefined : data.description,
       };
 
@@ -61,7 +47,7 @@ export const useUpdateIngredientMutation = () => {
       data,
     }: {
       id: string;
-      data: Partial<Omit<CreateIngredientInput, 'category'>>;
+      data: Partial<Omit<CreateIngredient, 'category'>>;
     }) => {
       const updateData: any = {
         ...data,
@@ -94,7 +80,7 @@ export const useUpdateIngredientMutation = () => {
 
 export const useDeleteIngredientMutation = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (id: string) => {
       try {
