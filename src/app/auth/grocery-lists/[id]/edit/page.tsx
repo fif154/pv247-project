@@ -17,7 +17,7 @@ export async function generateMetadata({
   const list = await getGroceryListAction(id);
 
   const title = list.name || 'Untitled Grocery List';
-  
+
   return {
     title: `Edit ${title} | MealMate`,
     description: `Update your grocery list "${title}".`,

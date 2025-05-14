@@ -17,7 +17,7 @@ export async function generateMetadata({
   const mealPlan = await getMealPlanAction(id);
 
   const title = mealPlan.name || 'Untitled Meal Plan';
-  
+
   return {
     title: `Edit ${title} | MealMate`,
     description: `Update your meal plan "${title}".`,

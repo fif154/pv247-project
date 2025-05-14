@@ -6,7 +6,6 @@ export const metadata = {
   description: 'Create new recipe on MealMate.',
 };
 
-
 export default async function CreateRecipePage() {
   const units = await listUnits();
 

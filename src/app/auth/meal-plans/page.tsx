@@ -9,8 +9,7 @@ import { Suspense } from 'react';
 
 export const metadata = {
   title: 'Meal Plans | MealMate',
-  description:
-    'View, manage, and create meal plans.',
+  description: 'View, manage, and create meal plans.',
 };
 
 async function MealPlansList() {
