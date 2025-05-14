@@ -1,20 +1,14 @@
 'use client';
 
 import { Ingredient } from '@/server/entities/models/ingredient';
+import { Pencil, Trash } from 'lucide-react';
 import { User } from 'next-auth';
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
-import { IngredientDetails } from './ingredient-details';
-import { EditIngredientForm } from './edit-ingredient-form';
-import { DeleteIngredientDialog } from './delete-ingredient-dialog';
-import { MoreHorizontal, Pencil, Trash } from 'lucide-react';
 import { Button } from '../ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '../ui/dropdown-menu';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import { DeleteIngredientDialog } from './delete-ingredient-dialog';
+import { EditIngredientForm } from './edit-ingredient-form';
+import { IngredientDetails } from './ingredient-details';
 
 type IngredientModalProps = {
   ingredient: Ingredient;

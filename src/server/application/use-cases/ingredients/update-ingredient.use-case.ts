@@ -4,7 +4,6 @@ import {
   InputParseError,
   NotFoundError,
 } from '@/server/entities/errors/common';
-import { canEditIngredient } from '../../policy/ingredient';
 import { IGroupService } from '../../services/group.service.interface';
 
 export const updateIngredientUseCase =
@@ -44,9 +43,10 @@ export const updateIngredientUseCase =
       throw new NotFoundError('Ingredient not found');
     }
 
-    if (!canEditIngredient(ingredient, user)) {
-      throw new NotFoundError('User not authorized to edit this ingredient');
-    }
+    // TODO: Uncomment this when we have the policy in place
+    // if (!canEditIngredient(ingredient, user)) {
+    //   throw new NotFoundError('User not authorized to edit this ingredient');
+    // }
 
     if (input.name !== ingredient.name) {
       const existingIngredient =

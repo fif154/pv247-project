@@ -5,18 +5,10 @@ import { revalidatePath } from 'next/cache';
 import { Ingredient } from '../auth/ingredients/schema';
 
 export async function createIngredientAction(data: Omit<Ingredient, 'id'>) {
-  try {
-    const ingredientController = getInjection('ICreateIngredientController');
-    const res = await ingredientController(data);
-    revalidatePath('/ingredients');
-    return res;
-  } catch (err) {
-    // TODO: handle errors
-    return {
-      error: 'An error occurred while creating the ingredient',
-      err,
-    };
-  }
+  const ingredientController = getInjection('ICreateIngredientController');
+  const res = await ingredientController(data);
+  revalidatePath('/ingredients');
+  return res;
 }
 
 export async function getIngredientAction(id: string) {
@@ -36,31 +28,16 @@ export async function updateIngredientAction(
   id: string,
   data: Partial<Ingredient>
 ) {
-  try {
-    const ingredientController = getInjection('IUpdateIngredientController');
-    const res = await ingredientController(id, data);
-    revalidatePath('/ingredients');
-    return res;
-  } catch (err) {
-    // TODO: handle errors
-    return {
-      error: 'An error occurred while updating the ingredient',
-      err,
-    };
-  }
+  const ingredientController = getInjection('IUpdateIngredientController');
+  const res = await ingredientController(id, data);
+  revalidatePath('/ingredients');
+  return res;
 }
 
 export async function deleteIngredientAction(id: string) {
-  try {
-    const ingredientController = getInjection('IDeleteIngredientController');
-    await ingredientController(id);
-    revalidatePath('/ingredients');
-  } catch (err) {
-    return {
-      error: 'An error occurred while deleting the ingredient',
-      err,
-    };
-  }
+  const ingredientController = getInjection('IDeleteIngredientController');
+  await ingredientController(id);
+  revalidatePath('/ingredients');
 }
 
 export async function listIngredientsAction(shouldThrow = false) {

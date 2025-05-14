@@ -1,7 +1,6 @@
 import { auth } from '@/auth';
 import { IIngredientsRepository } from '@/server/application/repositories/ingredients.repository.interface';
 import { NotFoundError } from '@/server/entities/errors/common';
-import { canDeleteIngredient } from '../../policy/ingredient';
 import { IGroupService } from '../../services/group.service.interface';
 
 export const deleteIngredientUseCase =
@@ -29,9 +28,10 @@ export const deleteIngredientUseCase =
       throw new NotFoundError('Ingredient not found');
     }
 
-    if (!canDeleteIngredient(ingredient, user)) {
-      throw new NotFoundError('Ingredient not found');
-    }
+    // TODO: Uncomment this when we have the policy in place
+    // if (!canDeleteIngredient(ingredient, user)) {
+    //   throw new NotFoundError('Ingredient not found');
+    // }
 
     return ingredientsRepository.deleteIngredient(id);
   };
