@@ -69,16 +69,18 @@ export function MealPlanning({ mealPlan }: { mealPlan: MealPlanWithStatus }) {
   const updateMealMutation = useUpdateMealMutation();
 
   const onMealUpdate = useCallback(
-    (mealId: string, day: string, newType: string) => {
-      updateMealMutation.mutate({
+    async (mealId: string, day: string, newType: string) => {
+      await updateMealMutation.mutateAsync({
         mealId,
         data: {
           plannedDate: getDateFromDay(dateRange, DAYS.find((d) => d === day)!),
           mealTypeId: mealTypes.find((type) => type.name === newType)?.id,
         },
+        mealPlanId: mealPlan.id,
+        dnd: true,
       });
     },
-    [dateRange, mealTypes, updateMealMutation]
+    [dateRange, mealPlan.id, mealTypes, updateMealMutation]
   );
 
   const buildBoard = useCallback(

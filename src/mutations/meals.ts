@@ -43,15 +43,23 @@ export function useUpdateMealMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: {
+    mutationFn: ({
+      dnd = false,
+      mealPlanId,
+      ...data
+    }: {
       mealId: string;
+      mealPlanId?: string;
       data: Partial<Omit<CreateMeal, 'userId' | 'groupId'>>;
       additionalIngredients?: Omit<CreateMealAdditionalIngredient, 'mealId'>[];
+      dnd?: boolean;
     }) => {
       return updateMealAction(
         data.mealId,
         data.data,
-        data.additionalIngredients
+        data.additionalIngredients,
+        mealPlanId,
+        dnd
       );
     },
     onSuccess: () => {

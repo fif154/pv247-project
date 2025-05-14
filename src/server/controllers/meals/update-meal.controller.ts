@@ -1,4 +1,5 @@
 import { ITransactionManagerService } from '@/server/application/services/transaction-manager.service.interface';
+import { IUpdateMealUseCase } from '@/server/application/use-cases/meals/update-meal.use-case';
 import {
   CreateMealAdditionalIngredient,
   Meal,
@@ -6,26 +7,24 @@ import {
 
 export const updateMealController =
   (
-    updateMealUseCase: (
-      id: string,
-      input: Partial<
-        Omit<Meal, 'id' | 'createdBy' | 'createdAt' | 'updatedAt'>
-      >,
-      additionalIngredients?: Omit<CreateMealAdditionalIngredient, 'mealId'>[],
-      tx?: unknown
-    ) => Promise<
-      Meal & { additionalIngredients?: CreateMealAdditionalIngredient[] }
-    >,
+    updateMealUseCase: IUpdateMealUseCase,
     transactionManager: ITransactionManagerService
   ) =>
   async (
     id: string,
     input: Partial<Omit<Meal, 'id' | 'createdBy' | 'createdAt' | 'updatedAt'>>,
-    additionalIngredients?: Omit<CreateMealAdditionalIngredient, 'mealId'>[]
+    additionalIngredients?: Omit<CreateMealAdditionalIngredient, 'mealId'>[],
+    dnd = false
   ) => {
     return transactionManager.startTransaction(async (tx) => {
       try {
-        return await updateMealUseCase(id, input, additionalIngredients, tx);
+        return await updateMealUseCase(
+          id,
+          input,
+          additionalIngredients,
+          dnd,
+          tx
+        );
       } catch (error) {
         console.error('Error updating meal:', error);
         tx.rollback();

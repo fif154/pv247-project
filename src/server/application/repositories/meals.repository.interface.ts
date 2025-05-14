@@ -17,6 +17,7 @@ export interface IMealsRepository {
     id: string,
     input: Partial<Omit<Meal, 'id' | 'createdBy' | 'createdAt' | 'updatedAt'>>,
     additionalIngredients?: Omit<CreateMealAdditionalIngredient, 'mealId'>[],
+    deleteAdditionalIngredients?: boolean,
     tx?: Transaction
   ): Promise<Meal>;
   deleteMeal(id: string, tx?: Transaction): Promise<void>;
