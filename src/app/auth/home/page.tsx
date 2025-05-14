@@ -7,6 +7,8 @@ import { CalendarDays } from 'lucide-react';
 import { Suspense } from 'react';
 import { AddNewButton } from './add-new-button';
 import { listMealsAction } from '@/app/meals/actions';
+import { auth } from '@/auth';
+import { SessionProvider } from 'next-auth/react';
 
 const formatDate = (date: Date) => format(date, 'EEEE, MMMM d, yyyy');
 
@@ -39,6 +41,7 @@ const HomeContent = async () => {
     },
     { calories: 0, carbs: 0, fat: 0, protein: 0 }
   );
+  const session = await auth();
 
   return (
     <div className="flex flex-col h-screen gap-4">
@@ -53,12 +56,14 @@ const HomeContent = async () => {
         <AddNewButton />
       </div>
       <Suspense fallback={<Loading />}>
-        <Macros
-          calories={totalMacros.calories}
-          carbs={totalMacros.carbs}
-          fat={totalMacros.fat}
-          protein={totalMacros.protein}
-        />
+        <SessionProvider session={session}>
+          <Macros
+            calories={totalMacros.calories}
+            carbs={totalMacros.carbs}
+            fat={totalMacros.fat}
+            protein={totalMacros.protein}
+          />
+        </SessionProvider>
       </Suspense>
       <Suspense fallback={<Loading />}>
         <Meals meals={meals} />

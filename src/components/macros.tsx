@@ -1,8 +1,9 @@
-import { auth } from '@/auth';
+'use client';
 import { cn } from '@/lib/utils';
 import { MacroItem } from './macro-item';
 import { Card, CardContent } from './ui/card';
-import { getUserAction } from '@/app/(users)/actions';
+import { useSession } from 'next-auth/react';
+import { useUser } from '@/queries/users';
 
 type Props = {
   carbs: number;
@@ -11,6 +12,12 @@ type Props = {
   calories: number;
   intakeMultiplier?: number;
   className?: string;
+  userSettings?: {
+    calories: number;
+    protein: number;
+    carbs: number;
+    fats: number;
+  };
 };
 
 export type MacroItemType = {
@@ -37,56 +44,51 @@ export const macroBgColors = {
   fat: 'bg-macro-fat',
 };
 
-export const Macros = async (props: Props) => {
-  const session = await auth();
-  const userId = session?.user.id;
-  if (!userId) {
-    throw new Error('User not found, this should not happen');
-  }
-  const user = await getUserAction(userId);
-
+export const Macros = (props: Props) => {
+  const { data: session } = useSession();
+  const { data } = useUser(session?.user.id ?? '');
   const macroItems: MacroItemType[] = [
     {
       label: 'Calories',
       value: props.calories,
-      userSetting: user?.calories ?? 2000,
+      userSetting: data?.calories ?? 2000,
       bgColor: macroBgColors.calories,
       textColor: macroTextColors.calories,
       unit: 'kcal',
       // Fallback = adjusted daily recommended intake
       percentage:
         props.calories /
-        (user?.calories ?? 2000 * (props.intakeMultiplier ?? 1)),
+        (data?.calories ?? 2000 * (props.intakeMultiplier ?? 1)),
     },
     {
       label: 'Carbs',
       value: props.carbs,
-      userSetting: user?.carbs ?? 270,
+      userSetting: data?.carbs ?? 270,
       bgColor: macroBgColors.carbs,
       textColor: macroTextColors.carbs,
       unit: 'g',
       percentage:
-        props.carbs / (user?.carbs ?? 270 * (props.intakeMultiplier ?? 1)),
+        props.carbs / (data?.carbs ?? 270 * (props.intakeMultiplier ?? 1)),
     },
     {
       label: 'Protein',
       value: props.protein,
-      userSetting: user?.protein ?? 50,
+      userSetting: data?.protein ?? 50,
       bgColor: macroBgColors.protein,
       textColor: macroTextColors.protein,
       unit: 'g',
       percentage:
-        props.protein / (user?.protein ?? 50 * (props.intakeMultiplier ?? 1)),
+        props.protein / (data?.protein ?? 50 * (props.intakeMultiplier ?? 1)),
     },
     {
       label: 'Fat',
       value: props.fat,
-      userSetting: user?.fats ?? 70,
+      userSetting: data?.fats ?? 70,
       bgColor: macroBgColors.fat,
       textColor: macroTextColors.fat,
       unit: 'g',
       percentage:
-        props.fat / (user?.fats ?? 70 * (props.intakeMultiplier ?? 1)),
+        props.fat / (data?.fats ?? 70 * (props.intakeMultiplier ?? 1)),
     },
   ];
   return (

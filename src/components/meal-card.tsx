@@ -43,7 +43,7 @@ export function MealCard({ meal }: Props) {
                 <span
                   className={`text-s font-medium ${macroTextColors.calories}`}
                 >
-                  {macros.calories} kcal
+                  {macros.calories}
                 </span>
                 <span className="text-s text-muted-foreground">kcal</span>
               </div>
