@@ -76,12 +76,11 @@ export function CreateIngredientModal({
     }
   }, [isOpen, form]);
 
-  const onSubmit = async (values: FormValues) => {
+    const onSubmit = async (values: FormValues) => {
     try {
       await createMutation.mutateAsync({
         ...values,
-        // Convert null to undefined for description
-        description: values.description || undefined, // Changed from null to undefined
+        description: values.description || undefined,
         category: values.categoryId || '',
         imageUrl: values.imageUrl || null,
       });
@@ -89,7 +88,7 @@ export function CreateIngredientModal({
     } catch (error) {
       console.error('Error creating ingredient:', error);
     }
-  };
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -177,34 +176,43 @@ export function CreateIngredientModal({
               )}
             />
 
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="calories"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Calories (kcal)</FormLabel>
-                    <FormControl>
-                      <Input {...field} type="number" min="0" step="0.1" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="baseMacroQuantity"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Base quantity (g)</FormLabel>
-                    <FormControl>
-                      <Input {...field} type="number" min="1" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            <div className="flex gap-4">
+              <div className="flex-1">
+                <FormField
+                  control={form.control}
+                  name="calories"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Calories (kcal)</FormLabel>
+                      <FormControl>
+                        <Input {...field} type="number" min="0" step="0.1" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="flex-1">
+                <FormField
+                  control={form.control}
+                  name="baseMacroQuantity"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Reference Quantity</FormLabel>
+                      <div className="flex flex-col space-y-1">
+                        <FormControl>
+                          <Input {...field} type="number" min="1" />
+                        </FormControl>
+                        <p className="text-xs text-muted-foreground">
+                          All nutritional values are per this amount in grams
+                          (default: 100g)
+                        </p>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
             </div>
 
             <div className="grid grid-cols-3 gap-4">
