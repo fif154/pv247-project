@@ -1,14 +1,16 @@
 import { Macros } from '@/components/macros';
 import { Meals } from '@/components/meals';
 import { PageHeader } from '@/components/page-header';
+import { Loading } from '@/components/ui/loading';
 import { format } from 'date-fns';
 import { CalendarDays } from 'lucide-react';
+import { Suspense } from 'react';
 import { AddNewButton } from './add-new-button';
 import { listMealsAction } from '@/app/meals/actions';
 
 const formatDate = (date: Date) => format(date, 'EEEE, MMMM d, yyyy');
 
-const Page = async () => {
+const HomeContent = async () => {
   const today = new Date();
   const meals = await listMealsAction(undefined, { from: today, to: today });
   const totalMacros = meals.reduce(
@@ -50,15 +52,27 @@ const Page = async () => {
         </div>
         <AddNewButton />
       </div>
+      <Suspense fallback={<Loading />}>
+
       <Macros
         calories={totalMacros.calories}
         carbs={totalMacros.carbs}
         fat={totalMacros.fat}
         protein={totalMacros.protein}
       />
+      </Suspense>
+      <Suspense fallback={<Loading />}>
+
       <Meals meals={meals} />
+      </Suspense>
     </div>
   );
 };
 
-export default Page;
+export default function Page() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <HomeContent />
+    </Suspense>
+  );
+}
