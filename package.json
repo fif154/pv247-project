@@ -29,6 +29,7 @@
     "@radix-ui/react-tabs": "^1.1.11",
     "@radix-ui/react-tooltip": "^1.2.5",
     "@tanstack/react-query": "^5.74.9",
+    "@vercel/blob": "^1.0.1",
     "bcrypt-ts": "^6.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

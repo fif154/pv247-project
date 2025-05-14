@@ -1,5 +1,4 @@
 import { Providers } from '@/components/providers';
-import { ThemeToggle } from '@/components/theme-toggle';
 import type { Metadata } from 'next';
 import { Bounce, ToastContainer } from 'react-toastify';
 import './globals.css';
@@ -31,13 +30,7 @@ export default function RootLayout({
             theme="light"
             transition={Bounce}
           />
-          <div className="relative">
-            {children}
-            {/* Temporary placement */}
-            <div className="absolute top-0 right-0 p-4">
-              <ThemeToggle />
-            </div>
-          </div>
+          <div className="relative">{children}</div>
         </Providers>
       </body>
     </html>

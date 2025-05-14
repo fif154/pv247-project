@@ -1,4 +1,5 @@
 import {
+  editMacrosAction,
   editUserAction,
   searchUsersByEmailAction,
 } from '@/app/(users)/actions';
@@ -21,6 +22,7 @@ export const useEditUserMutation = () =>
       userId: string;
       name: string;
       email: string;
+      image?: string | null;
     }) => {
       return await editUserAction(data);
     },
@@ -29,5 +31,24 @@ export const useEditUserMutation = () =>
     },
     onSuccess: () => {
       showSuccessToast('User updated successfully.');
+    },
+  });
+
+export const useEditMacrosMutation = () =>
+  useMutation({
+    mutationFn: async (data: {
+      userId: string;
+      fats: number;
+      protein: number;
+      carbs: number;
+      calories: number;
+    }) => {
+      return await editMacrosAction(data);
+    },
+    onError: () => {
+      showErrorToast('Failed to edit macros. Please try again.');
+    },
+    onSuccess: () => {
+      showSuccessToast('Macros updated successfully.');
     },
   });

@@ -5,6 +5,7 @@ const editUserInputSchema = z.object({
   userId: z.string(),
   name: z.string(),
   email: z.string().email(),
+  image: z.string().optional().nullable(),
 });
 
 export const editUserController =
@@ -14,6 +15,7 @@ export const editUserController =
       userId: data.userId,
       name: data.name,
       email: data.email,
+      image: data.image,
     });
 
     return updatedUser;

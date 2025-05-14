@@ -91,6 +91,10 @@ import { ISaveRecipeIngredientsUseCase } from '@/server/application/use-cases/re
 import { ISaveRecipeIngredientsController } from '@/server/controllers/recipes/save-recipe-ingredients.controller';
 import { IListFilteredRecipesUseCase } from '../application/use-cases/recipes/list-filtered-recipes.use-case';
 import { IListFilteredRecipesController } from '../controllers/recipes/list-filtered-recipes.controller';
+import { IEditMacrosUseCase } from '../application/use-cases/users/edit-macros.use-case';
+import { IEditMacrosController } from '../controllers/users/edit-macros.controller';
+import { IGetUserUseCase } from '../application/use-cases/users/get-user.use-case';
+import { IGetUserController } from '../controllers/users/get-user.controller';
 
 export const DI_SYMBOLS = {
   // Services
@@ -130,6 +134,8 @@ export const DI_SYMBOLS = {
   IGetRecipeUseCase: Symbol.for('IGetRecipeUseCase'),
   IEditUserUseCase: Symbol.for('IEditUserUseCase'),
   ISetCurrentGroupUseCase: Symbol.for('ISetCurrentGroupUseCase'),
+  IEditMacrosUseCase: Symbol.for('IEditMacrosUseCase'),
+  IGetUserUseCase: Symbol.for('IGetUserUseCase'),
 
   // Controllers
   ISignInController: Symbol.for('ISignInController'),
@@ -159,6 +165,8 @@ export const DI_SYMBOLS = {
   IGetRecipeController: Symbol.for('IGetRecipeController'),
   IEditUserController: Symbol.for('IEditUserController'),
   ISetCurrentGroupController: Symbol.for('ISetCurrentGroupController'),
+  IEditMacrosController: Symbol.for('IEditMacrosController'),
+  IGetUserController: Symbol.for('IGetUserController'),
 
   // Ingredient Categories
   IIngredientCategoriesRepository: Symbol.for(
@@ -261,6 +269,8 @@ export type DI_RETURN_TYPES = {
   IGetRecipeUseCase: IGetRecipeUseCase;
   IEditUserUseCase: IEditUserUseCase;
   ISetCurrentGroupUseCase: ISetCurrentGroupUseCase;
+  IEditMacrosUseCase: IEditMacrosUseCase;
+  IGetUserUseCase: IGetUserUseCase;
 
   // Controllers
   ISignInController: ISignInController;
@@ -284,6 +294,8 @@ export type DI_RETURN_TYPES = {
   IGetRecipeController: IGetRecipeController;
   IEditUserController: IEditUserController;
   ISetCurrentGroupController: ISetCurrentGroupController;
+  IEditMacrosController: IEditMacrosController;
+  IGetUserController: IGetUserController;
 
   // Ingredient Categories
   IIngredientCategoriesRepository: IIngredientCategoriesRepository;
