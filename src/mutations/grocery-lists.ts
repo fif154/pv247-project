@@ -12,13 +12,20 @@ import {
 import { showErrorToast, showSuccessToast } from '@/utils/toast';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
+import { DateRange } from 'react-day-picker';
 
 export const useCreateGroceryListMutation = () => {
   const router = useRouter();
 
   return useMutation({
-    mutationFn: async (data: GroceryListFormValues) => {
-      return await createGroceryListAction(data);
+    mutationFn: async ({
+      data,
+      mealDateRange,
+    }: {
+      data: GroceryListFormValues;
+      mealDateRange?: DateRange;
+    }) => {
+      return await createGroceryListAction(data, mealDateRange);
     },
     onError: () => {
       showErrorToast('Failed to create grocery list');

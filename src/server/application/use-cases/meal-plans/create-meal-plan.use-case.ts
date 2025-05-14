@@ -1,7 +1,7 @@
 import { auth } from '@/auth';
 import { IMealPlansRepository } from '@/server/application/repositories/meal-plans.repository.interface';
 import { NotFoundError } from '@/server/entities/errors/common';
-import { CreateMealPlan } from '@/server/entities/models/meal-plan';
+import { ClientCreateMealPlan as CreateMealPlan } from '@/server/entities/models/meal-plan';
 import { IGroupService } from '../../services/group.service.interface';
 
 export const createMealPlanUseCase =

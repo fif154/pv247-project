@@ -50,6 +50,7 @@ export function createGroceryListsModule() {
       DI_SYMBOLS.IIngredientsRepository,
       DI_SYMBOLS.IMealPlansRepository,
       DI_SYMBOLS.IGroceryListService,
+      DI_SYMBOLS.IIngredientService,
       DI_SYMBOLS.IGroupService,
     ]);
 
@@ -81,6 +82,7 @@ export function createGroceryListsModule() {
       DI_SYMBOLS.IGroceryListItemsRepository,
       DI_SYMBOLS.IIngredientsRepository,
       DI_SYMBOLS.IGroceryListService,
+      DI_SYMBOLS.IIngredientService,
       DI_SYMBOLS.IGroupService,
     ]);
 

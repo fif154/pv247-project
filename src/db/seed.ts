@@ -370,25 +370,16 @@ async function main() {
   console.log(`✓ RecipeIngredients: ${recipeIngredients.length}`);
 
   // ---------- 12. MealTypes ----------
-  const MEAL_TYPE_NAMES = [
-    'Breakfast',
-    'Brunch',
-    'Lunch',
-    'Dinner',
-    'Snack',
-    'Dessert',
-    'Appetizer',
-    'Side Dish',
-    'Main Course',
-    'Beverage',
-  ];
+  const MEAL_TYPE_NAMES = ['Breakfast', 'Lunch', 'Dinner', 'Snack'];
   const mealTypes = [] as Array<typeof schema.mealTypes.$inferSelect>;
+  let i = 0;
   for (const n of MEAL_TYPE_NAMES) {
     mealTypes.push(
       await insertOne(schema.mealTypes, {
         id: crypto.randomUUID(),
         name: n,
         description: faker.lorem.sentence(),
+        sortOrder: i++,
       })
     );
   }

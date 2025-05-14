@@ -1,4 +1,5 @@
 import { mealAdditionalIngredients, meals } from '@/db/schema';
+import { Macros } from '@/utils/macros';
 import { InferInsertModel } from 'drizzle-orm';
 import { TModelWithRelations } from '../utils';
 
@@ -10,3 +11,7 @@ export type MealAdditionalIngredient =
 export type CreateMealAdditionalIngredient = InferInsertModel<
   typeof mealAdditionalIngredients
 >;
+
+export type MealWithMacros = Meal & {
+  macros: Macros;
+};
