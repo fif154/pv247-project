@@ -31,6 +31,10 @@ export const users = sqliteTable('user', {
   passwordHash: text('password'),
   // Current group context
   groupId: text('group_id'),
+  protein: real('protein'),
+  carbs: real('carbs'),
+  fats: real('fats'),
+  calories: real('calories'),
 });
 
 export const accounts = sqliteTable(

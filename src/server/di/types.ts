@@ -5,7 +5,9 @@ import { IMealPlanMealsRepository } from '@/server/application/repositories/meal
 import { IMealPlansRepository } from '@/server/application/repositories/meal-plans.repository.interface';
 import { IMealTypesRepository } from '@/server/application/repositories/meal-types.repository.interface';
 import { IMealsRepository } from '@/server/application/repositories/meals.repository.interface';
+import { IRecipeIngredientsRepository } from '@/server/application/repositories/recipe-ingredients.repository.interface';
 import { IUnitsRepository } from '@/server/application/repositories/units.repository.interface';
+import { IRecipeIngredientsService } from '@/server/application/services/recipe-ingredients.service.interface';
 import { IAddGroceryListItemsUseCase } from '@/server/application/use-cases/grocery-lists/add-grocery-list-items.use-case';
 import { ICreateGroceryListUseCase } from '@/server/application/use-cases/grocery-lists/create-grocery-list.use-case';
 import { IDeleteGroceryListItemUseCase } from '@/server/application/use-cases/grocery-lists/delete-grocery-list-item.use-case';
@@ -21,6 +23,7 @@ import { ICreateMealPlanUseCase } from '@/server/application/use-cases/meal-plan
 import { IListMealPlansUseCase } from '@/server/application/use-cases/meal-plans/list-meal-plans.use-case';
 import { ICreateMealUseCase } from '@/server/application/use-cases/meals/create-meal.use-case';
 import { IListMealsUseCase } from '@/server/application/use-cases/meals/list-meals.use-case';
+import { ISaveRecipeIngredientsUseCase } from '@/server/application/use-cases/recipes/save-recipe-ingredients.use-case';
 import { IListUnitsUseCase } from '@/server/application/use-cases/units/list-units.use-case';
 import { IAddGroceryListItemsController } from '@/server/controllers/grocery-lists/add-grocery-list-items.controller';
 import { ICreateGroceryListController } from '@/server/controllers/grocery-lists/create-grocery-list.controller';
@@ -35,6 +38,7 @@ import { ICreateMealPlanController } from '@/server/controllers/meal-plans/creat
 import { IListMealPlansController } from '@/server/controllers/meal-plans/list-meal-plans.controller';
 import { ICreateMealController } from '@/server/controllers/meals/create-meal.controller';
 import { IListMealsController } from '@/server/controllers/meals/list-meals.controller';
+import { ISaveRecipeIngredientsController } from '@/server/controllers/recipes/save-recipe-ingredients.controller';
 import { IListUnitsController } from '@/server/controllers/units/list-units.controller';
 import { IGroupMembersRepository } from '../application/repositories/groupMembers.repository.interface';
 import { IGroupsRepository } from '../application/repositories/groups.repository.interface';
@@ -72,9 +76,12 @@ import { IUpdateMealUseCase } from '../application/use-cases/meals/update-meal.u
 import { ICreateRecipeUseCase } from '../application/use-cases/recipes/create-recipe.use-case';
 import { IDeleteRecipeUseCase } from '../application/use-cases/recipes/delete-recipe.use-case';
 import { IGetRecipeUseCase } from '../application/use-cases/recipes/get-recipe.use-case';
+import { IListFilteredRecipesUseCase } from '../application/use-cases/recipes/list-filtered-recipes.use-case';
 import { IListRecipesUseCase } from '../application/use-cases/recipes/list-recipes.use-case';
 import { IUpdateRecipeUseCase } from '../application/use-cases/recipes/update-recipe.use-case';
+import { IEditMacrosUseCase } from '../application/use-cases/users/edit-macros.use-case';
 import { IEditUserUseCase } from '../application/use-cases/users/edit-user.use-case';
+import { IGetUserUseCase } from '../application/use-cases/users/get-user.use-case';
 import { ISearchUsersByEmailUseCase } from '../application/use-cases/users/search-users.use-case';
 import { ISetCurrentGroupUseCase } from '../application/use-cases/users/set-current-group.use-case';
 import { IRegisterController } from '../controllers/auth/register.controller';
@@ -103,9 +110,12 @@ import { IUpdateMealController } from '../controllers/meals/update-meal.controll
 import { ICreateRecipeController } from '../controllers/recipes/create-recipe.controller';
 import { IDeleteRecipeController } from '../controllers/recipes/delete-recipe.controller';
 import { IGetRecipeController } from '../controllers/recipes/get-recipe.controller';
+import { IListFilteredRecipesController } from '../controllers/recipes/list-filtered-recipes.controller';
 import { IListRecipesController } from '../controllers/recipes/list-recipes.controller';
 import { IUpdateRecipeController } from '../controllers/recipes/update-recipe.controller';
+import { IEditMacrosController } from '../controllers/users/edit-macros.controller';
 import { IEditUserController } from '../controllers/users/edit-user.controller';
+import { IGetUserController } from '../controllers/users/get-user.controller';
 import { ISearchUsersByEmailController } from '../controllers/users/search-users.controller';
 import { ISetCurrentGroupController } from '../infrastructure/controllers/users/set-current-group.controller';
 
@@ -148,6 +158,8 @@ export const DI_SYMBOLS = {
   IGetRecipeUseCase: Symbol.for('IGetRecipeUseCase'),
   IEditUserUseCase: Symbol.for('IEditUserUseCase'),
   ISetCurrentGroupUseCase: Symbol.for('ISetCurrentGroupUseCase'),
+  IEditMacrosUseCase: Symbol.for('IEditMacrosUseCase'),
+  IGetUserUseCase: Symbol.for('IGetUserUseCase'),
 
   // Controllers
   ISignInController: Symbol.for('ISignInController'),
@@ -177,6 +189,8 @@ export const DI_SYMBOLS = {
   IGetRecipeController: Symbol.for('IGetRecipeController'),
   IEditUserController: Symbol.for('IEditUserController'),
   ISetCurrentGroupController: Symbol.for('ISetCurrentGroupController'),
+  IEditMacrosController: Symbol.for('IEditMacrosController'),
+  IGetUserController: Symbol.for('IGetUserController'),
 
   // Ingredient Categories
   IIngredientCategoriesRepository: Symbol.for(
@@ -230,6 +244,17 @@ export const DI_SYMBOLS = {
   ICreateMealPlanController: Symbol.for('ICreateMealPlanController'),
   IListMealPlansController: Symbol.for('IListMealPlansController'),
 
+  // Recipe Ingredients
+  IRecipeIngredientsRepository: Symbol.for('IRecipeIngredientsRepository'),
+  IRecipeIngredientsService: Symbol.for('IRecipeIngredientsService'),
+  ISaveRecipeIngredientsUseCase: Symbol.for('ISaveRecipeIngredientsUseCase'),
+  ISaveRecipeIngredientsController: Symbol.for(
+    'ISaveRecipeIngredientsController'
+  ),
+
+  // Filtered recipes
+  IListFilteredRecipesUseCase: Symbol.for('IListFilteredRecipesUseCase'),
+  IListFilteredRecipesController: Symbol.for('IListFilteredRecipesController'),
   // Meal Types
   IMealTypesRepository: Symbol.for('IMealTypesRepository'),
   IListMealTypesUseCase: Symbol.for('IListMealTypesUseCase'),
@@ -306,6 +331,8 @@ export type DI_RETURN_TYPES = {
   IGetRecipeUseCase: IGetRecipeUseCase;
   IEditUserUseCase: IEditUserUseCase;
   ISetCurrentGroupUseCase: ISetCurrentGroupUseCase;
+  IEditMacrosUseCase: IEditMacrosUseCase;
+  IGetUserUseCase: IGetUserUseCase;
 
   // Controllers
   ISignInController: ISignInController;
@@ -329,6 +356,8 @@ export type DI_RETURN_TYPES = {
   IGetRecipeController: IGetRecipeController;
   IEditUserController: IEditUserController;
   ISetCurrentGroupController: ISetCurrentGroupController;
+  IEditMacrosController: IEditMacrosController;
+  IGetUserController: IGetUserController;
 
   // Ingredient Categories
   IIngredientCategoriesRepository: IIngredientCategoriesRepository;
@@ -376,6 +405,15 @@ export type DI_RETURN_TYPES = {
   ICreateMealPlanController: ICreateMealPlanController;
   IListMealPlansController: IListMealPlansController;
 
+  // Recipe Ingredients
+  IRecipeIngredientsRepository: IRecipeIngredientsRepository;
+  IRecipeIngredientsService: IRecipeIngredientsService;
+  ISaveRecipeIngredientsUseCase: ISaveRecipeIngredientsUseCase;
+  ISaveRecipeIngredientsController: ISaveRecipeIngredientsController;
+
+  // Filtered recipes
+  IListFilteredRecipesUseCase: IListFilteredRecipesUseCase;
+  IListFilteredRecipesController: IListFilteredRecipesController;
   // Meal Types
   IMealTypesRepository: IMealTypesRepository;
   IListMealTypesUseCase: IListMealTypesUseCase;

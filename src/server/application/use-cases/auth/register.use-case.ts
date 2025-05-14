@@ -50,6 +50,11 @@ export const registerUseCase =
           passwordHash,
           name: `${input.firstName} ${input.lastName}`,
           groupId,
+          // Reference income of adult
+          calories: 2000,
+          fats: 70,
+          protein: 50,
+          carbs: 270,
         },
         tx
       );
