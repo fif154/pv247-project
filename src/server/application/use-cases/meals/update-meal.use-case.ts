@@ -20,6 +20,7 @@ export const updateMealUseCase =
     id: string,
     input: Partial<Omit<Meal, 'id' | 'createdBy' | 'createdAt' | 'updatedAt'>>,
     additionalIngredients?: Omit<CreateMealAdditionalIngredient, 'mealId'>[],
+    dnd = false,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     tx?: any
   ) => {
@@ -45,7 +46,13 @@ export const updateMealUseCase =
 
     const combined = ingredientService.combine(additionalIngredients ?? []);
 
-    const meal = await mealsRepository.updateMeal(id, input, combined, tx);
+    const meal = await mealsRepository.updateMeal(
+      id,
+      input,
+      combined,
+      !dnd,
+      tx
+    );
 
     return { ...meal, additionalIngredients };
   };

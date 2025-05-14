@@ -120,6 +120,7 @@ export const AddMealModal = ({
     if (isEditMode && meal) {
       await updateMealMutation.mutateAsync({
         mealId: meal.id,
+        mealPlanId,
         data: {
           ...values,
           recipeId: values.recipe.id,

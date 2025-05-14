@@ -39,11 +39,7 @@ export const registerUseCase =
         },
         tx
       );
-      groupId =
-        // TODO: remove this, just for development purposes
-        existingUser?.email === 'glos2001@seznam.cz'
-          ? 'default'
-          : defaultGroup.id;
+      groupId = defaultGroup.id;
     }
 
     let user = existingUser;

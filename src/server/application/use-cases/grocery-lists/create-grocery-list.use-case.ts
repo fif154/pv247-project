@@ -6,6 +6,7 @@ import { IIngredientsRepository } from '@/server/application/repositories/ingred
 import { IRecipesRepository } from '@/server/application/repositories/recipes.repository.interface';
 import { NotFoundError } from '@/server/entities/errors/common';
 import { CreateGroceryListItem } from '@/server/entities/models/grocery-list-item';
+import { MealAdditionalIngredient } from '@/server/entities/models/meal';
 import { Recipe } from '@/server/entities/models/recipe';
 import { isDateInRange } from '@/utils/date';
 import { DateRange } from 'react-day-picker';
@@ -65,6 +66,7 @@ export const createGroceryListUseCase =
       allRecipes.push(...recipes);
     }
 
+    const allIngredients: CreateGroceryListItem[] = [];
     if (input.selectedMealPlans?.length) {
       const mealPlans = await mealPlansRepository.getMealPlansByIds(
         input.selectedMealPlans,
@@ -81,6 +83,21 @@ export const createGroceryListUseCase =
           )
         : allMeals;
 
+      const allAdditionalIngredients = (mealPlans.flatMap(
+        (mealPlan) =>
+          mealPlan.meals
+            ?.map((m) => m.meal?.additionalIngredients)
+            .flatMap((i) => i)
+            .filter(Boolean) || []
+      ) ?? []) as MealAdditionalIngredient[];
+
+      allIngredients.push(
+        ...allAdditionalIngredients.map((i) => ({
+          ...i,
+          groceryListId: groceryList.id,
+        }))
+      );
+
       const allRecipesFromMealPlans =
         filteredMeals.map((m) => m!.recipe).filter(Boolean) || [];
 
@@ -88,7 +105,6 @@ export const createGroceryListUseCase =
       allRecipes.push(...(allRecipesFromMealPlans as Recipe[]));
     }
 
-    const allIngredients: CreateGroceryListItem[] = [];
     for (const recipe of allRecipes) {
       if (recipe?.ingredients) {
         const items = recipe.ingredients.map((ingredient) => ({

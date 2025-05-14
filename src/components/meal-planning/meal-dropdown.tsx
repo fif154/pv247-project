@@ -47,20 +47,22 @@ export const MealDropdown = ({ meal }: { meal: Meal }) => {
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
-      <AddMealModal
-        modalOpen={isAddMealModalOpen}
-        setModalOpen={() => {
-          // https://github.com/shadcn-ui/ui/issues/468
-          setTimeout(() => {
-            document.body.style.pointerEvents = '';
-          }, 100);
-          setIsAddMealModalOpen(false);
-        }}
-        meal={meal}
-        plannedDate={meal.plannedDate!}
-        mealType={meal.mealType!}
-        modal={isAddMealModalOpen}
-      />
+      {isAddMealModalOpen ? (
+        <AddMealModal
+          modalOpen={isAddMealModalOpen}
+          setModalOpen={() => {
+            // https://github.com/shadcn-ui/ui/issues/468
+            setTimeout(() => {
+              document.body.style.pointerEvents = '';
+            }, 100);
+            setIsAddMealModalOpen(false);
+          }}
+          meal={meal}
+          plannedDate={meal.plannedDate!}
+          mealType={meal.mealType!}
+          modal={isAddMealModalOpen}
+        />
+      ) : null}
     </>
   );
 };

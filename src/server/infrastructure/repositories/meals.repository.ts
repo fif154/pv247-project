@@ -78,6 +78,7 @@ export class MealsRepository implements IMealsRepository {
     id: string,
     input: Partial<Omit<Meal, 'id' | 'createdBy' | 'createdAt' | 'updatedAt'>>,
     additionalIngredients?: Omit<CreateMealAdditionalIngredient, 'mealId'>[],
+    deleteAdditionalIngredients = true,
     tx?: Transaction
   ): Promise<Meal> {
     const invoker = tx ?? db;
@@ -86,6 +87,10 @@ export class MealsRepository implements IMealsRepository {
       .set(input)
       .where(and(eq(meals.id, id), isNull(meals.deletedAt)))
       .returning();
+
+    if (!deleteAdditionalIngredients) {
+      return meal;
+    }
 
     await invoker
       .delete(mealAdditionalIngredients)

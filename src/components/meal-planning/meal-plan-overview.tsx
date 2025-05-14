@@ -35,9 +35,6 @@ export const MealPlanOverview = ({
 
   const createGroceryListMutation = useCreateGroceryListMutation();
   const copyMealsToDateRangeMutation = useCopyMealsToDateRangeMutation();
-  // Its the same mutation, using it just to distuingish the loading state
-  const copyMealsToDateRangeMutationRandomize =
-    useCopyMealsToDateRangeMutation();
 
   const handleCreateGroceryList = () => {
     if (meals.length === 0) {
@@ -69,7 +66,7 @@ export const MealPlanOverview = ({
   };
 
   const handleCopyMealsRandomize = async () => {
-    await copyMealsToDateRangeMutationRandomize.mutateAsync({
+    await copyMealsToDateRangeMutation.mutateAsync({
       mealPlanId,
       sourceDateRange: dateRange,
       targetDateRange: {
