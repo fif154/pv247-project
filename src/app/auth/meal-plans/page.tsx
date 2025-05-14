@@ -7,6 +7,12 @@ import { Loading } from '@/components/ui/loading';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
+export const metadata = {
+  title: 'Meal Plans | MealMate',
+  description:
+    'View, manage, and create meal plans.',
+};
+
 async function MealPlansList() {
   const mealPlans = await listMealPlansAction();
 
