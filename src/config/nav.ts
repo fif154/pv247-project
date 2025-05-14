@@ -5,6 +5,7 @@ import {
   Settings,
   Share2,
   ShoppingCart,
+  Apple,
 } from 'lucide-react';
 
 export const navItems = [
@@ -12,6 +13,7 @@ export const navItems = [
   { icon: CalendarDays, label: 'Meal Plans', href: '/auth/meal-plans' },
   { icon: ChefHat, label: 'Recipes', href: '/auth/recipes' },
   { icon: ShoppingCart, label: 'Grocery List', href: '/auth/grocery-lists' },
+  { icon: Apple, label: 'Ingredients', href: '/auth/ingredients' }, 
   { icon: Share2, label: 'Groups', href: '/auth/groups' },
   { icon: Settings, label: 'Settings', href: '/auth/settings' },
 ];

@@ -1,10 +1,34 @@
+import { auth } from '@/auth';
+import { IngredientsGrid } from '@/components/ingredients/ingredients-grid';
+import { PageHeader } from '@/components/page-header';
+import { listIngredientsAction } from '@/app/ingredients/actions';
+import { redirect } from 'next/navigation';
+import { Ingredient } from '@/server/entities/models/ingredient';
+
 const Page = async () => {
+  const userSession = await auth();
+  
+  if (!userSession?.user) {
+    redirect('/auth/login');
+  }
+  
+  const ingredientsResult = await listIngredientsAction();
+  
+  const ingredients: Ingredient[] = 'error' in ingredientsResult 
+    ? [] 
+    : ingredientsResult;
+  
   return (
-    <div className="flex flex-col h-screen gap-4">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-4xl font-bold">Ingredients</h1>
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-row justify-between items-center">
+        <PageHeader>Ingredients</PageHeader>
       </div>
+      <IngredientsGrid 
+        ingredients={ingredients} 
+        currentUser={userSession.user} 
+      />
     </div>
   );
 };
+
 export default Page;
