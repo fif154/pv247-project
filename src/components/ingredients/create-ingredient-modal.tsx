@@ -251,25 +251,6 @@ export function CreateIngredientModal({
               />
             </div>
 
-            <FormField
-              control={form.control}
-              name="unit"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Unit</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      value="gram"
-                      disabled
-                      className="bg-muted"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <Button
               type="submit"
               className="w-full"

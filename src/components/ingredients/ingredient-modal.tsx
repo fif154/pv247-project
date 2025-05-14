@@ -41,27 +41,25 @@ export function IngredientModal({
           <DialogHeader className="flex flex-row items-center justify-between mb-2">
             <DialogTitle>{ingredient.name}</DialogTitle>
             {canEdit && (
-              <div className="ml-auto">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-8 w-8">
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => setIsEditMode(true)}>
-                      <Pencil className="mr-2 h-4 w-4" />
-                      Edit
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => setDeleteDialogOpen(true)}
-                      className="text-destructive"
-                    >
-                      <Trash className="mr-2 h-4 w-4" />
-                      Delete
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsEditMode(true)}
+                  className="flex items-center gap-1"
+                >
+                  <Pencil className="h-3.5 w-3.5" />
+                  Edit
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setDeleteDialogOpen(true)}
+                  className="flex items-center gap-1 text-destructive hover:text-destructive mr-4"
+                >
+                  <Trash className="h-3.5 w-3.5" />
+                  Delete
+                </Button>
               </div>
             )}
           </DialogHeader>
@@ -70,7 +68,6 @@ export function IngredientModal({
               ingredient={ingredient}
               onSuccess={() => {
                 setIsEditMode(false);
-                // Force a reload of the ingredient list
                 window.location.reload();
               }}
             />
