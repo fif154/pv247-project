@@ -23,6 +23,7 @@ async function insertOne<T extends keyof typeof schema>(
   table: (typeof schema)[T],
   row: any
 ) {
+  // @ts-expect-error: Type 'typeof schema[T]' is not assignable to type 'typeof schema[T]'.
   const [inserted] = await db.insert(table).values(row).returning();
   return inserted as typeof row;
 }
