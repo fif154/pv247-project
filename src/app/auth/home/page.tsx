@@ -53,17 +53,15 @@ const HomeContent = async () => {
         <AddNewButton />
       </div>
       <Suspense fallback={<Loading />}>
-
-      <Macros
-        calories={totalMacros.calories}
-        carbs={totalMacros.carbs}
-        fat={totalMacros.fat}
-        protein={totalMacros.protein}
-      />
+        <Macros
+          calories={totalMacros.calories}
+          carbs={totalMacros.carbs}
+          fat={totalMacros.fat}
+          protein={totalMacros.protein}
+        />
       </Suspense>
       <Suspense fallback={<Loading />}>
-
-      <Meals meals={meals} />
+        <Meals meals={meals} />
       </Suspense>
     </div>
   );
