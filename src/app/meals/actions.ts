@@ -37,7 +37,7 @@ export const updateMealAction = async (
   additionalIngredients?: Omit<CreateMealAdditionalIngredient, 'mealId'>[]
 ) => {
   const controller = getInjection('IUpdateMealController');
-  return controller(id, input, additionalIngredients);
+  await controller(id, input, additionalIngredients);
 };
 
 export const deleteMealAction = async (id: string): Promise<void> => {

@@ -7,12 +7,11 @@ import {
   GroupWithMemberIds,
 } from '@/server/entities/models/group';
 
-export const createGroupWithMembersUseCase =
-  (
-    groupsRepository: IGroupsRepository,
-    groupMembersRepository: IGroupMembersRepository
-  ) =>
-  async (
+export function createGroupWithMembersUseCase(
+  groupsRepository: IGroupsRepository,
+  groupMembersRepository: IGroupMembersRepository
+) {
+  return async (
     group: CreateGroup,
     members: string[],
     tx?: any
@@ -34,6 +33,7 @@ export const createGroupWithMembersUseCase =
       members: groupMembers.map((member) => member.userId),
     };
   };
+}
 
 export type ICreateGroupWithMembersUseCase = ReturnType<
   typeof createGroupWithMembersUseCase
