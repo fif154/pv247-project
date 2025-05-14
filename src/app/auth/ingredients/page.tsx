@@ -1,6 +1,11 @@
 import { Loading } from '@/components/ui/loading';
 import { Suspense } from 'react';
 
+export const metadata = {
+  title: 'Ingredients | MealMate',
+  description: 'Browse, manage, and organize ingredients used in your meals.',
+};
+
 async function IngredientsList() {
   // TODO: Add ingredients fetching logic here
   return (

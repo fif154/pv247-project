@@ -5,6 +5,12 @@ import { Loading } from '@/components/ui/loading';
 import { Suspense } from 'react';
 import { listRecipes } from '../../recipes/actions';
 
+export const metadata = {
+  title: 'Create Grocery List | MealMate',
+  description:
+    'Build a grocery list based on your selected recipes and meal plans.',
+};
+
 async function CreateFormContent() {
   const [recipes, mealPlans] = await Promise.all([
     listRecipes(),

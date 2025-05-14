@@ -8,6 +8,22 @@ interface PageProps {
   }>;
 }
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const mealPlan = await getMealPlanAction(id);
+
+  const title = mealPlan.name || 'Untitled Meal Plan';
+
+  return {
+    title: `Edit ${title} | MealMate`,
+    description: `Update your meal plan "${title}".`,
+  };
+}
+
 const Page = async ({ params }: PageProps) => {
   const { id } = await params;
   const mealPlan = await getMealPlanAction(id);

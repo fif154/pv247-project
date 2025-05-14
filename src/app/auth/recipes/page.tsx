@@ -6,6 +6,11 @@ import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
+export const metadata = {
+  title: 'Recipes | MealMate',
+  description: 'Browse, search, and manage your favorite recipes on MealMate.',
+};
+
 export default async function RecipesPage({
   searchParams,
 }: {

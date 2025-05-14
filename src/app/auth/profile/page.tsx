@@ -7,6 +7,12 @@ import { Loading } from '@/components/ui/loading';
 import { SessionProvider } from 'next-auth/react';
 import { Suspense } from 'react';
 
+export const metadata = {
+  title: 'Profile | MealMate',
+  description:
+    'View and edit your profile information including name, email, and avatar.',
+};
+
 async function ProfileContent() {
   const userSession = (await auth())!;
   const userInfo = {

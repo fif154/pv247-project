@@ -26,6 +26,12 @@ const findThisWeekGroceryList = (groceryLists: GroceryList[]) => {
   );
 };
 
+export const metadata = {
+  title: 'Grocery Lists | MealMate',
+  description:
+    'View, manage, and create grocery lists to keep your meal planning organized.',
+};
+
 async function GroceryListsContent() {
   const groceryLists = await listGroceryListsAction();
   const currentList = findThisWeekGroceryList(groceryLists);

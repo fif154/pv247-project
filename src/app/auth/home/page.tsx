@@ -10,6 +10,11 @@ import { listMealsAction } from '@/app/meals/actions';
 import { auth } from '@/auth';
 import { SessionProvider } from 'next-auth/react';
 
+export const metadata = {
+  title: 'Home | MealMate',
+  description: 'Manage your meals and nutrition easily.',
+};
+
 const formatDate = (date: Date) => format(date, 'EEEE, MMMM d, yyyy');
 
 const HomeContent = async () => {

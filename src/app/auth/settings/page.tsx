@@ -5,6 +5,11 @@ import { PageHeader } from '@/components/page-header';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Card } from '@/components/ui/card';
 
+export const metadata = {
+  title: 'Settings | MealMate',
+  description: 'Customize your MealMate experience.',
+};
+
 const Page = async () => {
   const userSession = await auth();
   const currentUser = userSession?.user;
