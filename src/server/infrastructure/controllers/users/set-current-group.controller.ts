@@ -2,7 +2,7 @@ import { ISetCurrentGroupUseCase } from '@/server/application/use-cases/users/se
 import { z } from 'zod';
 
 const setCurrentGroupSchema = z.object({
-  groupId: z.string().uuid(),
+  groupId: z.string(),
 });
 
 export const setCurrentGroupController =

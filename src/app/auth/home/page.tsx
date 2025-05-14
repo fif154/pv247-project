@@ -1,8 +1,10 @@
 import { Macros } from '@/components/macros';
 import { Meals } from '@/components/meals';
 import { PageHeader } from '@/components/page-header';
+import { Loading } from '@/components/ui/loading';
 import { format } from 'date-fns';
 import { CalendarDays } from 'lucide-react';
+import { Suspense } from 'react';
 import { AddNewButton } from './add-new-button';
 
 export const metadata = {
@@ -12,7 +14,7 @@ export const metadata = {
 
 const formatDate = (date: Date) => format(date, 'EEEE, MMMM d, yyyy');
 
-const Page = async () => {
+const HomeContent = async () => {
   const today = new Date();
 
   return (
@@ -27,10 +29,20 @@ const Page = async () => {
         </div>
         <AddNewButton />
       </div>
-      <Macros calories={1560} carbs={12} fat={44} protein={123} />
-      <Meals />
+      <Suspense fallback={<Loading />}>
+        <Macros calories={1560} carbs={12} fat={44} protein={123} />
+      </Suspense>
+      <Suspense fallback={<Loading />}>
+        <Meals />
+      </Suspense>
     </div>
   );
 };
 
-export default Page;
+export default function Page() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <HomeContent />
+    </Suspense>
+  );
+}

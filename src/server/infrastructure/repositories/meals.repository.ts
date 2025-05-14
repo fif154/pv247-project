@@ -59,7 +59,17 @@ export class MealsRepository implements IMealsRepository {
             unit: true,
           },
         },
-        recipe: true,
+        recipe: {
+          with: {
+            ingredients: {
+              with: {
+                ingredient: true,
+                unit: true,
+              },
+            },
+          },
+        },
+        mealType: true,
       },
     });
   }
@@ -67,7 +77,7 @@ export class MealsRepository implements IMealsRepository {
   async updateMeal(
     id: string,
     input: Partial<Omit<Meal, 'id' | 'createdBy' | 'createdAt' | 'updatedAt'>>,
-    additionalIngredients?: CreateMealAdditionalIngredient[],
+    additionalIngredients?: Omit<CreateMealAdditionalIngredient, 'mealId'>[],
     tx?: Transaction
   ): Promise<Meal> {
     const invoker = tx ?? db;
@@ -77,11 +87,11 @@ export class MealsRepository implements IMealsRepository {
       .where(and(eq(meals.id, id), isNull(meals.deletedAt)))
       .returning();
 
-    if (additionalIngredients?.length) {
-      await invoker
-        .delete(mealAdditionalIngredients)
-        .where(eq(mealAdditionalIngredients.mealId, id));
+    await invoker
+      .delete(mealAdditionalIngredients)
+      .where(eq(mealAdditionalIngredients.mealId, id));
 
+    if (additionalIngredients?.length) {
       const ingredientsWithMealId = additionalIngredients.map((ingredient) => ({
         ...ingredient,
         mealId: id,

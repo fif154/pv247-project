@@ -190,90 +190,92 @@ const IngredientListForm = ({
           No ingredients added yet.
         </div>
       ) : null}
-      {ingredients.map((field, index) => (
-        <Card key={field.id ?? index}>
-          <CardHeader className="flex items-center justify-between">
-            <h3 className="text-sm font-medium text-muted-foreground">
-              Ingredient {index + 1}
-            </h3>
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              onClick={() => removeIngredient(index)}
-            >
-              <Trash2 className="h-4 w-4 text-destructive" />
-              <span className="sr-only">Remove</span>
-            </Button>
-          </CardHeader>
-          <CardContent className="grid gap-4 sm:grid-cols-2 lg:grid-cols-12">
-            <div className="lg:col-span-7">
-              <FormField
-                control={form.control}
-                name={`manualIngredients.${index}.name`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel
-                      className={cn(index !== 0 && 'sr-only', 'font-bold')}
-                    >
-                      Ingredient name
-                    </FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g. Milk" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4 sm:col-span-2 lg:col-span-5">
-              <div>
+      {ingredients.map((field, index) => {
+        return (
+          <Card key={field.id ?? index}>
+            <CardHeader className="flex items-center justify-between">
+              <h3 className="text-sm font-medium text-muted-foreground">
+                Ingredient {index + 1}
+              </h3>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() => removeIngredient(index)}
+              >
+                <Trash2 className="h-4 w-4 text-destructive" />
+                <span className="sr-only">Remove</span>
+              </Button>
+            </CardHeader>
+            <CardContent className="grid gap-4 sm:grid-cols-2 lg:grid-cols-12">
+              <div className="lg:col-span-7">
                 <FormField
                   control={form.control}
-                  name={`manualIngredients.${index}.quantity`}
+                  name={`manualIngredients.${index}.name`}
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel
                         className={cn(index !== 0 && 'sr-only', 'font-bold')}
                       >
-                        Qty
+                        Ingredient name
                       </FormLabel>
                       <FormControl>
-                        <Input type="number" placeholder="1" {...field} />
+                        <Input placeholder="e.g. Milk" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
-              <div>
+              <div className="grid grid-cols-2 gap-4 sm:col-span-2 lg:col-span-5">
+                <div>
+                  <FormField
+                    control={form.control}
+                    name={`manualIngredients.${index}.quantity`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel
+                          className={cn(index !== 0 && 'sr-only', 'font-bold')}
+                        >
+                          Qty
+                        </FormLabel>
+                        <FormControl>
+                          <Input type="number" placeholder="1" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div>
+                  <SelectField
+                    form={form}
+                    name={`manualIngredients.${index}.unit`}
+                    label={index === 0 ? 'Unit' : undefined}
+                    labelClassName={cn(index !== 0 && 'sr-only')}
+                    options={units}
+                    placeholder="Unit"
+                    searchPlaceholder="Search units…"
+                    emptyText="No units."
+                  />
+                </div>
+              </div>
+              <div className="sm:col-span-2 lg:col-span-12">
                 <SelectField
                   form={form}
-                  name={`manualIngredients.${index}.unit`}
-                  label={index === 0 ? 'Unit' : undefined}
+                  name={`manualIngredients.${index}.category`}
+                  label={index === 0 ? 'Category' : undefined}
                   labelClassName={cn(index !== 0 && 'sr-only')}
-                  options={units}
-                  placeholder="Unit"
-                  searchPlaceholder="Search units…"
-                  emptyText="No units."
+                  options={categories}
+                  placeholder="Select category"
+                  searchPlaceholder="Search categories…"
+                  emptyText="No categories."
                 />
               </div>
-            </div>
-            <div className="sm:col-span-2 lg:col-span-12">
-              <SelectField
-                form={form}
-                name={`manualIngredients.${index}.category`}
-                label={index === 0 ? 'Category' : undefined}
-                labelClassName={cn(index !== 0 && 'sr-only')}
-                options={categories}
-                placeholder="Select category"
-                searchPlaceholder="Search categories…"
-                emptyText="No categories."
-              />
-            </div>
-          </CardContent>
-        </Card>
-      ))}
+            </CardContent>
+          </Card>
+        );
+      })}
       <Button
         type="button"
         variant="outline"

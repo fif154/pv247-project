@@ -2,7 +2,7 @@ import { db, Transaction } from '@/db';
 import { ingredients } from '@/db/schema';
 import { IIngredientsRepository } from '@/server/application/repositories/ingredients.repository.interface';
 import { Ingredient } from '@/server/entities/models/ingredient';
-import { and, eq, isNull } from 'drizzle-orm';
+import { and, asc, desc, eq, isNull } from 'drizzle-orm';
 
 export class IngredientsRepository implements IIngredientsRepository {
   async createIngredient(
@@ -77,12 +77,20 @@ export class IngredientsRepository implements IIngredientsRepository {
   }
 
   async listIngredients(groupId: string): Promise<Ingredient[]> {
-    const result = await db
-      .select()
-      .from(ingredients)
-      .where(
-        and(eq(ingredients.groupId, groupId), isNull(ingredients.deletedAt))
-      );
+    const result = await db.query.ingredients.findMany({
+      where: and(
+        eq(ingredients.groupId, groupId),
+        isNull(ingredients.deletedAt)
+      ),
+      orderBy: (ingredients) => [
+        asc(ingredients.name),
+        desc(ingredients.createdAt),
+      ],
+      with: {
+        category: true,
+      },
+    });
+
     return result;
   }
 }

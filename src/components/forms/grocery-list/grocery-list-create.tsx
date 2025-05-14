@@ -27,7 +27,7 @@ export const GroceryListCreateForm = (props: Props) => {
   const { handleSubmit } = form;
 
   const onSubmit = async (data: GroceryListFormValues) => {
-    await createGroceryListMutation.mutateAsync(data);
+    await createGroceryListMutation.mutateAsync({ data });
   };
 
   return (

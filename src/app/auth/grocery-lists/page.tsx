@@ -2,11 +2,13 @@ import { GroceryListComponent } from '@/components/grocery-list-component';
 import { GroceryListListComponent } from '@/components/grocery-list-list-component';
 import { PageHeader } from '@/components/page-header';
 import { Button } from '@/components/ui/button';
+import { Loading } from '@/components/ui/loading';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { GroceryList } from '@/server/entities/models/grocery-list';
 import { TabsContent } from '@radix-ui/react-tabs';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
+import { Suspense } from 'react';
 import { listGroceryListsAction } from './actions';
 
 // Could be done on BE
@@ -30,46 +32,29 @@ export const metadata = {
     'View, manage, and create grocery lists to keep your meal planning organized.',
 };
 
-const Page = async () => {
+async function GroceryListsContent() {
   const groceryLists = await listGroceryListsAction();
-
   const currentList = findThisWeekGroceryList(groceryLists);
 
   return (
-    <div className="flex flex-col h-screen gap-4">
-      <div className="flex flex-row justify-between items-center">
-        <div className="flex flex-col gap-2">
-          <PageHeader>Grocery List</PageHeader>
-        </div>
-        <Button variant="coral">
-          <Link
-            href="/auth/grocery-lists/new"
-            className="flex items-center gap-2"
-          >
-            <Plus />
-            <span className="hidden md:block">Create a new grocery list</span>
-          </Link>
-        </Button>
-      </div>
-      <Tabs defaultValue="week">
-        <TabsList className="mb-4 grid w-full grid-cols-2">
-          <TabsTrigger value="week">This week</TabsTrigger>
-          <TabsTrigger value="all">All lists</TabsTrigger>
-        </TabsList>
-        <TabsContent value="week">
-          {currentList ? (
-            <GroceryListComponent groceryList={currentList!} />
-          ) : (
-            <EmptyThisWeeksGroceryList />
-          )}
-        </TabsContent>
-        <TabsContent value="all">
-          <GroceryListListComponent groceryLists={groceryLists} />
-        </TabsContent>
-      </Tabs>
-    </div>
+    <Tabs defaultValue="week">
+      <TabsList className="mb-4 grid w-full grid-cols-2">
+        <TabsTrigger value="week">This week</TabsTrigger>
+        <TabsTrigger value="all">All lists</TabsTrigger>
+      </TabsList>
+      <TabsContent value="week">
+        {currentList ? (
+          <GroceryListComponent groceryList={currentList!} />
+        ) : (
+          <EmptyThisWeeksGroceryList />
+        )}
+      </TabsContent>
+      <TabsContent value="all">
+        <GroceryListListComponent groceryLists={groceryLists} />
+      </TabsContent>
+    </Tabs>
   );
-};
+}
 
 const EmptyThisWeeksGroceryList = () => {
   return (
@@ -88,6 +73,30 @@ const EmptyThisWeeksGroceryList = () => {
           <span>Create a new grocery list</span>
         </Link>
       </Button>
+    </div>
+  );
+};
+
+const Page = () => {
+  return (
+    <div className="flex flex-col h-screen gap-4">
+      <div className="flex flex-row justify-between items-center">
+        <div className="flex flex-col gap-2">
+          <PageHeader>Grocery List</PageHeader>
+        </div>
+        <Button variant="coral">
+          <Link
+            href="/auth/grocery-lists/new"
+            className="flex items-center gap-2"
+          >
+            <Plus />
+            <span className="hidden md:block">Create a new grocery list</span>
+          </Link>
+        </Button>
+      </div>
+      <Suspense fallback={<Loading />}>
+        <GroceryListsContent />
+      </Suspense>
     </div>
   );
 };

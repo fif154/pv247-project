@@ -13,6 +13,7 @@ import {
 import { z } from 'zod';
 import { IGroceryListService } from '../../services/grocery-list.service.interface';
 import { IGroupService } from '../../services/group.service.interface';
+import { IIngredientService } from '../../services/ingredient.service.interface';
 
 export const addGroceryListItemsSchema = z.object({
   groceryListId: z.string(),
@@ -32,6 +33,7 @@ export const addGroceryListItemsUseCase =
     groceryListItemsRepository: IGroceryListItemsRepository,
     ingredientsRepository: IIngredientsRepository,
     groceryListService: IGroceryListService,
+    ingredientService: IIngredientService,
     groupService: IGroupService
   ) =>
   async (input: AddGroceryListItemsInput, tx?: Transaction) => {
@@ -83,7 +85,7 @@ export const addGroceryListItemsUseCase =
       });
     }
 
-    const combinedItems = groceryListService.combineIngredients(itemsToCreate);
+    const combinedItems = ingredientService.combine(itemsToCreate);
 
     const groceryListIngredients = (
       await groceryListItemsRepository.getGroceryListItemsByGroceryListId(

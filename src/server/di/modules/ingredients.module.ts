@@ -1,3 +1,4 @@
+import { IngredientService } from '@/server/infrastructure/services/ingredient.service';
 import { createModule } from '@evyweb/ioctopus';
 import { createIngredientUseCase } from '../../application/use-cases/ingredients/create-ingredient.use-case';
 import { deleteIngredientUseCase } from '../../application/use-cases/ingredients/delete-ingredient.use-case';
@@ -83,6 +84,10 @@ export const createIngredientsModule = () => {
     .toHigherOrderFunction(getIngredientController, [
       DI_SYMBOLS.IGetIngredientUseCase,
     ]);
+
+  ingredientsModule
+    .bind(DI_SYMBOLS.IIngredientService)
+    .toClass(IngredientService, []);
 
   return ingredientsModule;
 };

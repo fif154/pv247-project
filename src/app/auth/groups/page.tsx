@@ -18,6 +18,7 @@ const Page = async () => {
   }
 
   const groups = await getUserGroupsWithMembersAction(currentUser.id);
+
   return (
     <div className="flex flex-col gap-4">
       <GroupHeader currentUser={currentUser} />

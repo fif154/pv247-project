@@ -1,14 +1,16 @@
 import { GroceryList } from '@/server/entities/models/grocery-list';
 import Link from 'next/link';
+import { Suspense } from 'react';
 import { formatGroceryListDate } from './grocery-list-component';
 import { PercentageBar } from './percentage-bar';
 import { Button } from './ui/button';
+import { Loading } from './ui/loading';
 
-export const GroceryListListComponent = ({
+async function GroceryListGrid({
   groceryLists,
 }: {
   groceryLists: GroceryList[];
-}) => {
+}) {
   return (
     <div className="grid rounded-lg gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {groceryLists.map((groceryList) => (
@@ -16,7 +18,7 @@ export const GroceryListListComponent = ({
       ))}
     </div>
   );
-};
+}
 
 const GroceryListListItem = ({ groceryList }: { groceryList: GroceryList }) => {
   const completedItems = groceryList.items!.filter(
@@ -61,5 +63,17 @@ const GroceryListListItem = ({ groceryList }: { groceryList: GroceryList }) => {
         </Button>
       </Link>
     </div>
+  );
+};
+
+export const GroceryListListComponent = ({
+  groceryLists,
+}: {
+  groceryLists: GroceryList[];
+}) => {
+  return (
+    <Suspense fallback={<Loading />}>
+      <GroceryListGrid groceryLists={groceryLists} />
+    </Suspense>
   );
 };

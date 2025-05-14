@@ -29,7 +29,9 @@ interface SelectPopoverProps {
   searchPlaceholder?: string;
   emptyText?: string;
   isLoading?: boolean;
+  modal?: boolean;
   className?: string;
+  disabled?: boolean;
 }
 
 export function SelectPopover({
@@ -40,15 +42,18 @@ export function SelectPopover({
   searchPlaceholder = 'Search...',
   emptyText = 'No options found.',
   isLoading = false,
+  modal = false,
   className,
+  disabled,
 }: SelectPopoverProps) {
   return (
-    <Popover>
+    <Popover modal={modal}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
           role="combobox"
           className={cn('w-full justify-between', className)}
+          disabled={disabled}
         >
           {value ? value.name : placeholder}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -70,6 +75,7 @@ export function SelectPopover({
                     key={option.id}
                     value={option.name}
                     onSelect={() => onSelect(option)}
+                    className="cursor-pointer"
                   >
                     <Check
                       className={cn(
