@@ -30,6 +30,7 @@ export const updateMealPlanAction = async (
   input: Partial<Omit<MealPlan, 'id' | 'createdBy' | 'createdAt' | 'updatedAt'>>
 ) => {
   const controller = getInjection('IUpdateMealPlanController');
+  revalidatePath(`/auth/meal-plans`);
   return await controller(id, input);
 };
 
